@@ -26,6 +26,8 @@ function preload ()
 {
     this.load.tilemapCSV('map', 'src/assets/tilemaps/mazemap.csv');
     this.load.image('tiles', 'src/assets/tiles/tiles.png');
+
+    this.load.spritesheet('dude', 'src/assets/sprites/spaceman.png', {frameWidth: 32, frameHeight: 48});
 }
 
 function create ()
@@ -35,7 +37,48 @@ function create ()
     var layer = map.createLayer(0, tileset, 0, 0); 
     // layer.skipCull = true;
 
-}
+    var player = this.add.sprite(15, 35, 'dude');
+
+
+    this.input.keyboard.on('keydown-A', function (event) {        var tile = layer.getTileAtWorldXY(player.x - 30, player.y, true);        if (tile.index === 1)
+        {
+            //  Blocked, we can't move
+        }
+        else
+        {
+            player.x -= 30;
+            player.angle = 0;
+        }    });    //  Right
+    this.input.keyboard.on('keydown-D', function (event) {        var tile = layer.getTileAtWorldXY(player.x + 32, player.y, true);        if (tile.index === 1)
+        {
+            //  Blocked, we can't move
+        }
+        else
+        {
+            player.x += 30;
+            player.angle = 0;
+        }    });    //  Up
+    this.input.keyboard.on('keydown-W', function (event) {        var tile = layer.getTileAtWorldXY(player.x, player.y - 32, true);        if (tile.index === 1)
+        {
+            //  Blocked, we can't move
+        }
+        else
+        {
+            player.y -= 30;
+            player.angle = 0;
+        }    });    //  Down
+    this.input.keyboard.on('keydown-S', function (event) {        var tile = layer.getTileAtWorldXY(player.x, player.y + 32, true);        if (tile.index === 1)
+        {
+            //  Blocked, we can't move
+        }
+        else
+        {
+            player.y += 30;
+            player.angle = 0;
+        }    });}
+
+
+
 
 function update (time, delta) 
 {
