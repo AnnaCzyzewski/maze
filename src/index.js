@@ -10,9 +10,15 @@ var config = {
     type: Phaser.AUTO,
     width: 750,
     height: 750,
-    backgroundColor: '#2d2d2d',
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 0 },
+            // debug: true
+        }
+    },
+    backgroundColor: '#ffffff',
     parent: 'phaser-example',
-    pixelArt: true,
     scene: {
         preload: preload,
         create: create,
@@ -20,110 +26,60 @@ var config = {
     }
 };
 
+//// Timer stuff
+//// **************
+// var text;
+// var eachSecondEvent;
+// var timerEndsEvent;
+//// ***************
+
 var game = new Phaser.Game(config); 
  
 function preload ()
 {
-    this.load.tilemapCSV('map', 'src/assets/tilemaps/mazemap.csv');
-    this.load.image('tiles', 'src/assets/tiles/tiles.png');
-    this.load.spritesheet('dude', 'src/assets/sprites/spaceman.png', {frameWidth: 32, frameHeight: 48});
+    this.load.image('wallTile', 'src/assets/tiles/wallTile.png');
+    this.load.tilemapTiledJSON('maze', 'src/assets/tilemaps/maze.json');
+
+    // this.load.tilemapCSV('map', 'src/assets/tilemaps/mazemap.csv');
+    // this.load.image('tiles', 'src/assets/tiles/tiles.png');
+    // this.load.spritesheet('dude', 'src/assets/sprites/spaceman.png', {frameWidth: 32, frameHeight: 48});
 }
 
 function create ()
 {
-    var map = this.make.tilemap({ key: 'map', tileWidth: 30, tileHeight: 30 });
-    var tileset = map.addTilesetImage('tiles');
-    var layer = map.createLayer(0, tileset, 0, 0); 
-    // layer.skipCull = true;
+    const map = this.make.tilemap({ key: 'maze' });
+    map.setCollision(1, true);
+    const tileset = map.addTilesetImage('wallTile', 'wallTile');
+    const layer = map.createLayer('Tile Layer 1', tileset, 60, 100);
 
-    var player = this.add.sprite(15, 35, 'dude');
+    this.player = this.add.circle(345, 115, 12, 0x000000, 1);
+    this.physics.add.existing(this.player);
+    this.player.body.setCircle(12);
 
-    this.input.keyboard.on('keydown-A', function (event) {        
-        var tile = layer.getTileAtWorldXY(player.x - 30, player.y, true);        
-        if (tile.index === 1)
-        {
-            //  Blocked, we can't move
-        }
-        else
-        {
-            player.x -= 30;
-            player.angle = 0;
-        }    });    //  Right
-    this.input.keyboard.on('keydown-D', function (event) {        
-        var tile = layer.getTileAtWorldXY(player.x + 32, player.y, true);        
-        if (tile.index === 1)
-        {
-            //  Blocked, we can't move
-        }
-        else
-        {
-            player.x += 30;
-            player.angle = 0;
-        }    });    //  Up
-    this.input.keyboard.on('keydown-W', function (event) {        
-        var tile = layer.getTileAtWorldXY(player.x, player.y - 32, true);        
-        if (tile.index === 1)
-        {
-            //  Blocked, we can't move
-        }
-        else
-        {
-            player.y -= 30;
-            player.angle = 0;
-        }    });    //  Down
-    this.input.keyboard.on('keydown-S', function (event) {        
-        var tile = layer.getTileAtWorldXY(player.x, player.y + 32, true);        
-        if (tile.index === 1)
-        {
-            //  Blocked, we can't move
-        }
-        else
-        {
-            player.y += 30;
-            player.angle = 0;
-        }    
-    });
+    this.physics.add.collider(this.player, layer);
+
+    this.cursors = this.input.keyboard.createCursorKeys()
+
+    //// CSV maze stuff
+    //// **************
+    // var map = this.make.tilemap({ key: 'map', tileWidth: 30, tileHeight: 30 });
+    // var tileset = map.addTilesetImage('tiles');
+    // var layer = map.createLayer(0, tileset, 0, 0);
+    //// layer.skipCull = true;
+    //// **************
+
+    //// Timer stuff
+    //// **************
+    // this.initialTime = 10;
+    // const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+    // text = this.add.text(screenCenterX, 55, formatTime(this.initialTime), { fontSize: 100 }).setOrigin(0.5);
+    // eachSecondEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
+    // timerEndsEvent = this.time.addEvent({ delay: 10100, callback: timerEnd, callbackScope: this, loop: true });
+    //// ***************
 }
 
-function update (time, delta) 
-{
-    // controls.update(delta); // unknown usage 
-}
-
-//// Uncomment below and comment out everything above to check out the timer :)
-
-// import Phaser from 'phaser'; 
-
-// var config = {
-//     type: Phaser.AUTO,
-//     width: 800,
-//     height: 600,
-//     backgroundColor: '#2d2d2d',
-//     parent: 'phaser-example',
-//     scene: {
-//         create: create,
-//     }
-// };
-
-// var text;
-// var eachSecondEvent;
-// var timerEndsEvent;
-
-// var game = new Phaser.Game(config);
-
-// function create ()
-// {
-//     this.initialTime = 10;
-
-//     const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-
-//     text = this.add.text(screenCenterX, 50, formatTime(this.initialTime), { fontSize: 100 }).setOrigin(0.5);
-
-//     eachSecondEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
-
-//     timerEndsEvent = this.time.addEvent({ delay: 10100, callback: timerEnd, callbackScope: this, loop: true });
-// }
-
+//// Timer stuff
+//// **************
 // function formatTime(seconds){
 //     // Minutes
 //     var minutes = Math.floor(seconds/60);
@@ -145,3 +101,35 @@ function update (time, delta)
 // {
 //     game.time.events.stop();
 // }
+//// ***************
+
+function update () 
+{
+
+    /** @type {Phaser.Physics.Arcade.Body} */
+    const body = this.player.body;
+
+    const speed = 200
+
+    if (this.cursors.left.isDown)
+    {
+        body.setVelocityX(-speed)
+    }
+    else if (this.cursors.right.isDown)
+    {
+        body.setVelocityX(speed)
+    }
+    else if (this.cursors.up.isDown)
+    {
+        body.setVelocityY(-speed)
+    }
+    else if (this.cursors.down.isDown)
+    {
+        body.setVelocityY(speed)
+    } 
+    else 
+    {
+        body.setVelocity(0, 0)
+    }
+
+}
