@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import Timer from './Timer';
+import Countdown from './Countdown';
 
 // The example this was taken from was csv map in phaser examples. The 
 // directory in examples is public/tilemap/csv map.js
@@ -11,7 +11,7 @@ export default class Game extends Phaser.Scene
 
 {
 
-	timer;
+	countdown;
 
     constructor()
 	{
@@ -35,10 +35,12 @@ export default class Game extends Phaser.Scene
         this.cursors = this.input.keyboard.createCursorKeys()
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        const timerLabel = this.add.text(screenCenterX, 50, '10', { fontSize: 100, color: '0x000000' }).setOrigin(0.5);
+        // const screenThreeQuarters = this.cameras.main.worldView.x + this.cameras.main.width * 0.75
 
-        this.timer = new Timer(this, timerLabel);
-		this.timer.start(this.handleCountdownFinished.bind(this));
+        const countdownLabel = this.add.text(screenCenterX, 50, '', { fontSize: 100, color: '0x000000' }).setOrigin(0.5);
+
+        this.countdown = new Countdown(this, countdownLabel, 10);
+		this.countdown.start(this.handleCountdownFinished.bind(this));
 
         //// CSV maze stuff
         //// **************
@@ -52,22 +54,28 @@ export default class Game extends Phaser.Scene
     handleCountdownFinished()
 	{
 		this.isFrozen = false;
-        this.timer.label.setText("Go!");
+        this.countdown.label.setText("Go!");
 	}
 
     update() 
     {
         const body = this.player.body;
-
+        var y = body.position.y;
+        var x = body.position.x;
         var checkFrozen = this.isFrozen;
+        const speed = 200;
+        var started = this.timerStarted;
 
-        const speed = 200
-        if (checkFrozen) {
-            body.setVelocity(0, 0)
-        } else {
+        // Control player movement
+        if (checkFrozen) 
+        {
+            body.setVelocity(0, 0);
+        } 
+        else 
+        {
             if (this.cursors.left.isDown)
             {
-                body.setVelocityX(-speed)
+                body.setVelocityX(-speed);
             }
             else if (this.cursors.right.isDown)
             {
@@ -87,7 +95,14 @@ export default class Game extends Phaser.Scene
             }
         }
 
-        this.timer.update()
+        // Check for maze completion
+        if (y >= 700 && (x >= 385 && x <= 400))
+        {
+            // finished maze!
+        }
+
+        this.countdown.update()
 
     }
+
 }

@@ -1,28 +1,28 @@
-// This code is from https://github.com/ourcade/memory-match-template-phaser3
+// Code adapted from this source: https://github.com/ourcade/memory-match-template-phaser3
 
-export default class Timer
+export default class Countdown
 {
 
 	scene;
 	label;
 	timerEvent;
-	duration = 0;
+	duration;
 
-	constructor(scene, label)
+	constructor(scene, label, duration)
 	{
 		this.scene = scene;
 		this.label = label;
+		this.duration = duration * 1000;
 	}
 
-	start(callback, duration = 10000)
+	start(callback)
 	{
 		this.stop();
 
 		this.finishedCallback = callback;
-		this.duration = duration;
 
 		this.timerEvent = this.scene.time.addEvent({
-			delay: duration,
+			delay: this.duration,
 			callback: () => {
 				this.label.text = '0';
 
