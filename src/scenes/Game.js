@@ -12,6 +12,9 @@ export default class Game extends Phaser.Scene
 {
 
 	countdown;
+    stopwatchLabel;
+    started = false;
+    startTime = 0;
 
     constructor()
 	{
@@ -35,9 +38,9 @@ export default class Game extends Phaser.Scene
         this.cursors = this.input.keyboard.createCursorKeys()
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        // const screenThreeQuarters = this.cameras.main.worldView.x + this.cameras.main.width * 0.75
-
+        
         const countdownLabel = this.add.text(screenCenterX, 50, '', { fontSize: 100, color: '0x000000' }).setOrigin(0.5);
+        this.stopwatchLabel = this.add.text(screenCenterX * 1.6, 50, '', { fontSize: 50, color: '0x000000' }).setOrigin(0.5);
 
         this.countdown = new Countdown(this, countdownLabel, 10);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
@@ -55,6 +58,9 @@ export default class Game extends Phaser.Scene
 	{
 		this.isFrozen = false;
         this.countdown.label.setText("Go!");
+
+        this.started = true;
+        this.startTime = this.game.getTime();
 	}
 
     update() 
@@ -64,7 +70,7 @@ export default class Game extends Phaser.Scene
         var x = body.position.x;
         var checkFrozen = this.isFrozen;
         const speed = 200;
-        var started = this.timerStarted;
+        var checkStarted = this.started;
 
         // Control player movement
         if (checkFrozen) 
@@ -95,10 +101,37 @@ export default class Game extends Phaser.Scene
             }
         }
 
+        // Control stopwatch
+        if (checkStarted == true)
+        {
+            var milliseconds = this.game.getTime() - this.startTime;
+
+            // Milliseconds to seconds
+            var seconds = Math.ceil(milliseconds / 1000);
+
+            // Seconds to minutes
+            var minutes = Math.floor(seconds/60);
+
+            // Remainder back to seconds
+            var partInSeconds = seconds%60;
+
+            // Adds left zeros to seconds
+            partInSeconds = partInSeconds.toString().padStart(2,'0');
+
+            // Formats time
+            var formattedTime =`${minutes}:${partInSeconds}`;
+
+            this.stopwatchLabel.text = formattedTime;
+        }
+
         // Check for maze completion
         if (y >= 700 && (x >= 385 && x <= 400))
         {
-            // finished maze!
+            // freeze the player;
+            this.isFrozen = true;
+
+            // stop the timer
+            this.started = false;
         }
 
         this.countdown.update()
