@@ -23,19 +23,21 @@ export default class Game extends Phaser.Scene
 
     create()
     {
+
         const map = this.make.tilemap({ key: 'maze' });
         map.setCollision(1, true);
         const tileset = map.addTilesetImage('wallTile', 'wallTile');
         const layer = map.createLayer('Tile Layer 1', tileset, 60, 100);
 
-        this.player = this.add.circle(345, 115, 12, 0x000000, 1);
+        this.player = this.add.circle(345, 115, 10, 0x000000, 1);
         this.physics.add.existing(this.player);
-        this.player.body.setCircle(12);
+        this.player.body.setCircle(10);
+
         this.isFrozen = true;
 
         this.physics.add.collider(this.player, layer);
-
-        this.cursors = this.input.keyboard.createCursorKeys()
+        
+        this.cursors = this.input.keyboard.createCursorKeys();
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         
@@ -65,6 +67,8 @@ export default class Game extends Phaser.Scene
 
     update() 
     {
+
+
         const body = this.player.body;
         var y = body.position.y;
         var x = body.position.x;
