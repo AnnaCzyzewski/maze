@@ -23,7 +23,6 @@ export default class Game extends Phaser.Scene
 
     create()
     {
-
         const map = this.make.tilemap({ key: 'maze' });
         map.setCollision(1, true);
         const tileset = map.addTilesetImage('wallTile', 'wallTile');
@@ -41,10 +40,14 @@ export default class Game extends Phaser.Scene
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         
+        this.scope = this.add.image(345, 115, 'scope').setOrigin(0.5);
+        this.scopeLayer = this.add.layer(this.scope);
+        this.scopeLayer.setVisible(false);
+
         const countdownLabel = this.add.text(screenCenterX, 50, '', { fontSize: 100, color: '0x000000' }).setOrigin(0.5);
         this.stopwatchLabel = this.add.text(screenCenterX * 1.6, 50, '', { fontSize: 50, color: '0x000000' }).setOrigin(0.5);
 
-        this.countdown = new Countdown(this, countdownLabel, 10);
+        this.countdown = new Countdown(this, countdownLabel, 1);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
 
         //// CSV maze stuff
@@ -63,12 +66,12 @@ export default class Game extends Phaser.Scene
 
         this.started = true;
         this.startTime = this.game.getTime();
+
+        this.scopeLayer.setVisible(true);
 	}
 
     update() 
     {
-
-
         const body = this.player.body;
         var y = body.position.y;
         var x = body.position.x;
@@ -128,6 +131,10 @@ export default class Game extends Phaser.Scene
             this.stopwatchLabel.text = formattedTime;
         }
 
+        // Control scope following player
+        this.scope.setX(x + 10);
+        this.scope.setY(y);
+
         // Check for maze completion
         if (y >= 700 && (x >= 385 && x <= 400))
         {
@@ -136,6 +143,12 @@ export default class Game extends Phaser.Scene
 
             // stop the timer
             this.started = false;
+
+            this.scopeLayer.setVisible(false);
+
+            this.countdown.label.setText('');
+            this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
+                50, 'Success!', { fontSize: 60, color: '0x000000' }).setOrigin(0.5);
         }
 
         this.countdown.update()
