@@ -28,6 +28,10 @@ export default class Game extends Phaser.Scene
         const tileset = map.addTilesetImage('wallTile', 'wallTile');
         const layer = map.createLayer('Tile Layer 1', tileset, 60, 100);
 
+        this.scope = this.add.circle(345, 115, 1000);
+        this.scope.setStrokeStyle(1, 0x1a65ac);
+        // scope radius = 1000; scope stroke width = 1800
+
         this.player = this.add.circle(345, 115, 10, 0x000000, 1);
         this.physics.add.existing(this.player);
         this.player.body.setCircle(10);
@@ -40,9 +44,9 @@ export default class Game extends Phaser.Scene
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         
-        this.scope = this.add.image(345, 115, 'scope').setOrigin(0.5);
-        this.scopeLayer = this.add.layer(this.scope);
-        this.scopeLayer.setVisible(false);
+        //this.scope = this.add.image(345, 115, 'scope').setOrigin(0.5);
+        //this.scopeLayer = this.add.layer(this.scope);
+        //this.scopeLayer.setVisible(false);
 
         const countdownLabel = this.add.text(screenCenterX, 50, '', { fontSize: 100, color: '0x000000' }).setOrigin(0.5);
         this.stopwatchLabel = this.add.text(screenCenterX * 1.6, 50, '', { fontSize: 50, color: '0x000000' }).setOrigin(0.5);
@@ -67,8 +71,27 @@ export default class Game extends Phaser.Scene
         this.started = true;
         this.startTime = this.game.getTime();
 
-        this.scopeLayer.setVisible(true);
+        //this.scopeLayer.setVisible(true);
+        this.shrink();
 	}
+
+    trackPlayer() 
+    {
+       this.scope.setPosition(this.player.x, this.player.y)
+    }
+
+    shrink()
+    {
+        for (let i = 0; i < 1800; i++) {
+            this.scope.setStrokeStyle(i, 0x1a65ac);
+            //setTimeout(this.stroke(i), 1000);
+        }
+    }
+
+    // stroke(int)
+    // {
+    //     this.scope.setStrokeStyle(int, 0x1a65ac);
+    // }
 
     update() 
     {
@@ -89,22 +112,27 @@ export default class Game extends Phaser.Scene
             if (this.cursors.left.isDown)
             {
                 body.setVelocityX(-speed);
+                this.trackPlayer();
             }
             else if (this.cursors.right.isDown)
             {
                 body.setVelocityX(speed)
+                this.trackPlayer();
             }
             else if (this.cursors.up.isDown)
             {
                 body.setVelocityY(-speed)
+                this.trackPlayer();
             }
             else if (this.cursors.down.isDown)
             {
                 body.setVelocityY(speed)
+                this.trackPlayer();
             } 
             else 
             {
                 body.setVelocity(0, 0)
+                this.trackPlayer();
             }
         }
 
@@ -132,8 +160,8 @@ export default class Game extends Phaser.Scene
         }
 
         // Control scope following player
-        this.scope.setX(x + 10);
-        this.scope.setY(y);
+        //this.scope.setX(x + 10);
+        //this.scope.setY(y);
 
         // Check for maze completion
         if (y >= 700 && (x >= 385 && x <= 400))
@@ -144,7 +172,8 @@ export default class Game extends Phaser.Scene
             // stop the timer
             this.started = false;
 
-            this.scopeLayer.setVisible(false);
+            //this.scopeLayer.setVisible(false);
+            this.scope.setStrokeStyle(1, 0x1a65ac);
 
             this.countdown.label.setText('');
             this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
