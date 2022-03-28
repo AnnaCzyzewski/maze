@@ -166,22 +166,38 @@ export default class Game extends Phaser.Scene
         // Check for maze completion
         if (y >= 700 && (x >= 385 && x <= 400))
         {
-            // freeze the player;
-            this.isFrozen = true;
 
-            // stop the timer
-            this.started = false;
 
-            //this.scopeLayer.setVisible(false);
-            this.scope.setStrokeStyle(1, 0x1a65ac);
 
-            this.countdown.label.setText('');
-            this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
-                50, 'Success!', { fontSize: 60, color: '0x000000' }).setOrigin(0.5);
+            this.handleWinGame();
+
+
         }
 
         this.countdown.update()
 
+    }
+
+
+    handleWinGame() 
+    {
+        // freeze the player;
+        this.isFrozen = true;
+
+        // stop the timer
+        this.started = false;
+
+        //this.scopeLayer.setVisible(false);
+        this.scope.setStrokeStyle(1, 0x1a65ac);
+
+
+        this.countdown.label.setText('');
+        this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
+            50, 'Success!', { fontSize: 60, color: '0x000000' }).setOrigin(0.5);
+
+        const helloButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 4, 500, 'Play Again', { fontSize: 60, fill: '#FF0000' });
+        helloButton.setInteractive()
+                    .on('pointerdown', () => this.scene.restart()); 
     }
 
 }
