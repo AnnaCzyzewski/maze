@@ -30,7 +30,7 @@ export default class Game extends Phaser.Scene
 
         this.scope = this.add.circle(345, 115, 1000);
         this.scope.setStrokeStyle(1, 0x1a65ac);
-        this.scopeStrokeWidth = 1;
+        this.scopeStrokeWidth = 0;
         // scope radius = 1000; scope stroke width = 1800
 
         this.player = this.add.circle(345, 115, 10, 0x000000, 1);
@@ -44,10 +44,6 @@ export default class Game extends Phaser.Scene
         this.cursors = this.input.keyboard.createCursorKeys();
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        
-        //this.scope = this.add.image(345, 115, 'scope').setOrigin(0.5);
-        //this.scopeLayer = this.add.layer(this.scope);
-        //this.scopeLayer.setVisible(false);
 
         const countdownLabel = this.add.text(screenCenterX, 50, '', { fontSize: 100, color: '0x000000' }).setOrigin(0.5);
         this.stopwatchLabel = this.add.text(screenCenterX * 1.6, 50, '', { fontSize: 50, color: '0x000000' }).setOrigin(0.5);
@@ -78,20 +74,23 @@ export default class Game extends Phaser.Scene
        this.scope.setPosition(this.player.x, this.player.y)
     }
 
-    shrinkScope()
+    animateScope()
     {
-        var scopeTargetSize = 1800;
-        var scopeShrinkSpeed = 2;
-        if (this.scopeStrokeWidth < scopeTargetSize) {
-            this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + scopeShrinkSpeed, scopeTargetSize);
+        var scopeTargetShrinkSize = 1800;
+        var scopeShrinkSpeed = 15;
+        var scopeTargetExpandSize = 0;
+        var scopeExpandSpeed = 30;
+        // shrink condition
+        if (this.scopeStrokeWidth < scopeTargetShrinkSize && !this.isFrozen) {
+            this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + scopeShrinkSpeed, scopeTargetShrinkSize);
+            this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
+        }
+        // expand condition
+        else if (this.scopeStrokeWidth > scopeTargetExpandSize && this.isFrozen) {
+            this.scopeStrokeWidth = Math.max(this.scopeStrokeWidth - scopeExpandSpeed, scopeTargetExpandSize);
             this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
         }
     }
-
-    // stroke(int)
-    // {
-    //     this.scope.setStrokeStyle(int, 0x1a65ac);
-    // }
 
     update() 
     {
@@ -108,7 +107,7 @@ export default class Game extends Phaser.Scene
         } 
         else 
         {
-            this.shrinkScope();
+            this.animateScope();
             
             if (this.cursors.left.isDown)
             {
@@ -187,8 +186,8 @@ export default class Game extends Phaser.Scene
         this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400);
         this.stopwatchLabel.setColor('#ff0000');
 
-        //this.scopeLayer.setVisible(false);
-        this.scope.setStrokeStyle(1, 0x1a65ac);
+        // expands scope
+        this.animateScope();
 
         // text with ""
         this.countdown.label.setText('');
