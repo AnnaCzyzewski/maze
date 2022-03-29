@@ -30,6 +30,7 @@ export default class Game extends Phaser.Scene
 
         this.scope = this.add.circle(345, 115, 1000);
         this.scope.setStrokeStyle(1, 0x1a65ac);
+        this.scopeStrokeWidth = 1;
         // scope radius = 1000; scope stroke width = 1800
 
         this.player = this.add.circle(345, 115, 10, 0x000000, 1);
@@ -70,9 +71,6 @@ export default class Game extends Phaser.Scene
 
         this.started = true;
         this.startTime = this.game.getTime();
-
-        //this.scopeLayer.setVisible(true);
-        this.shrink();
 	}
 
     trackPlayer() 
@@ -80,11 +78,13 @@ export default class Game extends Phaser.Scene
        this.scope.setPosition(this.player.x, this.player.y)
     }
 
-    shrink()
+    shrinkScope()
     {
-        for (let i = 0; i < 1800; i++) {
-            this.scope.setStrokeStyle(i, 0x1a65ac);
-            //setTimeout(this.stroke(i), 1000);
+        var scopeTargetSize = 1800;
+        var scopeShrinkSpeed = 2;
+        if (this.scopeStrokeWidth < scopeTargetSize) {
+            this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + scopeShrinkSpeed, scopeTargetSize);
+            this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
         }
     }
 
@@ -98,17 +98,18 @@ export default class Game extends Phaser.Scene
         const body = this.player.body;
         var y = body.position.y;
         var x = body.position.x;
-        var checkFrozen = this.isFrozen;
         const speed = 200;
-        var checkStarted = this.started;
+
 
         // Control player movement
-        if (checkFrozen) 
+        if (this.isFrozen) 
         {
             body.setVelocity(0, 0);
         } 
         else 
         {
+            this.shrinkScope();
+            
             if (this.cursors.left.isDown)
             {
                 body.setVelocityX(-speed);
@@ -137,7 +138,7 @@ export default class Game extends Phaser.Scene
         }
 
         // Control stopwatch
-        if (checkStarted == true)
+        if (this.started)
         {
             var milliseconds = this.game.getTime() - this.startTime;
 
