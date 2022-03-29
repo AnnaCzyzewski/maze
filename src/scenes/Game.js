@@ -166,12 +166,7 @@ export default class Game extends Phaser.Scene
         // Check for maze completion
         if (y >= 700 && (x >= 385 && x <= 400))
         {
-
-
-
             this.handleWinGame();
-
-
         }
 
         this.countdown.update()
@@ -187,17 +182,25 @@ export default class Game extends Phaser.Scene
         // stop the timer
         this.started = false;
 
+        // moves time to center of screen
+        this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400);
+        this.stopwatchLabel.setColor('#ff0000');
+
         //this.scopeLayer.setVisible(false);
         this.scope.setStrokeStyle(1, 0x1a65ac);
 
-
+        // text with ""
         this.countdown.label.setText('');
         this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
             50, 'Success!', { fontSize: 60, color: '0x000000' }).setOrigin(0.5);
 
-        const helloButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 4, 500, 'Play Again', { fontSize: 60, fill: '#FF0000' });
-        helloButton.setInteractive()
+        // button with "Play Again" that resets scene 
+        const resetButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 4, 500, 'Play Again', { fontSize: 60, fill: '#FF0000' });
+        resetButton.setInteractive()
                     .on('pointerdown', () => this.scene.restart()); 
+
+        // button with "Next Level" that moves to next level (doesn't work yet)
+        const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 4, 600, 'Next Level', { fontSize: 60, fill: '#FF0000' });
     }
 
 }
