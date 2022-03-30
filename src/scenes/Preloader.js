@@ -13,6 +13,7 @@ export default class Preloader extends Phaser.Scene
         this.load.image('wallTile', 'src/assets/tiles/wallTile.png');
         this.load.tilemapTiledJSON('maze', 'src/assets/tilemaps/maze.json');
         this.load.image('scope', 'src/assets/whiteSquare.png');
+        this.load.image('background', 'src/assets/sprites/graybackground.png')
 
         // this.load.tilemapCSV('map', 'src/assets/tilemaps/mazemap.csv');
         // this.load.image('tiles', 'src/assets/tiles/tiles.png');
@@ -21,7 +22,7 @@ export default class Preloader extends Phaser.Scene
 
     create()
     {
-        this.scene.start('game');
+        this.scene.start('titleScene');
     }
 
 }
