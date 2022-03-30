@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 
 import Preloader from './scenes/Preloader';
 import Game from './scenes/Game';
+import TitleScene from './scenes/TitleScene';
+
 
 var config = {
     type: Phaser.AUTO,
@@ -16,8 +18,9 @@ var config = {
     },
     backgroundColor: '#ffffff',
     parent: 'phaser-example',
-    scene: [Preloader, Game]
+    scene: [Preloader, TitleScene, Game]
 };
 
 var game = new Phaser.Game(config); 
+var titleSc = new Phaser.Game(config);
 
