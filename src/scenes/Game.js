@@ -15,6 +15,12 @@ export default class Game extends Phaser.Scene
     stopwatchLabel;
     started = false;
     startTime = 0;
+    seconds;
+    formattedTime;
+
+    // initialize the timeRecord as something higher than anybody would reasonably get
+    timeRecord = 10000000;
+    timeRecordLabel;
 
     constructor()
 	{
@@ -37,8 +43,6 @@ export default class Game extends Phaser.Scene
         this.physics.add.existing(this.player);
         this.player.body.setCircle(10);
 
-        this.isFrozen = true;
-
         this.physics.add.collider(this.player, layer);
         
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -48,8 +52,10 @@ export default class Game extends Phaser.Scene
         const countdownLabel = this.add.text(screenCenterX, 50, '', { fontSize: 100, color: '0x000000' }).setOrigin(0.5);
         this.stopwatchLabel = this.add.text(screenCenterX * 1.6, 50, '', { fontSize: 50, color: '0x000000' }).setOrigin(0.5);
 
-        this.countdown = new Countdown(this, countdownLabel, 1);
+        this.countdown = new Countdown(this, countdownLabel, 2);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
+
+        this.timeRecordLabel = this.add.text(150, 50, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
 
         //// CSV maze stuff
         //// **************
@@ -62,11 +68,10 @@ export default class Game extends Phaser.Scene
 
     handleCountdownFinished()
 	{
-		this.isFrozen = false;
-        this.countdown.label.setText("Go!");
-
         this.started = true;
         this.startTime = this.game.getTime();
+
+        this.countdown.label.setText("Go!");
 	}
 
     trackPlayer() 
@@ -81,12 +86,12 @@ export default class Game extends Phaser.Scene
         var scopeTargetExpandSize = 0;
         var scopeExpandSpeed = 30;
         // shrink condition
-        if (this.scopeStrokeWidth < scopeTargetShrinkSize && !this.isFrozen) {
+        if (this.scopeStrokeWidth < scopeTargetShrinkSize && this.started) {
             this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + scopeShrinkSpeed, scopeTargetShrinkSize);
             this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
         }
         // expand condition
-        else if (this.scopeStrokeWidth > scopeTargetExpandSize && this.isFrozen) {
+        else if (this.scopeStrokeWidth > scopeTargetExpandSize && !this.started) {
             this.scopeStrokeWidth = Math.max(this.scopeStrokeWidth - scopeExpandSpeed, scopeTargetExpandSize);
             this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
         }
@@ -99,69 +104,14 @@ export default class Game extends Phaser.Scene
         var x = body.position.x;
         const speed = 200;
 
-
-        // Control player movement
-        if (this.isFrozen) 
-        {
-            body.setVelocity(0, 0);
-        } 
-        else 
-        {
-            this.animateScope();
-            
-            if (this.cursors.left.isDown)
-            {
-                body.setVelocityX(-speed);
-                this.trackPlayer();
-            }
-            else if (this.cursors.right.isDown)
-            {
-                body.setVelocityX(speed)
-                this.trackPlayer();
-            }
-            else if (this.cursors.up.isDown)
-            {
-                body.setVelocityY(-speed)
-                this.trackPlayer();
-            }
-            else if (this.cursors.down.isDown)
-            {
-                body.setVelocityY(speed)
-                this.trackPlayer();
-            } 
-            else 
-            {
-                body.setVelocity(0, 0)
-                this.trackPlayer();
-            }
-        }
-
-        // Control stopwatch
         if (this.started)
         {
-            var milliseconds = this.game.getTime() - this.startTime;
-
-            // Milliseconds to seconds
-            var seconds = Math.ceil(milliseconds / 1000);
-
-            // Seconds to minutes
-            var minutes = Math.floor(seconds/60);
-
-            // Remainder back to seconds
-            var partInSeconds = seconds%60;
-
-            // Adds left zeros to seconds
-            partInSeconds = partInSeconds.toString().padStart(2,'0');
-
-            // Formats time
-            var formattedTime =`${minutes}:${partInSeconds}`;
-
-            this.stopwatchLabel.text = formattedTime;
+            this.startGame(body, speed);
         }
-
-        // Control scope following player
-        //this.scope.setX(x + 10);
-        //this.scope.setY(y);
+        else
+        {
+            body.setVelocity(0, 0);
+        }
 
         // Check for maze completion
         if (y >= 700 && (x >= 385 && x <= 400))
@@ -170,17 +120,76 @@ export default class Game extends Phaser.Scene
         }
 
         this.countdown.update()
-
     }
 
+    startGame(body, speed)
+    {
+        // Animate the scope
+        this.animateScope();
+                    
+        // Control the player movement
+        if (this.cursors.left.isDown)
+        {
+            body.setVelocityX(-speed);
+            this.trackPlayer();
+        }
+        else if (this.cursors.right.isDown)
+        {
+            body.setVelocityX(speed)
+            this.trackPlayer();
+        }
+        else if (this.cursors.up.isDown)
+        {
+            body.setVelocityY(-speed)
+            this.trackPlayer();
+        }
+        else if (this.cursors.down.isDown)
+        {
+            body.setVelocityY(speed)
+            this.trackPlayer();
+        } 
+        else 
+        {
+            body.setVelocity(0, 0)
+            this.trackPlayer();
+        }
+
+        // Control the stopwatch
+        var milliseconds = this.game.getTime() - this.startTime;
+        this.controlStopwatch(milliseconds);
+    }
+
+    controlStopwatch(milliseconds) 
+    {
+        // Milliseconds to seconds
+        this.seconds = Math.ceil(milliseconds / 1000);
+
+        // Seconds to minutes
+        var minutes = Math.floor(this.seconds/60);
+
+        // Remainder back to seconds
+        var partInSeconds = this.seconds%60;
+
+        // Adds left zeros to seconds
+        partInSeconds = partInSeconds.toString().padStart(2,'0');
+
+        // Formats time
+        this.formattedTime =`${minutes}:${partInSeconds}`;
+
+        // Sets the stopwatch label
+        this.stopwatchLabel.text = this.formattedTime;
+    }
 
     handleWinGame() 
     {
-        // freeze the player;
-        this.isFrozen = true;
-
-        // stop the timer
+        // stop the game (stops timer and player)
         this.started = false;
+
+        // update time record
+        if (this.seconds < this.timeRecord) {
+            this.timeRecord = this.seconds;
+            this.timeRecordLabel.text = 'PR ' + this.formattedTime;            
+        }
 
         // moves time to center of screen
         this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400);
@@ -189,10 +198,10 @@ export default class Game extends Phaser.Scene
         // expands scope
         this.animateScope();
 
-        // text with ""
+        // // text with ""
         this.countdown.label.setText('');
-        this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
-            50, 'Success!', { fontSize: 60, color: '0x000000' }).setOrigin(0.5);
+        // this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
+        //     50, 'Success!', { fontSize: 60, color: '0x000000' }).setOrigin(0.5);
 
         // button with "Play Again" that resets scene 
         const resetButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 4, 500, 'Play Again', { fontSize: 60, fill: '#FF0000' });
