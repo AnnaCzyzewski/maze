@@ -8,18 +8,17 @@ import Countdown from './Countdown';
 // csv maze is 25 by 25 tiles, 750 pixels by 750. 
 
 export default class Game extends Phaser.Scene
-
 {
-
 	countdown;
     stopwatchLabel;
     started = false;
     startTime = 0;
     seconds;
     formattedTime;
+    timesPlayed;
 
     // initialize the timeRecord as something higher than anybody would reasonably get
-    timeRecord = 10000000;
+    timeRecord;
     timeRecordLabel;
 
     constructor()
@@ -27,35 +26,50 @@ export default class Game extends Phaser.Scene
 		super('game')
 	}
 
-    create()
+    create(data)
     {
+        // Create maze tilemap
         const map = this.make.tilemap({ key: 'maze' });
         map.setCollision(1, true);
         const tileset = map.addTilesetImage('wallTile', 'wallTile');
         const layer = map.createLayer('Tile Layer 1', tileset, 60, 100);
 
+        // Create scope
         this.scope = this.add.circle(345, 115, 1000);
         this.scope.setStrokeStyle(1, 0x1a65ac);
         this.scopeStrokeWidth = 0;
-        // scope radius = 1000; scope stroke width = 1800
 
+        // Create player
         this.player = this.add.circle(345, 115, 10, 0x000000, 1);
         this.physics.add.existing(this.player);
         this.player.body.setCircle(10);
 
+        // Add collision
         this.physics.add.collider(this.player, layer);
         
         this.cursors = this.input.keyboard.createCursorKeys();
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
 
+        // Initialize countdown and stopwatch
         const countdownLabel = this.add.text(screenCenterX, 50, '', { fontSize: 100, color: '0x000000' }).setOrigin(0.5);
         this.stopwatchLabel = this.add.text(screenCenterX * 1.6, 50, '', { fontSize: 50, color: '0x000000' }).setOrigin(0.5);
-
         this.countdown = new Countdown(this, countdownLabel, 2);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
 
-        this.timeRecordLabel = this.add.text(150, 50, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+        this.timesPlayed = data.timesPlayed || 0;
+
+        // If this is the first time the game is played
+        if (this.timesPlayed == 0)
+        {
+            this.timeRecord = 1000;
+            this.timeRecordLabel = this.add.text(150, 50, 'no PR', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+        }
+        else 
+        {
+            this.timeRecord = data.timeRecord;
+            this.formatTimeRecordLabel(this.timeRecord);
+        }
 
         //// CSV maze stuff
         //// **************
@@ -82,9 +96,9 @@ export default class Game extends Phaser.Scene
     animateScope()
     {
         var scopeTargetShrinkSize = 1800;
-        var scopeShrinkSpeed = 15;
+        var scopeShrinkSpeed = 50;
         var scopeTargetExpandSize = 0;
-        var scopeExpandSpeed = 30;
+        var scopeExpandSpeed = 50;
         // shrink condition
         if (this.scopeStrokeWidth < scopeTargetShrinkSize && this.started) {
             this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + scopeShrinkSpeed, scopeTargetShrinkSize);
@@ -106,10 +120,12 @@ export default class Game extends Phaser.Scene
 
         if (this.started)
         {
+            // Start the game
             this.startGame(body, speed);
         }
         else
         {
+            // Player can't move
             body.setVelocity(0, 0);
         }
 
@@ -119,6 +135,7 @@ export default class Game extends Phaser.Scene
             this.handleWinGame();
         }
 
+        // Handle countdown updating
         this.countdown.update()
     }
 
@@ -180,6 +197,23 @@ export default class Game extends Phaser.Scene
         this.stopwatchLabel.text = this.formattedTime;
     }
 
+    formatTimeRecordLabel(seconds)
+    {
+        // Seconds to minutes
+        var minutes = Math.floor(seconds/60);
+
+        // Remainder back to seconds
+        var partInSeconds = seconds%60;
+
+        // Adds left zeros to seconds
+        partInSeconds = partInSeconds.toString().padStart(2,'0');
+
+        // Formats time
+        var formattedTime =`${minutes}:${partInSeconds}`;
+
+        this.timeRecordLabel = this.add.text(150, 50, 'PR ' + formattedTime, { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+    }
+
     handleWinGame() 
     {
         // stop the game (stops timer and player)
@@ -206,10 +240,9 @@ export default class Game extends Phaser.Scene
         // button with "Play Again" that resets scene 
         const resetButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 4, 500, 'Play Again', { fontSize: 60, fill: '#FF0000' });
         resetButton.setInteractive()
-                    .on('pointerdown', () => this.scene.restart()); 
+                    .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
 
         // button with "Next Level" that moves to next level (doesn't work yet)
         const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 4, 600, 'Next Level', { fontSize: 60, fill: '#FF0000' });
     }
-
 }
