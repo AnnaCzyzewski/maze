@@ -7,7 +7,7 @@ import TitleScene from './scenes/TitleScene';
 
 var config = {
     type: Phaser.AUTO,
-    width: 750,
+    width: 1420,
     height: 750,
     physics: {
         default: 'arcade',
@@ -16,6 +16,7 @@ var config = {
             // debug: true
         }
     },
+    // backgroundColor: '#D0D0D0',
     backgroundColor: '#ffffff',
     parent: 'phaser-example',
     scene: [Preloader, TitleScene, Game]

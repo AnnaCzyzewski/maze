@@ -12,14 +12,24 @@ export default class Game extends Phaser.Scene
 	countdown;
     stopwatchLabel;
     started = false;
+    ended;
     startTime = 0;
     seconds;
     formattedTime;
     timesPlayed;
-
-    // initialize the timeRecord as something higher than anybody would reasonably get
     timeRecord;
     timeRecordLabel;
+    mazeEntranceX = 680;
+    mazeEntranceY = 115;
+    mazeExitX = 740;
+    mazeExitY = 715;
+    playerRadius = 10;
+    countdownTime = 10;
+    playerSpeed = 200;
+    scopeSpeed = 50;
+    scopeTargetShrinkSize = 1800;
+    scopeStrokeWidth = 0;
+    blue = 0x0abff7;
 
     constructor()
 	{
@@ -28,45 +38,73 @@ export default class Game extends Phaser.Scene
 
     create(data)
     {
+        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+
+        this.ended = false;
+
         // Create maze tilemap
         const map = this.make.tilemap({ key: 'maze' });
         map.setCollision(1, true);
         const tileset = map.addTilesetImage('wallTile', 'wallTile');
         const layer = map.createLayer('Tile Layer 1', tileset, 60, 100);
+        layer.setX(screenCenterX - layer.width / 2);
+
+        // Add arrow key image
+        this.arrowKeys = this.add.image(1225, screenCenterY, 'arrowKeys').setOrigin(0.5);
+        
+        // Add arrow
+        this.arrow = this.add.image(this.mazeEntranceX, this.mazeEntranceY - 35, 'arrow');
+        // this.arrow.flipY = true;
+        this.arrow.rotation = 1.6;
+
+        // Add dotted line at exit (need to make this a more clear image)
+        this.dottedLine = this.add.image(this.mazeExitX, this.mazeExitY - 14, 'dottedLine');
+
+        // Add line at the beginning to keep the player from going outside of the maze
+        var boundaryLine = this.add.rectangle(this.mazeEntranceX, this.mazeEntranceY - 16, 30, 1, 0xffffff);
+        this.physics.add.existing(boundaryLine, true);
 
         // Create scope
-        this.scope = this.add.circle(345, 115, 1000);
-        this.scope.setStrokeStyle(1, 0x1a65ac);
-        this.scopeStrokeWidth = 0;
+        this.scope = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, 1000);
 
-        // Create player
-        this.player = this.add.circle(345, 115, 10, 0x000000, 1);
+        // Create player (same blue as the blue in the maze screen concepts)
+        this.player = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, this.playerRadius, this.blue, 1);
         this.physics.add.existing(this.player);
         this.player.body.setCircle(10);
 
-        // Add collision
+        // Add rectangle for collision testing purposes
+        // var rectangle = this.add.rectangle(100, 50, 100, 50, '0x000000');
+        // this.physics.add.existing(rectangle, true)
+
+        // Add collisions
         this.physics.add.collider(this.player, layer);
-        
+        this.physics.add.collider(this.player, boundaryLine);
+        // this.physics.add.collider(this.player, rectangle);
+
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-
         // Initialize countdown and stopwatch
-        const countdownLabel = this.add.text(screenCenterX, 50, '', { fontSize: 100, color: '0x000000' }).setOrigin(0.5);
-        this.stopwatchLabel = this.add.text(screenCenterX * 1.6, 50, '', { fontSize: 50, color: '0x000000' }).setOrigin(0.5);
-        this.countdown = new Countdown(this, countdownLabel, 2);
+        const countdownLabel = this.add.text(screenCenterX * 1.35, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+        this.stopwatchLabel = this.add.text(screenCenterX * 1.15, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+        this.countdown = new Countdown(this, countdownLabel, this.countdownTime);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
 
+        this.textLabel = this.add.text(screenCenterX * 0.85, 45, "Memorize for ", { fontSize: 65, color: '0x000000'}).setOrigin(0.5);
+
         this.timesPlayed = data.timesPlayed || 0;
+        console.log('times played is ' + this.timesPlayed);
 
         // If this is the first time the game is played
         if (this.timesPlayed == 0)
         {
+            console.log('entered times played is 0 if statement');
             this.timeRecord = 1000;
-            this.timeRecordLabel = this.add.text(150, 50, 'no PR', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+            this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
         }
         else 
         {
+            console.log('entered times played is not 0 if statement');
             this.timeRecord = data.timeRecord;
             this.formatTimeRecordLabel(this.timeRecord);
         }
@@ -82,10 +120,14 @@ export default class Game extends Phaser.Scene
 
     handleCountdownFinished()
 	{
+        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+
         this.started = true;
         this.startTime = this.game.getTime();
 
-        this.countdown.label.setText("Go!");
+        this.countdown.label.setText('');
+        this.textLabel.setText('Go!');
+        this.textLabel.setStyle({ fontSize: 100});
 	}
 
     trackPlayer() 
@@ -95,19 +137,22 @@ export default class Game extends Phaser.Scene
 
     animateScope()
     {
-        var scopeTargetShrinkSize = 1800;
-        var scopeShrinkSpeed = 50;
         var scopeTargetExpandSize = 0;
-        var scopeExpandSpeed = 50;
         // shrink condition
-        if (this.scopeStrokeWidth < scopeTargetShrinkSize && this.started) {
-            this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + scopeShrinkSpeed, scopeTargetShrinkSize);
+        if (this.scopeStrokeWidth < this.scopeTargetShrinkSize && this.started) {
+            this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + this.scopeSpeed, this.scopeTargetShrinkSize);
             this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
+
+            // just seeing what a white scope looks like
+            // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0xffffff);
         }
         // expand condition
         else if (this.scopeStrokeWidth > scopeTargetExpandSize && !this.started) {
-            this.scopeStrokeWidth = Math.max(this.scopeStrokeWidth - scopeExpandSpeed, scopeTargetExpandSize);
+            this.scopeStrokeWidth = Math.max(this.scopeStrokeWidth - this.scopeSpeed, scopeTargetExpandSize);
             this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
+
+            // just seeing what a white scope looks like
+            // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0xffffff);
         }
     }
 
@@ -116,21 +161,26 @@ export default class Game extends Phaser.Scene
         const body = this.player.body;
         var y = body.position.y;
         var x = body.position.x;
-        const speed = 200;
 
         if (this.started)
         {
             // Start the game
-            this.startGame(body, speed);
+            this.startGame(body, this.playerSpeed);
         }
         else
         {
             // Player can't move
             body.setVelocity(0, 0);
+
+            // Shake the camera a bit if the user tries to move too early
+            if (!this.ended && (this.cursors.left.isDown || this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.down.isDown))
+            {
+                this.cameras.main.shake(20, 0.002);
+            } 
         }
 
         // Check for maze completion
-        if (y >= 700 && (x >= 385 && x <= 400))
+        if (y >= (this.mazeExitY - 15) && (x >= (this.mazeExitX - 15) && x <= (this.mazeExitX + 15)))
         {
             this.handleWinGame();
         }
@@ -141,6 +191,10 @@ export default class Game extends Phaser.Scene
 
     startGame(body, speed)
     {
+        // Get rid of the arrow keys and arrow images
+        this.arrowKeys.setVisible(false);
+        this.arrow.setVisible(false);
+
         // Animate the scope
         this.animateScope();
                     
@@ -199,6 +253,8 @@ export default class Game extends Phaser.Scene
 
     formatTimeRecordLabel(seconds)
     {
+        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+
         // Seconds to minutes
         var minutes = Math.floor(seconds/60);
 
@@ -211,38 +267,39 @@ export default class Game extends Phaser.Scene
         // Formats time
         var formattedTime =`${minutes}:${partInSeconds}`;
 
-        this.timeRecordLabel = this.add.text(150, 50, 'PR ' + formattedTime, { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+        // Sets the time record label to formatted time
+        this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, 'Record ' + formattedTime, { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
     }
 
     handleWinGame() 
     {
-        // stop the game (stops timer and player)
+        // Handle booleans
         this.started = false;
+        this.ended = true;
 
-        // update time record
+        // Get rid of "Go!" and countdown label
+        this.textLabel.setText('');
+        this.countdown.label.setText('');
+
+        // Update time record
         if (this.seconds < this.timeRecord) {
             this.timeRecord = this.seconds;
-            this.timeRecordLabel.text = 'PR ' + this.formattedTime;            
+            this.timeRecordLabel.text = 'Record ' + this.formattedTime;            
         }
-
+        
         // moves time to center of screen
-        this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400);
-        this.stopwatchLabel.setColor('#ff0000');
+        this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
+        this.stopwatchLabel.setColor('#0abff7');
 
         // expands scope
         this.animateScope();
 
-        // // text with ""
-        this.countdown.label.setText('');
-        // this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
-        //     50, 'Success!', { fontSize: 60, color: '0x000000' }).setOrigin(0.5);
-
         // button with "Play Again" that resets scene 
-        const resetButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 4, 500, 'Play Again', { fontSize: 60, fill: '#FF0000' });
+        const resetButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'Play Again', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
         resetButton.setInteractive()
                     .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
 
         // button with "Next Level" that moves to next level (doesn't work yet)
-        const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 4, 600, 'Next Level', { fontSize: 60, fill: '#FF0000' });
+        const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'Next Level', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
     }
 }
