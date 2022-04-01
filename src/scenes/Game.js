@@ -45,7 +45,6 @@ export default class Game extends Phaser.Scene
 
         // Create maze tilemap
         const map = this.make.tilemap({ key: 'maze' });
-        map.setCollision(1, true);
         const tileset = map.addTilesetImage('wallTile', 'wallTile');
         const layer = map.createLayer('Tile Layer 1', tileset, 60, 100);
         layer.setX(screenCenterX - layer.width / 2);
@@ -73,14 +72,23 @@ export default class Game extends Phaser.Scene
         this.physics.add.existing(this.player);
         this.player.body.setCircle(10);
 
-        // Add rectangle for collision testing purposes
-        // var rectangle = this.add.rectangle(100, 50, 100, 50, '0x000000');
-        // this.physics.add.existing(rectangle, true)
+        // Add a rectangle at the location of each tile for collision purposes
+        layer.forEachTile(tile => {
+            if(tile.index == 1) {
+                let tilePos = map.tileToWorldXY(tile.x, tile.y);
+                var rectangle = this.add.rectangle(
+                    tilePos.x + tile.width / 2,
+                    tilePos.y + tile.height / 2,
+                    tile.width,
+                    tile.height);
+                this.physics.add.existing(rectangle, true);
+                this.physics.add.collider(this.player, rectangle);
+            }
+        });
 
         // Add collisions
         this.physics.add.collider(this.player, layer);
         this.physics.add.collider(this.player, boundaryLine);
-        // this.physics.add.collider(this.player, rectangle);
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -93,18 +101,15 @@ export default class Game extends Phaser.Scene
         this.textLabel = this.add.text(screenCenterX * 0.85, 45, "Memorize for ", { fontSize: 65, color: '0x000000'}).setOrigin(0.5);
 
         this.timesPlayed = data.timesPlayed || 0;
-        console.log('times played is ' + this.timesPlayed);
 
         // If this is the first time the game is played
         if (this.timesPlayed == 0)
         {
-            console.log('entered times played is 0 if statement');
             this.timeRecord = 1000;
             this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
         }
         else 
         {
-            console.log('entered times played is not 0 if statement');
             this.timeRecord = data.timeRecord;
             this.formatTimeRecordLabel(this.timeRecord);
         }
@@ -141,18 +146,18 @@ export default class Game extends Phaser.Scene
         // shrink condition
         if (this.scopeStrokeWidth < this.scopeTargetShrinkSize && this.started) {
             this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + this.scopeSpeed, this.scopeTargetShrinkSize);
-            this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
+            // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
 
             // just seeing what a white scope looks like
-            // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0xffffff);
+            this.scope.setStrokeStyle(this.scopeStrokeWidth, 0xffffff);
         }
         // expand condition
         else if (this.scopeStrokeWidth > scopeTargetExpandSize && !this.started) {
             this.scopeStrokeWidth = Math.max(this.scopeStrokeWidth - this.scopeSpeed, scopeTargetExpandSize);
-            this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
+            // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
 
             // just seeing what a white scope looks like
-            // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0xffffff);
+            this.scope.setStrokeStyle(this.scopeStrokeWidth, 0xffffff);
         }
     }
 
