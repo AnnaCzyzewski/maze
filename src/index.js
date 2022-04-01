@@ -22,6 +22,6 @@ var config = {
     scene: [Preloader, TitleScene, Game]
 };
 
-var game = new Phaser.Game(config); 
-var titleSc = new Phaser.Game(config);
+new Phaser.Game(config); 
+//var titleSc = new Phaser.Game(config);
 
