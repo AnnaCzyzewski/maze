@@ -54,7 +54,6 @@ export default class Game extends Phaser.Scene
         
         // Add arrow
         this.arrow = this.add.image(this.mazeEntranceX, this.mazeEntranceY - 35, 'arrow');
-        // this.arrow.flipY = true;
         this.arrow.rotation = 1.6;
 
         // Add dotted line at exit (need to make this a more clear image)
@@ -90,22 +89,23 @@ export default class Game extends Phaser.Scene
         this.physics.add.collider(this.player, layer);
         this.physics.add.collider(this.player, boundaryLine);
 
+        // Set up cursors variable
         this.cursors = this.input.keyboard.createCursorKeys();
 
         // Initialize countdown and stopwatch
         const countdownLabel = this.add.text(screenCenterX * 1.35, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
-        this.stopwatchLabel = this.add.text(screenCenterX * 1.15, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+        this.textLabel = this.add.text(screenCenterX * 0.85, 45, "Memorize for ", { fontSize: 65, color: '0x000000'}).setOrigin(0.5);
+        this.stopwatchLabel = this.add.text(screenCenterX * 1.25, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
         this.countdown = new Countdown(this, countdownLabel, this.countdownTime);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
 
-        this.textLabel = this.add.text(screenCenterX * 0.85, 45, "Memorize for ", { fontSize: 65, color: '0x000000'}).setOrigin(0.5);
-
+        // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
 
         // If this is the first time the game is played
         if (this.timesPlayed == 0)
         {
-            this.timeRecord = 1000;
+            this.timeRecord = 1000 * 1000;
             this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
         }
         else 
@@ -231,26 +231,39 @@ export default class Game extends Phaser.Scene
         }
 
         // Control the stopwatch
-        var milliseconds = this.game.getTime() - this.startTime;
-        this.controlStopwatch(milliseconds);
+        this.milliseconds = this.game.getTime() - this.startTime;
+        this.controlStopwatch(this.milliseconds);
     }
 
     controlStopwatch(milliseconds) 
     {
-        // Milliseconds to seconds
-        this.seconds = Math.ceil(milliseconds / 1000);
+
+        // Milliseconds to one digit (idk what unit that is)
+        var oneDigitMil = Math.ceil(milliseconds / 100);
+
+        // OneDigitMil to seconds
+        var seconds = Math.floor(oneDigitMil / 10);
+
+        // Remainder back to OneDigitMil
+        var partInOneDigitMils = oneDigitMil%10;
 
         // Seconds to minutes
-        var minutes = Math.floor(this.seconds/60);
+        var minutes = Math.floor(seconds/60);
 
         // Remainder back to seconds
-        var partInSeconds = this.seconds%60;
+        var partInSeconds = seconds%60;
 
-        // Adds left zeros to seconds
-        partInSeconds = partInSeconds.toString().padStart(2,'0');
+        if(minutes >= 1) 
+        {
+            // Adds left zeros to seconds
+            partInSeconds = partInSeconds.toString().padStart(2,'0');
+            // Formats time
+            this.formattedTime =`${minutes}:${partInSeconds}.${partInOneDigitMils}`;
+        } else 
+        {
+            this.formattedTime =`${partInSeconds}.${partInOneDigitMils}`;
+        }
 
-        // Formats time
-        this.formattedTime =`${minutes}:${partInSeconds}`;
 
         // Sets the stopwatch label
         this.stopwatchLabel.text = this.formattedTime;
@@ -287,8 +300,8 @@ export default class Game extends Phaser.Scene
         this.countdown.label.setText('');
 
         // Update time record
-        if (this.seconds < this.timeRecord) {
-            this.timeRecord = this.seconds;
+        if (this.milliseconds < this.timeRecord) {
+            this.timeRecord = this.milliseconds;
             this.timeRecordLabel.text = 'Record ' + this.formattedTime;            
         }
         
