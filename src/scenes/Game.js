@@ -114,6 +114,11 @@ export default class Game extends Phaser.Scene
             this.formatTimeRecordLabel(this.timeRecord);
         }
 
+        // home button to get back to titlescene
+        const homeButton = this.add.text(200, 45, 'Home', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
+        homeButton.setInteractive()
+                    .on('pointerdown', () => this.handleHomeButton());
+        
         //// CSV maze stuff
         //// **************
         // var map = this.make.tilemap({ key: 'map', tileWidth: 30, tileHeight: 30 });
@@ -121,6 +126,22 @@ export default class Game extends Phaser.Scene
         // var layer = map.createLayer(0, tileset, 0, 0);
         //// layer.skipCull = true;
         //// **************
+
+    }
+
+    handleHomeButton() {
+        this.started = false;
+
+        // expands scope
+        this.animateScope();
+        this.scopeStrokeWidth = 0;
+
+        // if (this.ended) {
+        //     this.timesPlayed = this.timesPlayed + 1;
+        // }
+
+        this.scene.start('titleScene');
+        // does not handle when a person finishes the maze with a new record and then clicks 'home' instead of 'play again'
     }
 
     handleCountdownFinished()
@@ -150,6 +171,7 @@ export default class Game extends Phaser.Scene
 
             // just seeing what a white scope looks like
             this.scope.setStrokeStyle(this.scopeStrokeWidth, 0xffffff);
+
         }
         // expand condition
         else if (this.scopeStrokeWidth > scopeTargetExpandSize && !this.started) {
