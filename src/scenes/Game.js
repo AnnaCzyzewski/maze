@@ -24,7 +24,7 @@ export default class Game extends Phaser.Scene
     mazeExitX = 740;
     mazeExitY = 715;
     playerRadius = 10;
-    countdownTime = 10;
+    countdownTime = 1;
     playerSpeed = 200;
     scopeSpeed = 50;
     scopeTargetShrinkSize = 1800;
@@ -99,18 +99,24 @@ export default class Game extends Phaser.Scene
         this.countdown = new Countdown(this, countdownLabel, this.countdownTime);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
 
+        console.log("times played is " + data.timesPlayed);
+
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
 
         // If this is the first time the game is played
         if (this.timesPlayed == 0)
         {
+            console.log("entered times played is 0 if statement");
             this.timeRecord = 1000 * 1000;
             this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+            console.log("time record is " + this.timeRecord);
         }
         else 
         {
+            console.log("times played is not 0");
             this.timeRecord = data.timeRecord;
+            console.log("time record is " + this.timeRecord);
             this.formatTimeRecordLabel(this.timeRecord);
         }
 
@@ -233,7 +239,7 @@ export default class Game extends Phaser.Scene
         }
         else if (this.cursors.right.isDown)
         {
-            body.setVelocityX(speed)
+            body.setVelocityX(speed);
             this.trackPlayer();
         }
         else if (this.cursors.up.isDown)
@@ -286,14 +292,22 @@ export default class Game extends Phaser.Scene
             this.formattedTime =`${partInSeconds}.${partInOneDigitMils}`;
         }
 
-
         // Sets the stopwatch label
         this.stopwatchLabel.text = this.formattedTime;
     }
 
-    formatTimeRecordLabel(seconds)
+    formatTimeRecordLabel(milliseconds)
     {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+
+        // Milliseconds to one digit (idk what unit that is)
+        var oneDigitMil = Math.ceil(milliseconds / 100);
+
+        // OneDigitMil to seconds
+        var seconds = Math.floor(oneDigitMil / 10);
+
+        // Remainder back to OneDigitMil
+        var partInOneDigitMils = oneDigitMil%10;
 
         // Seconds to minutes
         var minutes = Math.floor(seconds/60);
@@ -301,11 +315,16 @@ export default class Game extends Phaser.Scene
         // Remainder back to seconds
         var partInSeconds = seconds%60;
 
-        // Adds left zeros to seconds
-        partInSeconds = partInSeconds.toString().padStart(2,'0');
-
-        // Formats time
-        var formattedTime =`${minutes}:${partInSeconds}`;
+        if(minutes >= 1) 
+        {
+            // Adds left zeros to seconds
+            partInSeconds = partInSeconds.toString().padStart(2,'0');
+            // Formats time
+            var formattedTime =`${minutes}:${partInSeconds}.${partInOneDigitMils}`;
+        } else 
+        {
+            var formattedTime =`${partInSeconds}.${partInOneDigitMils}`;
+        }
 
         // Sets the time record label to formatted time
         this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, 'Record ' + formattedTime, { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
