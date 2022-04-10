@@ -12,18 +12,18 @@ export default class LevelScene extends Phaser.Scene {
          var bg = this.add.sprite(100,100, 'background');
          bg.setOrigin(0,0);
  
-         var text = this.add.text(100,150, 'Level One');
+         var text = this.add.text(100,150, 'Level One', { fontSize: 10, fill: '#0abff7' });
          text.setInteractive({ useHandCursor: true });
          text.on('pointerup', () => this.clickButton());
 
 
          
-         var text = this.add.text(70,150, 'Level Two');
+         var text = this.add.text(70,150, 'Level Two', { fontSize: 10, fill: '#0abff7' });
          text.setInteractive({ useHandCursor: true });
          text.on('pointerup', () => this.clickButton());
 
          
-         var text = this.add.text(130,150, 'Level Three');
+         var text = this.add.text(130,150, 'Level Three', { fontSize: 10, fill: '#0abff7' });
          text.setInteractive({ useHandCursor: true });
          text.on('pointerup', () => this.clickButton());
          
