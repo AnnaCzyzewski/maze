@@ -11,8 +11,10 @@ export default class Game extends Phaser.Scene
 {
 	countdown;
     stopwatchLabel;
+
     started = false;
     ended;
+
     startTime = 0;
     seconds;
     formattedTime;
@@ -24,7 +26,7 @@ export default class Game extends Phaser.Scene
     mazeExitX = 740;
     mazeExitY = 715;
     playerRadius = 10;
-    countdownTime = 1;
+    countdownTime = 10;
     playerSpeed = 200;
     scopeSpeed = 50;
     scopeTargetShrinkSize = 1800;
@@ -176,7 +178,7 @@ export default class Game extends Phaser.Scene
             // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
 
             // just seeing what a white scope looks like
-            this.scope.setStrokeStyle(this.scopeStrokeWidth, 0xffffff);
+            this.scope.setStrokeStyle(this.scopeStrokeWidth, this.blue);
 
         }
         // expand condition
@@ -185,7 +187,7 @@ export default class Game extends Phaser.Scene
             // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
 
             // just seeing what a white scope looks like
-            this.scope.setStrokeStyle(this.scopeStrokeWidth, 0xffffff);
+            this.scope.setStrokeStyle(this.scopeStrokeWidth, this.blue);
         }
     }
 
