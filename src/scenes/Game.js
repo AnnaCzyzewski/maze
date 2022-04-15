@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Countdown from './Countdown';
+import Maze from '/lib/maze';
 
 // The example this was taken from was csv map in phaser examples. The 
 // directory in examples is public/tilemap/csv map.js
@@ -26,7 +27,7 @@ export default class Game extends Phaser.Scene
     mazeExitX = 740;
     mazeExitY = 715;
     playerRadius = 10;
-    countdownTime = 10;
+    countdownTime = 8;
     playerSpeed = 200;
     scopeSpeed = 50;
     scopeTargetShrinkSize = 1800;
@@ -45,10 +46,29 @@ export default class Game extends Phaser.Scene
 
         this.ended = false;
 
+        const mymaze = new Maze(10, 10);
+        console.log("mymaze is " + mymaze);
+        mymaze.gateway(4, 0);
+        mymaze.gateway(5, 9);
+        const mazeMap = mymaze.tiles();
+
+        // Need to flip all the 0s and 1s because of the way the algorithm works
+        for (var i = 0; i <= 20; i++) {
+            for (var j = 0; j <= 20; j++) {
+                if (mazeMap[i][j] == 0) {
+                    mazeMap[i][j] = 1;
+                } else if (mazeMap[i][j] == 1) {
+                    mazeMap[i][j] = 0;
+                }
+            }
+        }
+
         // Create maze tilemap
         const map = this.make.tilemap({ key: 'maze' });
         const tileset = map.addTilesetImage('wallTile', 'wallTile');
-        const layer = map.createLayer('Tile Layer 1', tileset, 60, 100);
+        const layer = map.createBlankLayer('maze', tileset, 60, 100);
+        layer.putTilesAt(mazeMap, 0, 0);
+        // layer.putTilesAt(mazeTiles, 0, 0);
         layer.setX(screenCenterX - layer.width / 2);
 
         // Add arrow key image
@@ -101,24 +121,18 @@ export default class Game extends Phaser.Scene
         this.countdown = new Countdown(this, countdownLabel, this.countdownTime);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
 
-        console.log("times played is " + data.timesPlayed);
-
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
 
         // If this is the first time the game is played
         if (this.timesPlayed == 0)
         {
-            console.log("entered times played is 0 if statement");
             this.timeRecord = 1000 * 1000;
             this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
-            console.log("time record is " + this.timeRecord);
         }
         else 
         {
-            console.log("times played is not 0");
             this.timeRecord = data.timeRecord;
-            console.log("time record is " + this.timeRecord);
             this.formatTimeRecordLabel(this.timeRecord);
         }
 
@@ -194,8 +208,10 @@ export default class Game extends Phaser.Scene
     update() 
     {
         const body = this.player.body;
-        var y = body.position.y;
-        var x = body.position.x;
+
+        // x and y represent the position of the middle of the player
+        var x = body.position.x + this.playerRadius;
+        var y = body.position.y + this.playerRadius;
 
         if (this.started)
         {
