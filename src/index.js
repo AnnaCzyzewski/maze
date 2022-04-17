@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import Preloader from './scenes/Preloader';
 import Game from './scenes/Game';
 import TitleScene from './scenes/TitleScene';
+import LevelScene from './scenes/LevelScene';
 
 
 var config = {
@@ -19,7 +20,7 @@ var config = {
     // backgroundColor: '#D0D0D0',
     backgroundColor: '#ffffff',
     parent: 'phaser-example',
-    scene: [Preloader, TitleScene, Game]
+    scene: [Preloader, TitleScene, LevelScene, Game]
 };
 
 new Phaser.Game(config); 

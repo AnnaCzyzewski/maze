@@ -15,13 +15,6 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     create(){
-        //var bg = this.add.sprite(750,100, 'background');
-        //bg.setOrigin(0,0);
-        //var text = this.add.text(120, 110, "MEMORY MAZE", { fontSize: 40, fill: '#0abff7' });
-
-        //var text = this.add.text(160,200, 'START GAME', { fontSize: 30, fill: '#0abff7' });
-        //text.setInteractive({ useHandCursor: true });
-        //text.on('pointerup', () => this.clickButton());
 
         var title = this.add.image(765, 220, 'memoryMaze');
         title.setScale(.75);
@@ -31,8 +24,6 @@ export default class TitleScene extends Phaser.Scene {
 
         var start = this.add.image(750, 380, 'startButton');
         start.setScale(.75);
-        //start.setInteractive({ useHandCursor: true });
-        //start.on('pointerup', () => this.clickButton());
 
         var levelSelect = this.add.image(750, 460, 'levelSelectButton');
         levelSelect.setScale(.75);
@@ -53,19 +44,24 @@ export default class TitleScene extends Phaser.Scene {
         var startOutline = this.add.rectangle(750, 326, 140, 40);
         //startOutline.setStrokeStyle(2);
         startOutline.setInteractive({ useHandCursor: true });
-        startOutline.on('pointerup', () => this.clickButton());
+        startOutline.on('pointerup', () => this.startButton());
 
         var levelSelectOutline = this.add.rectangle(750, 389, 305, 40);
         //levelSelectOutline.setStrokeStyle(2);
         levelSelectOutline.setInteractive({ useHandCursor: true });
+        levelSelectOutline.on('pointerup', () => this.levelSelectButton());
 
         var settingsOutline = this.add.rectangle(960, 661, 56, 56);
         //settingsOutline.setStrokeStyle(2);
         settingsOutline.setInteractive({ useHandCursor: true });
     }
 
-    clickButton() {
+    startButton() {
         this.scene.start('game');
+    }
+
+    levelSelectButton() {
+        this.scene.start('levelScene');
     }
 }
 
