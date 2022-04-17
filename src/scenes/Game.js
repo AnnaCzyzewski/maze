@@ -137,8 +137,10 @@ export default class Game extends Phaser.Scene
         }
 
         // home button to get back to titlescene
-        const homeButton = this.add.text(200, 45, 'Home', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-        homeButton.setInteractive()
+        var homeButton = this.add.image(275, 125, 'homeIcon');
+        homeButton.setScale(.75);
+        var homeOutline = this.add.rectangle(275, 66, 56, 56); // y offset by 59 px
+        homeOutline.setInteractive()
                     .on('pointerdown', () => this.handleHomeButton());
         
         //// CSV maze stuff
