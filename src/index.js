@@ -8,8 +8,14 @@ import LevelScene from './scenes/LevelScene';
 
 var config = {
     type: Phaser.AUTO,
-    width: 1420,
-    height: 750,
+    scale: {
+        //eventually may want to change the width of the screen to 1000 x 750 to make
+        // screen look better
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 1420,
+        height: 750
+    },
     physics: {
         default: 'arcade',
         arcade: {

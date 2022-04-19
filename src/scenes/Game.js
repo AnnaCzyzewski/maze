@@ -151,6 +151,9 @@ export default class Game extends Phaser.Scene
         //// layer.skipCull = true;
         //// **************
 
+        //this.scale.displaySize.setAspectRatio( width/height );
+        //this.scale.refresh();
+
     }
 
     handleHomeButton() {
