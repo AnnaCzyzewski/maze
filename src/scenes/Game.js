@@ -139,7 +139,8 @@ export default class Game extends Phaser.Scene
         // home button to get back to titlescene
         var homeButton = this.add.image(275, 125, 'homeIcon');
         homeButton.setScale(.75);
-        var homeOutline = this.add.rectangle(275, 66, 56, 56); // y offset by 59 px
+        var homeOutline = this.add.rectangle(275, 48, 56, 56); // y offset by 59 px
+        homeOutline.setInteractive({ useHandCursor: true });
         homeOutline.setInteractive()
                     .on('pointerdown', () => this.handleHomeButton());
         
@@ -381,7 +382,11 @@ export default class Game extends Phaser.Scene
         resetButton.setInteractive()
                     .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
 
-        // button with "Next Level" that moves to next level (doesn't work yet)
+
+        // button with "Next Level" that moves to next level, which is just randomized
+        // for the rapid fire 
         const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'Next Level', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
+        nextLevelButton.setInteractive()
+                    .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
     }
 }
