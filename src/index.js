@@ -5,7 +5,6 @@ import Game from './scenes/Game';
 import TitleScene from './scenes/TitleScene';
 import LevelScene from './scenes/LevelScene';
 
-
 var config = {
     type: Phaser.AUTO,
     scale: {
@@ -30,5 +29,3 @@ var config = {
 };
 
 new Phaser.Game(config); 
-//var titleSc = new Phaser.Game(config);
-

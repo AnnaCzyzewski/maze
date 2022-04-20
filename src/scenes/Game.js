@@ -22,12 +22,12 @@ export default class Game extends Phaser.Scene
     difficulty;
     countdownTime;
     level0;
+    mazeEntranceX;
+    mazeEntranceY;
+    mazeExitX;
+    mazeExitY;
     started = false;
     startTime = 0;
-    mazeEntranceX = 680;
-    mazeEntranceY = 115;
-    mazeExitX = 740;
-    mazeExitY = 715;
     playerRadius = 10;
     playerSpeed = 200;
     scopeSpeed = 50;
@@ -59,6 +59,10 @@ export default class Game extends Phaser.Scene
             this.level0 = true;
             this.countdownTime = 10;
         } else {
+            this.mazeEntranceX = 680;
+            this.mazeEntranceY = 115;
+            this.mazeExitX = 740;
+            this.mazeExitY = 715;
             this.level0 = false;
             if(this.difficulty == 1) {
                 this.countdownTime = 10;
@@ -421,9 +425,12 @@ export default class Game extends Phaser.Scene
 
         if (this.level0) { 
             this.stopwatchLabel.setVisible(false);
-            // const playRealButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'Play Forreal', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-            // playRealButton.setInteractive()
-            //             .on('pointerdown', () => this.scene.restart({ difficulty: 1 })); 
+            const toLevelsButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
+                                                this.cameras.main.worldView.y + this.cameras.main.height / 2, 
+                                                'Got it!', 
+                                                { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
+            toLevelsButton.setInteractive()
+                        .on('pointerdown', () => this.scene.start('levelScene')); 
 
         } else {
             // moves time to center of screen
@@ -435,8 +442,11 @@ export default class Game extends Phaser.Scene
             resetButton.setInteractive()
                         .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
 
-            // button with "Next Level" that moves to next level (doesn't work yet)
+            // button with "Next Level" that moves to next level, which is just randomized
+            // for the rapid fire 
             const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'Next Level', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
+            nextLevelButton.setInteractive()
+                        .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
         }
     }
 }

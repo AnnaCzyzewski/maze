@@ -43,18 +43,38 @@ export default class LevelScene extends Phaser.Scene {
 
         var zero = this.add.image(580, 350.5, 'zero');
         zero.setScale(.9);
+        var zeroOutline = this.add.rectangle(580, 260, 72, 83);
+        // zeroOutline.setStrokeStyle(2, '0x0abff7');
+        zeroOutline.setInteractive({ useHandCursor: true });
+        zeroOutline.on('pointerup', () => this.level0Button());
 
         var one = this.add.image(692.25, 362, 'one');
         one.setScale(.9);
+        var oneOutline = this.add.rectangle(692.25, 260, 72, 83);
+        // oneOutline.setStrokeStyle(2, '0x0abff7');
+        oneOutline.setInteractive({ useHandCursor: true });
+        oneOutline.on('pointerup', () => this.easyButton());
 
         var two = this.add.image(807.75, 358, 'two');
         two.setScale(.9);
+        var twoOutline = this.add.rectangle(808, 260, 72, 83);
+        // twoOutline.setStrokeStyle(2, '0x0abff7');
+        twoOutline.setInteractive({ useHandCursor: true });
+        twoOutline.on('pointerup', () => this.mediumButton());
 
         var three = this.add.image(920, 362, 'three');
         three.setScale(.9);
+        var threeOutline = this.add.rectangle(920.25, 260, 72, 83);
+        // threeOutline.setStrokeStyle(2, '0x0abff7');
+        threeOutline.setInteractive({ useHandCursor: true });
+        threeOutline.on('pointerup', () => this.hardButton());
 
         var four = this.add.image(580, 465.5, 'four');
         four.setScale(.9);
+        var fourOutline = this.add.rectangle(580, 380, 72, 83);
+        // fourOutline.setStrokeStyle(2, '0x0abff7');
+        fourOutline.setInteractive({ useHandCursor: true });
+        fourOutline.on('pointerup', () => this.insaneButton());
 
         var five = this.add.image(692.25, 457.5, 'five');
         five.setScale(.9);
@@ -75,6 +95,27 @@ export default class LevelScene extends Phaser.Scene {
 
     homeButton() {
         this.scene.start('titleScene');
+    }
+
+    // Just made these functions for reference on what to do with the difficulty, they're not connected to buttons yet
+    level0Button() {
+        this.scene.start('game', {difficulty: 0});
+    }
+
+    easyButton() {
+        this.scene.start('game', {difficulty: 1});
+    }
+
+    mediumButton() {
+        this.scene.start('game', {difficulty: 2});
+    }
+
+    hardButton() {
+        this.scene.start('game', {difficulty: 3});
+    }
+
+    insaneButton() {
+        this.scene.start('game', {difficulty: 4});
     }
 
 }

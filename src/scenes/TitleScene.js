@@ -37,6 +37,9 @@ export default class TitleScene extends Phaser.Scene {
         var screenOutline = this.add.rectangle(750, 380, screen.width - 15, screen.height - 15);
         screenOutline.setStrokeStyle(2);
 
+        console.log("screen.width is " + screen.width);
+        console.log("screen.height is " + screen.height);
+
         // fill between screen and screen inner outline
         var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);
@@ -56,29 +59,9 @@ export default class TitleScene extends Phaser.Scene {
         settingsOutline.setInteractive({ useHandCursor: true });
     }
 
+    // right now this runs 
     startButton() {
         this.scene.start('game', {difficulty: 0});
-    }
-
-    // Just made these functions for reference on what to do with the difficulty, they're not connected to buttons yet
-    level0Button() {
-        this.scene.start('game', {difficulty: 0});
-    }
-
-    easyButton() {
-        this.scene.start('game', {difficulty: 1});
-    }
-
-    mediumButton() {
-        this.scene.start('game', {difficulty: 2});
-    }
-
-    hardButton() {
-        this.scene.start('game', {difficulty: 3});
-    }
-
-    insaneButton() {
-        this.scene.start('game', {difficulty: 4});
     }
 
     levelSelectButton() {
