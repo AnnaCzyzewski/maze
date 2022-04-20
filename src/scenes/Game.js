@@ -10,49 +10,75 @@ import Maze from '/lib/maze';
 
 export default class Game extends Phaser.Scene
 {
-	countdown;
-    stopwatchLabel;
-
-    started = false;
+    level;
+    countdown;
+    stopwatchLabel; 
     ended;
-
-    startTime = 0;
     seconds;
     formattedTime;
     timesPlayed;
     timeRecord;
     timeRecordLabel;
+    difficulty;
+    countdownTime;
+    level0;
+    started = false;
+    startTime = 0;
     mazeEntranceX = 680;
     mazeEntranceY = 115;
     mazeExitX = 740;
     mazeExitY = 715;
     playerRadius = 10;
-    countdownTime = 8;
     playerSpeed = 200;
     scopeSpeed = 50;
-    scopeTargetShrinkSize = 1800;
     scopeStrokeWidth = 0;
     blue = 0x0abff7;
+    
+    scopeTargetShrinkSize = 1800;
 
     constructor()
 	{
 		super('game')
 	}
 
+    init(data)
+    {
+        this.difficulty = data.difficulty;
+    }
+
     create(data)
     {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
+        // this.difficulty = data.difficulty;
+
+        // Way to control the countdown time or scope (or rlly anything) based on which button is pushed and thus what the difficulty is
+        // (countdown times are just fillers for now, will have to tweak them)
+        if (this.difficulty == 0) {
+            this.level0 = true;
+            this.countdownTime = 10;
+        } else {
+            this.level0 = false;
+            if(this.difficulty == 1) {
+                this.countdownTime = 10;
+            } else if(this.difficulty == 2) {
+                this.countdownTime = 7;
+            } else if(this.difficulty == 3) {
+                this.countdownTime = 5;
+            } else if(this.difficulty == 4) {
+                this.countdownTime = 3;
+            }
+        }
+
         this.ended = false;
 
         const mymaze = new Maze(10, 10);
-        console.log("mymaze is " + mymaze);
         mymaze.gateway(4, 0);
         mymaze.gateway(5, 9);
         const mazeMap = mymaze.tiles();
 
-        // Need to flip all the 0s and 1s because of the way the algorithm works
+        // Need to flip all the 0s and 1s because of the way the algorithm works (Paul has easier way to do this! ask him)
         for (var i = 0; i <= 20; i++) {
             for (var j = 0; j <= 20; j++) {
                 if (mazeMap[i][j] == 0) {
@@ -63,20 +89,43 @@ export default class Game extends Phaser.Scene
             }
         }
 
-        // Create maze tilemap
+        var level0Tiles = [
+            [1, 1, 1, 0, 1, 1, 1], 
+            [1, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 0, 1], 
+            [1, 0, 0, 0, 0, 0, 1], 
+            [1, 0, 1, 1, 1, 0, 1], 
+            [1, 0, 0, 0, 1, 0, 1],
+            [1, 1, 1, 0, 1, 1, 1]
+        ]
+
+        // Make maze tilemap
         const map = this.make.tilemap({ key: 'maze' });
         const tileset = map.addTilesetImage('wallTile', 'wallTile');
         const layer = map.createBlankLayer('maze', tileset, 60, 100);
-        layer.putTilesAt(mazeMap, 0, 0);
-        // layer.putTilesAt(mazeTiles, 0, 0);
-        layer.setX(screenCenterX - layer.width / 2);
 
-        // Add arrow key image
-        this.arrowKeys = this.add.image(1225, screenCenterY, 'arrowKeys').setOrigin(0.5);
-        
-        // Add arrow
-        this.arrow = this.add.image(this.mazeEntranceX, this.mazeEntranceY - 35, 'arrow');
-        this.arrow.rotation = 1.6;
+        if (this.level0) {
+            // Level 0
+            this.mazeEntranceY = 215;
+            this.mazeEntranceX = 710;
+            this.mazeExitY = 395;
+            this.mazeExitX = 710;
+
+            layer.putTilesAt(level0Tiles, 0, 0);
+            layer.setY(200);
+            layer.setX(screenCenterX - 105);
+
+            // Add arrow key image (only for level 0)
+            this.arrowKeys = this.add.image(1225, screenCenterY, 'arrowKeys').setOrigin(0.5);
+            
+            // Add arrow (only for level 0)
+            this.arrow = this.add.image(this.mazeEntranceX, this.mazeEntranceY - 35, 'arrow');
+            this.arrow.rotation = 1.6;
+        } else {
+            // Regular maze
+            layer.putTilesAt(mazeMap, 0, 0);
+            layer.setX(screenCenterX - layer.width / 2);
+        }
 
         // Add dotted line at exit (need to make this a more clear image)
         this.dottedLine = this.add.image(this.mazeExitX, this.mazeExitY - 14, 'dottedLine');
@@ -124,33 +173,28 @@ export default class Game extends Phaser.Scene
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
 
-        // If this is the first time the game is played
-        if (this.timesPlayed == 0)
-        {
-            this.timeRecord = 1000 * 1000;
-            this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
-        }
-        else 
-        {
-            this.timeRecord = data.timeRecord;
-            this.formatTimeRecordLabel(this.timeRecord);
+        // If it isn't level 0
+        if (!this.level0) {
+            // If this is the first time the game is played
+            if (this.timesPlayed == 0)
+            {
+                this.timeRecord = 1000 * 1000;
+                this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+            }
+            else 
+            {
+                this.timeRecord = data.timeRecord;
+                this.formatTimeRecordLabel(this.timeRecord);
+            }
         }
 
         // home button to get back to titlescene
-        var homeButton = this.add.image(275, 125, 'homeIcon');
+        var homeButton = this.add.image(screenCenterX * 0.2, 125, 'homeIcon');
         homeButton.setScale(.75);
-        var homeOutline = this.add.rectangle(275, 48, 56, 56); // y offset by 59 px
+        var homeOutline = this.add.rectangle(screenCenterX * 0.2, 48, 56, 56); // y offset by 59 px
         homeOutline.setInteractive({ useHandCursor: true });
         homeOutline.setInteractive()
                     .on('pointerdown', () => this.handleHomeButton());
-        
-        //// CSV maze stuff
-        //// **************
-        // var map = this.make.tilemap({ key: 'map', tileWidth: 30, tileHeight: 30 });
-        // var tileset = map.addTilesetImage('tiles');
-        // var layer = map.createLayer(0, tileset, 0, 0);
-        //// layer.skipCull = true;
-        //// **************
 
         //this.scale.displaySize.setAspectRatio( width/height );
         //this.scale.refresh();
@@ -249,8 +293,10 @@ export default class Game extends Phaser.Scene
     startGame(body, speed)
     {
         // Get rid of the arrow keys and arrow images
-        this.arrowKeys.setVisible(false);
-        this.arrow.setVisible(false);
+        if (this.level0) {
+            this.arrowKeys.setVisible(false);
+            this.arrow.setVisible(false);
+        }
 
         // Animate the scope
         this.animateScope();
@@ -369,24 +415,28 @@ export default class Game extends Phaser.Scene
             this.timeRecord = this.milliseconds;
             this.timeRecordLabel.text = 'Record ' + this.formattedTime;            
         }
-        
-        // moves time to center of screen
-        this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
-        this.stopwatchLabel.setColor('#0abff7');
 
         // expands scope
         this.animateScope();
 
-        // button with "Play Again" that resets scene 
-        const resetButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'Play Again', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-        resetButton.setInteractive()
-                    .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
+        if (this.level0) { 
+            this.stopwatchLabel.setVisible(false);
+            // const playRealButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'Play Forreal', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
+            // playRealButton.setInteractive()
+            //             .on('pointerdown', () => this.scene.restart({ difficulty: 1 })); 
 
+        } else {
+            // moves time to center of screen
+            this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
+            this.stopwatchLabel.setColor('#0abff7');
 
-        // button with "Next Level" that moves to next level, which is just randomized
-        // for the rapid fire 
-        const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'Next Level', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-        nextLevelButton.setInteractive()
-                    .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
+            // button with "Play Again" that resets scene 
+            const resetButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'Play Again', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
+            resetButton.setInteractive()
+                        .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
+
+            // button with "Next Level" that moves to next level (doesn't work yet)
+            const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'Next Level', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
+        }
     }
 }

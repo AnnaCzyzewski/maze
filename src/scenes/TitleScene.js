@@ -57,11 +57,33 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     startButton() {
-        this.scene.start('game');
+        this.scene.start('game', {difficulty: 0});
+    }
+
+    // Just made these functions for reference on what to do with the difficulty, they're not connected to buttons yet
+    level0Button() {
+        this.scene.start('game', {difficulty: 0});
+    }
+
+    easyButton() {
+        this.scene.start('game', {difficulty: 1});
+    }
+
+    mediumButton() {
+        this.scene.start('game', {difficulty: 2});
+    }
+
+    hardButton() {
+        this.scene.start('game', {difficulty: 3});
+    }
+
+    insaneButton() {
+        this.scene.start('game', {difficulty: 4});
     }
 
     levelSelectButton() {
         this.scene.start('levelScene');
     }
 }
+
 
