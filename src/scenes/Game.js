@@ -27,6 +27,10 @@ export default class Game extends Phaser.Scene
     scopeSpeed = 50;
     scopeStrokeWidth = 0;
     blue = 0x0abff7;
+    green = 0x2feb1a;
+    orange = 0xebac1a;
+    red = 0xd61806;
+    purple = 0xd925f5;
     
     scopeTargetShrinkSize = 1800;
 
