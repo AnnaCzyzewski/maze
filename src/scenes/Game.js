@@ -201,19 +201,50 @@ export default class Game extends Phaser.Scene
     }
 
     handleHomeButton() {
-        this.started = false;
+        var thisGame = this;
 
-        // expands scope
-        this.animateScope();
-        this.scopeStrokeWidth = 0;
+        var homeTextBox = this.add.rectangle(710, 375, 500, 350, '0xffffff'); // need to change x and y to constants 
+        
+        homeTextBox.setStrokeStyle(1, '0x000000');
+        var homeText = this.add.text(710, 320, "Go back?\nYour progress\nwon't be saved", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5); 
 
-        // if (this.ended) {
-        //     this.timesPlayed = this.timesPlayed + 1;
-        // }
+        var yesButton = this.add.text(600, 475, "yes", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5);
+        yesButton.setInteractive({ useHandCursor: true });
 
-        this.scene.start('titleScene');
-        // does not handle when a person finishes the maze with a new record and then clicks 'home' instead of 'play again'
+
+        var noButton = this.add.text(820, 475, "no", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5);
+        noButton.setInteractive({ useHandCursor: true });
+
+            function fun1() {
+                thisGame.started = false;
+                // expands scope
+                thisGame.animateScope();
+                thisGame.scopeStrokeWidth = 0;
+
+                // if (this.ended) {
+                //     this.timesPlayed = this.timesPlayed + 1;
+                // }
+
+                thisGame.scene.start('titleScene');
+                // does not handle when a person finishes the maze with a new record and then clicks 'home' instead of 'play again'
+            }
+
+            function fun2() {
+                homeText.destroy();
+                yesButton.destroy();
+                noButton.destroy();
+                homeTextBox.destroy();
+            }
+             
+        yesButton.setInteractive() 
+                    .on('pointerdown', () => fun1());
+
+        noButton.setInteractive() 
+                    .on('pointerdown', () => fun2());
+
     }
+
+
 
     handleCountdownFinished()
 	{
