@@ -103,6 +103,7 @@ export default class LevelScene extends Phaser.Scene {
     }
 
     easyButton() {
+        // this.scene.start('rapid');
         this.scene.start('game', {difficulty: 1});
     }
 

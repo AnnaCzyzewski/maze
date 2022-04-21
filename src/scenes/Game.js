@@ -2,12 +2,6 @@ import Phaser from 'phaser';
 import Countdown from './Countdown';
 import Maze from '/lib/maze';
 
-// The example this was taken from was csv map in phaser examples. The 
-// directory in examples is public/tilemap/csv map.js
-
-// As a note: the tiles are 30x30 px, have indices of 0 and 1. The current 
-// csv maze is 25 by 25 tiles, 750 pixels by 750. 
-
 export default class Game extends Phaser.Scene
 {
     level;
@@ -118,9 +112,6 @@ export default class Game extends Phaser.Scene
             layer.putTilesAt(level0Tiles, 0, 0);
             layer.setY(200);
             layer.setX(screenCenterX - 105);
-
-            // Add arrow key image (only for level 0)
-            this.arrowKeys = this.add.image(1225, screenCenterY, 'arrowKeys').setOrigin(0.5);
             
             // Add arrow (only for level 0)
             this.arrow = this.add.image(this.mazeEntranceX, this.mazeEntranceY - 35, 'arrow');
@@ -140,6 +131,10 @@ export default class Game extends Phaser.Scene
 
         // Create scope
         this.scope = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, 1000);
+
+        // Add arrow key image (not visible unless it's level 0 and game is started)
+        this.arrowKeys = this.add.image(1225, screenCenterY, 'arrowKeys').setOrigin(0.5);
+        this.arrowKeys.setVisible(false);
 
         // Create player (same blue as the blue in the maze screen concepts)
         this.player = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, this.playerRadius, this.blue, 1);
@@ -243,18 +238,12 @@ export default class Game extends Phaser.Scene
         // shrink condition
         if (this.scopeStrokeWidth < this.scopeTargetShrinkSize && this.started) {
             this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + this.scopeSpeed, this.scopeTargetShrinkSize);
-            // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
-
-            // just seeing what a white scope looks like
             this.scope.setStrokeStyle(this.scopeStrokeWidth, this.blue);
 
         }
         // expand condition
         else if (this.scopeStrokeWidth > scopeTargetExpandSize && !this.started) {
             this.scopeStrokeWidth = Math.max(this.scopeStrokeWidth - this.scopeSpeed, scopeTargetExpandSize);
-            // this.scope.setStrokeStyle(this.scopeStrokeWidth, 0x1a65ac);
-
-            // just seeing what a white scope looks like
             this.scope.setStrokeStyle(this.scopeStrokeWidth, this.blue);
         }
     }
@@ -296,9 +285,9 @@ export default class Game extends Phaser.Scene
 
     startGame(body, speed)
     {
-        // Get rid of the arrow keys and arrow images
+        // Add the arrow keys and get rid of the arrow image
         if (this.level0) {
-            this.arrowKeys.setVisible(false);
+            this.arrowKeys.setVisible(true);
             this.arrow.setVisible(false);
         }
 
@@ -424,6 +413,7 @@ export default class Game extends Phaser.Scene
         this.animateScope();
 
         if (this.level0) { 
+            this.arrowKeys.setVisible(false);
             this.stopwatchLabel.setVisible(false);
             const toLevelsButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
                                                 this.cameras.main.worldView.y + this.cameras.main.height / 2, 
@@ -442,11 +432,10 @@ export default class Game extends Phaser.Scene
             resetButton.setInteractive()
                         .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
 
-            // button with "Next Level" that moves to next level, which is just randomized
-            // for the rapid fire 
+            // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
             const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'Next Level', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
             nextLevelButton.setInteractive()
-                        .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
+                        .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));
         }
     }
 }
