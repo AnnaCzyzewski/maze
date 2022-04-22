@@ -32,7 +32,8 @@ export default class Countdown
 				{
 					callback();
 				}
-			}
+			},
+			paused: false
 		})
 	}
 
@@ -53,10 +54,10 @@ export default class Countdown
 		}
 
 		const elapsedInMil = this.timerEvent.getElapsed();
-		const remaining = this.duration - elapsedInMil;
+		this.remaining = this.duration - elapsedInMil;
 
         // Milliseconds to seconds
-        var seconds = Math.ceil(remaining / 1000);
+        var seconds = Math.ceil(this.remaining / 1000);
 
         // Seconds to minutes
         var minutes = Math.floor(seconds/60);
