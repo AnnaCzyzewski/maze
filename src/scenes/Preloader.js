@@ -36,6 +36,16 @@ export default class Preloader extends Phaser.Scene
         this.load.image('eight', 'src/assets/eight.png');
         this.load.image('nine', 'src/assets/nine.png');
         this.load.image('ten', 'src/assets/ten.png');
+        this.load.image('survival', 'src/assets/survival.png');
+        this.load.image('survivalButton', 'src/assets/survival_button.png');
+        this.load.image('chooseDifficulty', 'src/assets/choose_difficulty.png');
+        this.load.image('easyButton', 'src/assets/easy_button.png');
+        this.load.image('mediumButton', 'src/assets/medium_button.png');
+        this.load.image('hardButton', 'src/assets/hard_button.png');
+        this.load.image('insaneButton', 'src/assets/insane_button.png');
+        this.load.image('playAgainButton', 'src/assets/play_again_button.png');
+        this.load.image('nextLevelButton', 'src/assets/next_level_button.png');
+        this.load.image('gotItButton', 'src/assets/got_it_button.png');
 
 
         // this.load.tilemapCSV('map', 'src/assets/tilemaps/mazemap.csv');

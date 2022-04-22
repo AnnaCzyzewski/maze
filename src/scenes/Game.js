@@ -282,6 +282,8 @@ export default class Game extends Phaser.Scene {
         this.scene.start('levelScene');
     }
 
+
+
     handleCountdownFinished()
 	{
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;

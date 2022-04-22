@@ -22,11 +22,14 @@ export default class TitleScene extends Phaser.Scene {
         var brain = this.add.image(750, 400, 'brainMaze');
         brain.setScale(.75);
 
-        var start = this.add.image(750, 380, 'startButton');
+        var start = this.add.image(750, 365, 'startButton');
         start.setScale(.75);
 
-        var levelSelect = this.add.image(750, 460, 'levelSelectButton');
+        var levelSelect = this.add.image(750, 445, 'levelSelectButton');
         levelSelect.setScale(.75);
+
+        var survival = this.add.image(750, 439, 'survivalButton');
+        survival.setScale(.54);
 
         var settings = this.add.image(960, 720, 'settingsIcon');
         settings.setScale(.75);
@@ -44,15 +47,20 @@ export default class TitleScene extends Phaser.Scene {
         var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);
 
-        var startOutline = this.add.rectangle(750, 326, 140, 40);
+        var startOutline = this.add.rectangle(750, 311, 140, 40);
         //startOutline.setStrokeStyle(2);
         startOutline.setInteractive({ useHandCursor: true });
         startOutline.on('pointerup', () => this.startButton());
 
-        var levelSelectOutline = this.add.rectangle(750, 389, 305, 40);
+        var levelSelectOutline = this.add.rectangle(750, 374, 305, 40);
         //levelSelectOutline.setStrokeStyle(2);
         levelSelectOutline.setInteractive({ useHandCursor: true });
         levelSelectOutline.on('pointerup', () => this.levelSelectButton());
+
+        var survivalOutline = this.add.rectangle(750, 439, 204, 40);
+        //survivalOutline.setStrokeStyle(2);
+        survivalOutline.setInteractive({ useHandCursor: true });
+        survivalOutline.on('pointerup', () => this.survivalButton());
 
         var settingsOutline = this.add.rectangle(960, 661, 56, 56);
         //settingsOutline.setStrokeStyle(2);
@@ -66,6 +74,10 @@ export default class TitleScene extends Phaser.Scene {
 
     levelSelectButton() {
         this.scene.start('levelScene');
+    }
+
+    survivalButton() {
+        this.scene.start('rapid');
     }
 }
 

@@ -1,6 +1,14 @@
 import Phaser from "phaser";
 
 export default class LevelScene extends Phaser.Scene {
+
+    blue = 0x0abff7;
+    green = 0x2feb1a;
+    orange = 0xebac1a;
+    red = 0xd61806;
+    purple = 0xd925f5;
+    black = 0x000000;
+
     constructor() {
         super({key:'levelScene'});
     }
@@ -18,6 +26,14 @@ export default class LevelScene extends Phaser.Scene {
 
         var screen = this.add.rectangle(750, 380, 550, 700);
         screen.setStrokeStyle(5);
+        screen.setInteractive();
+        screen.on("pointerover", () => {
+            zero.setTintFill(this.black);
+            one.setTintFill(this.black);
+            two.setTintFill(this.black);
+            three.setTintFill(this.black);
+            four.setTintFill(this.black);
+        });
 
         var screenOutline = this.add.rectangle(750, 380, screen.width - 15, screen.height - 15);
         screenOutline.setStrokeStyle(2);
@@ -47,6 +63,9 @@ export default class LevelScene extends Phaser.Scene {
         // zeroOutline.setStrokeStyle(2, '0x0abff7');
         zeroOutline.setInteractive({ useHandCursor: true });
         zeroOutline.on('pointerup', () => this.level0Button());
+        zeroOutline.on("pointerover", () => {
+            zero.setTintFill(this.blue);
+        });
 
         var one = this.add.image(692.25, 362, 'one');
         one.setScale(.9);
@@ -54,6 +73,9 @@ export default class LevelScene extends Phaser.Scene {
         // oneOutline.setStrokeStyle(2, '0x0abff7');
         oneOutline.setInteractive({ useHandCursor: true });
         oneOutline.on('pointerup', () => this.easyButton());
+        oneOutline.on("pointerover", () => {
+            one.setTintFill(this.green);
+        });
 
         var two = this.add.image(807.75, 358, 'two');
         two.setScale(.9);
@@ -61,6 +83,9 @@ export default class LevelScene extends Phaser.Scene {
         // twoOutline.setStrokeStyle(2, '0x0abff7');
         twoOutline.setInteractive({ useHandCursor: true });
         twoOutline.on('pointerup', () => this.mediumButton());
+        twoOutline.on("pointerover", () => {
+            two.setTintFill(this.orange);
+        });
 
         var three = this.add.image(920, 362, 'three');
         three.setScale(.9);
@@ -68,6 +93,9 @@ export default class LevelScene extends Phaser.Scene {
         // threeOutline.setStrokeStyle(2, '0x0abff7');
         threeOutline.setInteractive({ useHandCursor: true });
         threeOutline.on('pointerup', () => this.hardButton());
+        threeOutline.on("pointerover", () => {
+            three.setTintFill(this.red);
+        });
 
         var four = this.add.image(580, 465.5, 'four');
         four.setScale(.9);
@@ -75,6 +103,9 @@ export default class LevelScene extends Phaser.Scene {
         // fourOutline.setStrokeStyle(2, '0x0abff7');
         fourOutline.setInteractive({ useHandCursor: true });
         fourOutline.on('pointerup', () => this.insaneButton());
+        fourOutline.on("pointerover", () => {
+            four.setTintFill(this.purple);
+        });
 
         var five = this.add.image(692.25, 457.5, 'five');
         five.setScale(.9);
