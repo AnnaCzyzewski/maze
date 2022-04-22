@@ -72,7 +72,7 @@ export default class LevelScene extends Phaser.Scene {
         var oneOutline = this.add.rectangle(692.25, 260, 72, 83);
         // oneOutline.setStrokeStyle(2, '0x0abff7');
         oneOutline.setInteractive({ useHandCursor: true });
-        oneOutline.on('pointerup', () => this.easyButton());
+        oneOutline.on('pointerup', () => this.level1Button());
         oneOutline.on("pointerover", () => {
             one.setTintFill(this.green);
         });
@@ -82,7 +82,7 @@ export default class LevelScene extends Phaser.Scene {
         var twoOutline = this.add.rectangle(808, 260, 72, 83);
         // twoOutline.setStrokeStyle(2, '0x0abff7');
         twoOutline.setInteractive({ useHandCursor: true });
-        twoOutline.on('pointerup', () => this.mediumButton());
+        twoOutline.on('pointerup', () => this.level2Button());
         twoOutline.on("pointerover", () => {
             two.setTintFill(this.orange);
         });
@@ -92,7 +92,7 @@ export default class LevelScene extends Phaser.Scene {
         var threeOutline = this.add.rectangle(920.25, 260, 72, 83);
         // threeOutline.setStrokeStyle(2, '0x0abff7');
         threeOutline.setInteractive({ useHandCursor: true });
-        threeOutline.on('pointerup', () => this.hardButton());
+        threeOutline.on('pointerup', () => this.level3Button());
         threeOutline.on("pointerover", () => {
             three.setTintFill(this.red);
         });
@@ -102,7 +102,7 @@ export default class LevelScene extends Phaser.Scene {
         var fourOutline = this.add.rectangle(580, 380, 72, 83);
         // fourOutline.setStrokeStyle(2, '0x0abff7');
         fourOutline.setInteractive({ useHandCursor: true });
-        fourOutline.on('pointerup', () => this.insaneButton());
+        fourOutline.on('pointerup', () => this.level4Button());
         fourOutline.on("pointerover", () => {
             four.setTintFill(this.purple);
         });
@@ -130,24 +130,24 @@ export default class LevelScene extends Phaser.Scene {
 
     // Just made these functions for reference on what to do with the difficulty, they're not connected to buttons yet
     level0Button() {
-        this.scene.start('game', {difficulty: 0});
+        this.scene.start('game', {difficulty: 0, rapidFire: false});
     }
 
-    easyButton() {
+    level1Button() {
         // this.scene.start('rapid');
-        this.scene.start('game', {difficulty: 1});
+        this.scene.start('game', {difficulty: 1, rapidFire: false});
     }
 
-    mediumButton() {
-        this.scene.start('game', {difficulty: 2});
+    level2Button() {
+        this.scene.start('game', {difficulty: 2, rapidFire: false});
     }
 
-    hardButton() {
-        this.scene.start('game', {difficulty: 3});
+    level3Button() {
+        this.scene.start('game', {difficulty: 3, rapidFire: false});
     }
 
-    insaneButton() {
-        this.scene.start('game', {difficulty: 4});
+    level4Button() {
+        this.scene.start('game', {difficulty: 4, rapidFire: false});
     }
 
 }

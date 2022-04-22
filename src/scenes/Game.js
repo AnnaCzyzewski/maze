@@ -204,7 +204,7 @@ export default class Game extends Phaser.Scene {
 		this.countdown.start(this.handleCountdownFinished.bind(this));
         
         // Update time record for normal levels or mazes played for rapid fire game play
-        if (!this.level0 && !this.rapidFire) {
+        if (!this.rapidFire) {
             // If this is the first time the game is played
             if (this.timesPlayed == 0)
             {
