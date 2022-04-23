@@ -510,22 +510,38 @@ export default class Game extends Phaser.Scene {
                             .on('pointerdown', () => this.scene.start('levelScene')); 
             // Not Level 0        
             } else {
-                // moves time to center of screen
-                this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
-                this.stopwatchLabel.setColor('#0abff7');
+            var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
+            rectanglePopUp.setStrokeStyle(5, '0x000000');
 
-                // button with "Play Again" that resets scene 
-                const resetButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'Play Again', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-                resetButton.setInteractive()
-                            .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
+            // moves time to center of screen
+            // this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
+ 
+            var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 250, "", { fontSize: 80, color: '#0abff7'});
+            stopwatchlabel.text = this.stopwatchLabel.text;
+            this.stopwatchLabel.destroy();
+            stopwatchlabel.setOrigin(0.5);
 
-                // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
-                const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'Next Level', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-                nextLevelButton.setInteractive()
-                            .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));
+            // when two buttons are made, the second one is the only one that shows
+            // when one button is made, the button shows 
+            // when three buttons are made, only the second one shows 
+
+            // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
+            const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'nextLevelButton').setOrigin(0.5).setScale(.75);
+            var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 360, 60);  
+            nextOutline.setInteractive({ useHandCursor: true });
+            nextOutline.setInteractive()
+                        .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));
+            
+            // button with "Play Again" that resets scene 
+            const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'playAgainButton').setOrigin(0.5).setScale(.75);
+            var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 393, 60); 
+            resetOutline.setInteractive({ useHandCursor: true });
+            resetOutline.setInteractive()
+                        .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));            
+
+
             }
+
         }
-
-
     }
 }
