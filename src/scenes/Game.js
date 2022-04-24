@@ -34,6 +34,7 @@ export default class Game extends Phaser.Scene {
     red = 0xd61806;
     purple = 0xd925f5;
     black = 0x000000;
+    pauseTime = 0;
 
     RFSumTime;
     RFTimeTaken;
@@ -234,7 +235,24 @@ export default class Game extends Phaser.Scene {
     }
 
     handleHomeButton() {
+
         var thisGame = this;
+
+        // if during countdown phase, set countdown as paused 
+        if (thisGame.started == false) {
+            thisGame.countdown.paused = true; 
+            // thisGame.countdown.pause();
+        }
+        // if during game phase, pauses game and gets a variable with the time at the beginning of the pause 
+        else {
+            thisGame.started = false;
+            var stopTime = thisGame.game.getTime();
+            // if (thisGame.rapidFire) {
+                
+            // }
+        }
+        
+
 
         var homeTextBox = this.add.rectangle(710, 375, 500, 350, '0xffffff'); // need to change x and y to constants 
         
@@ -249,7 +267,6 @@ export default class Game extends Phaser.Scene {
         noButton.setInteractive({ useHandCursor: true });
 
             function fun1() {
-                thisGame.started = false;
                 // expands scope
                 thisGame.animateScope();
                 thisGame.scopeStrokeWidth = 0;
@@ -267,6 +284,22 @@ export default class Game extends Phaser.Scene {
                 yesButton.destroy();
                 noButton.destroy();
                 homeTextBox.destroy();
+                // If in the countdown phase, resets pause boolean 
+                if (thisGame.countdown.paused == true) {
+                    thisGame.countdown.paused = false; 
+
+                    // thisGame.countdown.resume();
+                }
+                // If in game phase, gets elapsed time and adds it to the pause time variables 
+                else if (thisGame.countdown.paused != true) {                 
+                    thisGame.started = true;
+                    var newTime = thisGame.game.getTime() - stopTime;
+                    thisGame.pauseTime += newTime; 
+                    // if (thisGame.rapidFire) {
+
+                    // }
+                }
+                
             }
              
         yesButton.setInteractive() 
@@ -274,6 +307,8 @@ export default class Game extends Phaser.Scene {
 
         noButton.setInteractive() 
                     .on('pointerdown', () => fun2());
+
+
 
     }
 
@@ -290,6 +325,7 @@ export default class Game extends Phaser.Scene {
 
         this.started = true;
         this.startTime = this.game.getTime();
+        this.pauseTime = 0;
 
         this.countdown.label.setText('');
         this.textLabel.setText('Go!');
@@ -362,7 +398,7 @@ export default class Game extends Phaser.Scene {
         }
 
         // Control the stopwatch
-        this.milliseconds = this.game.getTime() - this.startTime;
+        this.milliseconds = this.game.getTime() - this.startTime - this.pauseTime;
         this.controlStopwatch(this.milliseconds);
     }
 
@@ -435,6 +471,8 @@ export default class Game extends Phaser.Scene {
 
         // Sets the stopwatch label
         this.stopwatchLabel.text = this.formattedTime;
+
+
     }
 
     formatTimeRecordLabel(milliseconds)
