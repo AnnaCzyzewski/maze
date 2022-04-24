@@ -40,9 +40,6 @@ export default class TitleScene extends Phaser.Scene {
         var screenOutline = this.add.rectangle(750, 380, screen.width - 15, screen.height - 15);
         screenOutline.setStrokeStyle(2);
 
-        console.log("screen.width is " + screen.width);
-        console.log("screen.height is " + screen.height);
-
         // fill between screen and screen inner outline
         var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);

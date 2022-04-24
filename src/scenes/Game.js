@@ -28,6 +28,8 @@ export default class Game extends Phaser.Scene {
     playerSpeed = 200;
     scopeSpeed = 50;
     scopeStrokeWidth = 0;
+
+    color;
     blue = 0x0abff7;
     green = 0x2feb1a;
     orange = 0xebac1a;
@@ -59,32 +61,12 @@ export default class Game extends Phaser.Scene {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
+        this.scopeStrokeWidth = 0;
+
         this.rapidFire = data.rapidFire;
 
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
-
-        // Way to control the countdown time or scope (or rlly anything) based on which button is pushed and thus what the difficulty is
-        // (countdown times are just fillers for now, will have to tweak them)
-        if (this.difficulty == 0) {
-            this.level0 = true;
-            this.countdownTime = 10;
-        } else {
-            this.mazeEntranceX = 680;
-            this.mazeEntranceY = 115;
-            this.mazeExitX = 740;
-            this.mazeExitY = 715;
-            this.level0 = false;
-            if(this.difficulty == 1) {
-                this.countdownTime = 10;
-            } else if(this.difficulty == 2) {
-                this.countdownTime = 7;
-            } else if(this.difficulty == 3) {
-                this.countdownTime = 5;
-            } else if(this.difficulty == 4) {
-                this.countdownTime = 3;
-            }
-        }
 
         this.ended = false;
 
@@ -92,6 +74,7 @@ export default class Game extends Phaser.Scene {
         mymaze.gateway(4, 0);
         mymaze.gateway(5, 9);
         const mazeMap = mymaze.tiles();
+        const route = mymaze.getRoute(mazeMap, 4, 0, 5, 9);
 
         // Need to flip all the 0s and 1s because of the way the algorithm works (Paul has easier way to do this! ask him)
         for (var i = 0; i <= 20; i++) {
@@ -119,6 +102,47 @@ export default class Game extends Phaser.Scene {
         const tileset = map.addTilesetImage('wallTile', 'wallTile');
         const layer = map.createBlankLayer('maze', tileset, 60, 100);
 
+        var timeMultiplier = 0.012195 * route.length + 0.17074;
+
+        // Way to control the countdown time or scope (or rlly anything) based on which button is pushed and thus what the difficulty is
+        // (countdown times are just fillers for now, will have to tweak them)
+        if (this.difficulty == 0) {
+            this.level0 = true;
+            this.countdownTime = 10;
+            this.color = this.blue;
+        } else {
+            this.mazeEntranceX = 680;
+            this.mazeEntranceY = 115;
+            this.mazeExitX = 740;
+            this.mazeExitY = 715;
+            this.level0 = false;
+            if(this.difficulty == 1) {
+                this.countdownTime = Math.ceil(10 * timeMultiplier);
+                this.color = this.green;
+            } else if(this.difficulty == 2) {
+                this.countdownTime = Math.ceil(7 * timeMultiplier);
+                this.color = this.orange;
+            } else if(this.difficulty == 3) {
+                this.countdownTime = Math.ceil(5 * timeMultiplier);
+                this.color = this.red;
+            } else if(this.difficulty == 4) {
+                this.countdownTime = Math.ceil(3 * timeMultiplier);
+                this.color = this.purple;
+            }
+        }
+
+        // Add dotted line at exit (need to make this a more clear image)
+        this.dottedLine = this.add.image(this.mazeExitX, this.mazeExitY - 14, 'dottedLine');
+
+        // Create scope
+        this.scope = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, 1000);
+
+        // Add white over scope
+        var rec1 = this.add.rectangle(0, 0, screenCenterX - layer.width / 2, 750, 0xffffff).setOrigin(0, 0);
+        var rec2 = this.add.rectangle(screenCenterX - layer.width / 2, 0, layer.width, 100, 0xffffff).setOrigin(0, 0);
+        var rec3 = this.add.rectangle(screenCenterX + layer.width / 2, 0, screenCenterX - layer.width / 2, 750, 0xffffff).setOrigin(0, 0);
+        var rec4 = this.add.rectangle(screenCenterX - layer.width / 2, layer.height + 100, layer.width, 750 - (100 + layer.height), 0xffffff).setOrigin(0,0);
+        
         if (this.level0) {
             // Level 0
             this.mazeEntranceY = 215;
@@ -139,22 +163,16 @@ export default class Game extends Phaser.Scene {
             layer.setX(screenCenterX - layer.width / 2);
         }
 
-        // Add dotted line at exit (need to make this a more clear image)
-        this.dottedLine = this.add.image(this.mazeExitX, this.mazeExitY - 14, 'dottedLine');
-
         // Add line at the beginning to keep the player from going outside of the maze
         var boundaryLine = this.add.rectangle(this.mazeEntranceX, this.mazeEntranceY - 16, 30, 1, 0xffffff);
         this.physics.add.existing(boundaryLine, true);
-
-        // Create scope
-        this.scope = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, 1000);
 
         // Add arrow key image (not visible unless it's level 0 and game is started)
         this.arrowKeys = this.add.image(1225, screenCenterY, 'arrowKeys').setOrigin(0.5);
         this.arrowKeys.setVisible(false);
 
         // Create player (same blue as the blue in the maze screen concepts)
-        this.player = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, this.playerRadius, this.blue, 1);
+        this.player = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, this.playerRadius, this.color, 1);
         this.physics.add.existing(this.player);
         this.player.body.setCircle(10);
 
@@ -197,8 +215,13 @@ export default class Game extends Phaser.Scene {
         }
 
         // Initialize countdown and stopwatch
-        this.countdownLabel = this.add.text(screenCenterX * 1.35, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
-        this.textLabel = this.add.text(screenCenterX * 0.85, 45, "Memorize for ", { fontSize: 65, color: '0x000000'}).setOrigin(0.5);
+        if(this.level0) {
+            this.countdownLabel = this.add.text(screenCenterX * 1.35, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+            this.textLabel = this.add.text(screenCenterX * 0.85, 45, "Memorize for ", { fontSize: 65, color: '0x000000'}).setOrigin(0.5);
+        } else {
+            this.countdownLabel = this.add.text(screenCenterX, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+        }
+
         this.stopwatchLabel = this.add.text(screenCenterX * 1.25, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
         this.countdown = new Countdown(this, this.countdownLabel, this.countdownTime);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
@@ -292,8 +315,11 @@ export default class Game extends Phaser.Scene {
         this.startTime = this.game.getTime();
 
         this.countdown.label.setText('');
-        this.textLabel.setText('Go!');
-        this.textLabel.setStyle({ fontSize: 100});
+
+        if(this.level0) {
+            this.textLabel.setText('Go!');
+            this.textLabel.setStyle({ fontSize: 100});
+        }
 	}
 
     trackPlayer() 
@@ -307,13 +333,12 @@ export default class Game extends Phaser.Scene {
         // shrink condition
         if (this.scopeStrokeWidth < this.scopeTargetShrinkSize && this.started) {
             this.scopeStrokeWidth = Math.min(this.scopeStrokeWidth + this.scopeSpeed, this.scopeTargetShrinkSize);
-            this.scope.setStrokeStyle(this.scopeStrokeWidth, this.blue);
-
+            this.scope.setStrokeStyle(this.scopeStrokeWidth, this.color);
         }
         // expand condition
         else if (this.scopeStrokeWidth > scopeTargetExpandSize && !this.started) {
             this.scopeStrokeWidth = Math.max(this.scopeStrokeWidth - this.scopeSpeed, scopeTargetExpandSize);
-            this.scope.setStrokeStyle(this.scopeStrokeWidth, this.blue);
+            this.scope.setStrokeStyle(this.scopeStrokeWidth, this.color);
         }
     }
 
@@ -385,7 +410,11 @@ export default class Game extends Phaser.Scene {
             body.setVelocity(0, 0);
 
             // Shake the camera a bit if the user tries to move too early
-            if (!this.ended && (this.cursors.left.isDown || this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.down.isDown))
+            if (!this.ended 
+                &&
+                (this.cursors.left.isDown || this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.down.isDown)
+                &&
+                ((this.rapidFire && this.timesPlayed == 0) || (!this.rapidFire)))
             {
                 this.cameras.main.shake(20, 0.002);
             } 
@@ -489,7 +518,9 @@ export default class Game extends Phaser.Scene {
             // Normal / old stuff
 
             // Get rid of "Go!" and countdown label
-            this.textLabel.setText('');
+            if(this.level0) {
+                this.textLabel.setText('');
+            }
             this.countdown.label.setText('');
 
             // Update time record
