@@ -139,10 +139,10 @@ export default class Game extends Phaser.Scene {
         this.scope = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, 1000);
 
         // Add white over scope
-        var rec1 = this.add.rectangle(0, 0, screenCenterX - layer.width / 2, 750, 0xffffff).setOrigin(0, 0);
-        var rec2 = this.add.rectangle(screenCenterX - layer.width / 2, 0, layer.width, 100, 0xffffff).setOrigin(0, 0);
-        var rec3 = this.add.rectangle(screenCenterX + layer.width / 2, 0, screenCenterX - layer.width / 2, 750, 0xffffff).setOrigin(0, 0);
-        var rec4 = this.add.rectangle(screenCenterX - layer.width / 2, layer.height + 100, layer.width, 750 - (100 + layer.height), 0xffffff).setOrigin(0,0);
+        // var rec1 = this.add.rectangle(0, 0, screenCenterX - layer.width / 2, 750, 0xffffff).setOrigin(0, 0);
+        // var rec2 = this.add.rectangle(screenCenterX - layer.width / 2, 0, layer.width, 100, 0xffffff).setOrigin(0, 0);
+        // var rec3 = this.add.rectangle(screenCenterX + layer.width / 2, 0, screenCenterX - layer.width / 2, 750, 0xffffff).setOrigin(0, 0);
+        // var rec4 = this.add.rectangle(screenCenterX - layer.width / 2, layer.height + 100, layer.width, 750 - (100 + layer.height), 0xffffff).setOrigin(0,0);
         
         if (this.level0) {
             // Level 0
