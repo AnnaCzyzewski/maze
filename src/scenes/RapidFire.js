@@ -8,6 +8,7 @@ export default class Game extends Phaser.Scene
     orange = 0xebac1a;
     red = 0xd61806;
     purple = 0xd925f5;
+    yellow = 0xfff700;
     black = 0x000000;
 
     constructor()

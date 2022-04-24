@@ -7,6 +7,7 @@ export default class LevelScene extends Phaser.Scene {
     orange = 0xebac1a;
     red = 0xd61806;
     purple = 0xd925f5;
+    yellow = 0xfff700;
     black = 0x000000;
 
     constructor() {
@@ -59,7 +60,7 @@ export default class LevelScene extends Phaser.Scene {
 
         var zero = this.add.image(580, 350.5, 'zero');
         zero.setScale(.9);
-        var zeroOutline = this.add.rectangle(580, 260, 72, 83);
+        var zeroOutline = this.add.rectangle(581, 259, 80, 90);
         // zeroOutline.setStrokeStyle(2, '0x0abff7');
         zeroOutline.setInteractive({ useHandCursor: true });
         zeroOutline.on('pointerup', () => this.level0Button());
@@ -69,7 +70,7 @@ export default class LevelScene extends Phaser.Scene {
 
         var one = this.add.image(692.25, 362, 'one');
         one.setScale(.9);
-        var oneOutline = this.add.rectangle(692.25, 260, 72, 83);
+        var oneOutline = this.add.rectangle(692.25, 259, 80, 90);
         // oneOutline.setStrokeStyle(2, '0x0abff7');
         oneOutline.setInteractive({ useHandCursor: true });
         oneOutline.on('pointerup', () => this.level1Button());
@@ -79,7 +80,7 @@ export default class LevelScene extends Phaser.Scene {
 
         var two = this.add.image(807.75, 358, 'two');
         two.setScale(.9);
-        var twoOutline = this.add.rectangle(808, 260, 72, 83);
+        var twoOutline = this.add.rectangle(808, 260, 80, 90);
         // twoOutline.setStrokeStyle(2, '0x0abff7');
         twoOutline.setInteractive({ useHandCursor: true });
         twoOutline.on('pointerup', () => this.level2Button());
@@ -89,7 +90,7 @@ export default class LevelScene extends Phaser.Scene {
 
         var three = this.add.image(920, 362, 'three');
         three.setScale(.9);
-        var threeOutline = this.add.rectangle(920.25, 260, 72, 83);
+        var threeOutline = this.add.rectangle(920.25, 260, 80, 90);
         // threeOutline.setStrokeStyle(2, '0x0abff7');
         threeOutline.setInteractive({ useHandCursor: true });
         threeOutline.on('pointerup', () => this.level3Button());
@@ -99,7 +100,7 @@ export default class LevelScene extends Phaser.Scene {
 
         var four = this.add.image(580, 465.5, 'four');
         four.setScale(.9);
-        var fourOutline = this.add.rectangle(580, 380, 72, 83);
+        var fourOutline = this.add.rectangle(580, 380, 80, 90);
         // fourOutline.setStrokeStyle(2, '0x0abff7');
         fourOutline.setInteractive({ useHandCursor: true });
         fourOutline.on('pointerup', () => this.level4Button());

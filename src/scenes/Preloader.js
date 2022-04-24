@@ -46,6 +46,9 @@ export default class Preloader extends Phaser.Scene
         this.load.image('playAgainButton', 'src/assets/play_again_button.png');
         this.load.image('nextLevelButton', 'src/assets/next_level_button.png');
         this.load.image('gotItButton', 'src/assets/got_it_button.png');
+        this.load.image('goHomePrompt', 'src/assets/go_home_prompt.png');
+        this.load.image('yesButton', 'src/assets/yes_button.png');
+        this.load.image('noButton', 'src/assets/no_button.png');
 
 
         // this.load.tilemapCSV('map', 'src/assets/tilemaps/mazemap.csv');
