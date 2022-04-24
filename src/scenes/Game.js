@@ -36,6 +36,7 @@ export default class Game extends Phaser.Scene {
     red = 0xd61806;
     purple = 0xd925f5;
     black = 0x000000;
+    pauseTime = 0;
 
     RFSumTime;
     RFTimeTaken;
@@ -257,7 +258,24 @@ export default class Game extends Phaser.Scene {
     }
 
     handleHomeButton() {
+
         var thisGame = this;
+
+        // if during countdown phase, set countdown as paused 
+        if (thisGame.started == false) {
+            thisGame.countdown.paused = true; 
+            // thisGame.countdown.pause();
+        }
+        // if during game phase, pauses game and gets a variable with the time at the beginning of the pause 
+        else {
+            thisGame.started = false;
+            var stopTime = thisGame.game.getTime();
+            // if (thisGame.rapidFire) {
+                
+            // }
+        }
+        
+
 
         var homeTextBox = this.add.rectangle(710, 375, 500, 350, '0xffffff'); // need to change x and y to constants 
         
@@ -272,7 +290,6 @@ export default class Game extends Phaser.Scene {
         noButton.setInteractive({ useHandCursor: true });
 
             function fun1() {
-                thisGame.started = false;
                 // expands scope
                 thisGame.animateScope();
                 thisGame.scopeStrokeWidth = 0;
@@ -290,6 +307,22 @@ export default class Game extends Phaser.Scene {
                 yesButton.destroy();
                 noButton.destroy();
                 homeTextBox.destroy();
+                // If in the countdown phase, resets pause boolean 
+                if (thisGame.countdown.paused == true) {
+                    thisGame.countdown.paused = false; 
+
+                    // thisGame.countdown.resume();
+                }
+                // If in game phase, gets elapsed time and adds it to the pause time variables 
+                else if (thisGame.countdown.paused != true) {                 
+                    thisGame.started = true;
+                    var newTime = thisGame.game.getTime() - stopTime;
+                    thisGame.pauseTime += newTime; 
+                    // if (thisGame.rapidFire) {
+
+                    // }
+                }
+                
             }
              
         yesButton.setInteractive() 
@@ -297,6 +330,8 @@ export default class Game extends Phaser.Scene {
 
         noButton.setInteractive() 
                     .on('pointerdown', () => fun2());
+
+
 
     }
 
@@ -313,6 +348,7 @@ export default class Game extends Phaser.Scene {
 
         this.started = true;
         this.startTime = this.game.getTime();
+        this.pauseTime = 0;
 
         this.countdown.label.setText('');
 
@@ -387,7 +423,7 @@ export default class Game extends Phaser.Scene {
         }
 
         // Control the stopwatch
-        this.milliseconds = this.game.getTime() - this.startTime;
+        this.milliseconds = this.game.getTime() - this.startTime - this.pauseTime;
         this.controlStopwatch(this.milliseconds);
     }
 
@@ -464,6 +500,8 @@ export default class Game extends Phaser.Scene {
 
         // Sets the stopwatch label
         this.stopwatchLabel.text = this.formattedTime;
+
+
     }
 
     formatTimeRecordLabel(milliseconds)
@@ -541,22 +579,38 @@ export default class Game extends Phaser.Scene {
                             .on('pointerdown', () => this.scene.start('levelScene')); 
             // Not Level 0        
             } else {
-                // moves time to center of screen
-                this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
-                this.stopwatchLabel.setColor('#0abff7');
+            var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
+            rectanglePopUp.setStrokeStyle(5, '0x000000');
 
-                // button with "Play Again" that resets scene 
-                const resetButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'Play Again', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-                resetButton.setInteractive()
-                            .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 })); 
+            // moves time to center of screen
+            // this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
+ 
+            var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 250, "", { fontSize: 80, color: '#0abff7'});
+            stopwatchlabel.text = this.stopwatchLabel.text;
+            this.stopwatchLabel.destroy();
+            stopwatchlabel.setOrigin(0.5);
 
-                // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
-                const nextLevelButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'Next Level', { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-                nextLevelButton.setInteractive()
-                            .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));
+            // when two buttons are made, the second one is the only one that shows
+            // when one button is made, the button shows 
+            // when three buttons are made, only the second one shows 
+
+            // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
+            const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'nextLevelButton').setOrigin(0.5).setScale(.75);
+            var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 360, 60);  
+            nextOutline.setInteractive({ useHandCursor: true });
+            nextOutline.setInteractive()
+                        .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));
+            
+            // button with "Play Again" that resets scene 
+            const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'playAgainButton').setOrigin(0.5).setScale(.75);
+            var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 393, 60); 
+            resetOutline.setInteractive({ useHandCursor: true });
+            resetOutline.setInteractive()
+                        .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));            
+
+
             }
+
         }
-
-
     }
 }
