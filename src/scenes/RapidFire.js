@@ -23,7 +23,7 @@ export default class Game extends Phaser.Scene
 
     init(data) {
 
-        // This doesn't actually work yet lol but we're working on it
+        // Only works until someone refreshes, can save the data using localStorage though
 
         if(this.easyRecord == null) {
             this.easyRecord = 0;
@@ -40,8 +40,6 @@ export default class Game extends Phaser.Scene
         if (this.insaneRecord == null) {
             this.insaneRecord = 0;
         }
-
-        console.log("difficulty in rapidfire init is " + data.difficulty);
 
         if(data.difficulty == 1) {
             if(data.mazesPlayed > this.easyRecord) {
@@ -60,23 +58,23 @@ export default class Game extends Phaser.Scene
                 this.insaneRecord = data.mazesPlayed;
             }
         }
-
-        console.log("easy record is " + this.easyRecord);
     }   
 
     create() {
-
-        // console.log("easy record is " + this.easyRecord);
-        // console.log("medium record is " + this.mediumRecord);
-        // console.log("hard record is " + this.hardRecord);
-        // console.log("insane record is " + this.insaneRecord);
-
         var title = this.add.image(750, 110, 'survival');
         title.setScale(1.1);
         var chooseDifficulty = this.add.image(750, 200, 'chooseDifficulty');
         chooseDifficulty.setScale(.6);
         var brain = this.add.image(750, 400, 'brainMaze');
         brain.setScale(.75);
+
+        var longestStreak = this.add.image(750, 550, 'longestStreak').setVisible(false);
+        longestStreak.setScale(.3);
+
+        var longestStreakEasy = this.add.text(843, 529, this.easyRecord, { fontSize: 40, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var longestStreakMedium = this.add.text(843, 529, this.mediumRecord, { fontSize: 40, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var longestStreakHard = this.add.text(843, 529, this.hardRecord, { fontSize: 40, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var longestStreakInsane = this.add.text(843, 529, this.insaneRecord, { fontSize: 40, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
 
         var screen = this.add.rectangle(750, 380, 550, 700);
         screen.setStrokeStyle(5);
@@ -85,6 +83,10 @@ export default class Game extends Phaser.Scene
             screenOutlineFill.setStrokeStyle(5, this.blue);
             home.setTintFill(this.black);
             longestStreak.setVisible(false);
+            longestStreakEasy.setVisible(false);
+            longestStreakMedium.setVisible(false);
+            longestStreakHard.setVisible(false);
+            longestStreakInsane.setVisible(false);
             //title.setTintFill(this.black);
             //brain.setTintFill(this.black);
         });
@@ -94,9 +96,6 @@ export default class Game extends Phaser.Scene
         // fill between screen and screen inner outline
         var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);
-
-        var longestStreak = this.add.image(750, 550, 'longestStreak');
-        longestStreak.setScale(.3);
 
         var easy = this.add.image(750, 280, 'easyButton');
         easy.setScale(.55);
@@ -108,6 +107,7 @@ export default class Game extends Phaser.Scene
         easyOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.green);
             longestStreak.setVisible(true);
+            longestStreakEasy.setVisible(true);
             //title.setTintFill(this.green);
             //brain.setTintFill(this.green);
         });
@@ -122,6 +122,7 @@ export default class Game extends Phaser.Scene
         mediumOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.orange);
             longestStreak.setVisible(true);
+            longestStreakMedium.setVisible(true);
             //title.setTintFill(this.orange);
             //brain.setTintFill(this.orange);
         });
@@ -136,6 +137,7 @@ export default class Game extends Phaser.Scene
         hardOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.red);
             longestStreak.setVisible(true);
+            longestStreakHard.setVisible(true);
             //title.setTintFill(this.red);
             //brain.setTintFill(this.red);
         });
@@ -150,6 +152,7 @@ export default class Game extends Phaser.Scene
         insaneOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.purple);
             longestStreak.setVisible(true);
+            longestStreakInsane.setVisible(true);
             //title.setTintFill(this.purple);
             //brain.setTintFill(this.purple);
         });

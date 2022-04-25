@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 export default class TitleScene extends Phaser.Scene {
+
     constructor() {
         super({key:'titleScene'});
     }
@@ -15,6 +16,8 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     create(){
+
+        console.log("went to title scene");
 
         var title = this.add.image(765, 220, 'memoryMaze');
         title.setScale(.75);

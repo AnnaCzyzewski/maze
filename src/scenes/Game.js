@@ -50,13 +50,11 @@ export default class Game extends Phaser.Scene {
     
     scopeTargetShrinkSize = 1800;
 
-    constructor()
-	{
+    constructor() {
 		super('game')
 	}
 
-    init(data)
-    {
+    init(data) {
         this.difficulty = data.difficulty;
         this.rapidFire = data.rapidFire;
     }
@@ -67,15 +65,13 @@ export default class Game extends Phaser.Scene {
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
         this.scopeStrokeWidth = 0;
-
     
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
         this.rapidFire = data.rapidFire;
         this.difficulty = data.difficulty;
 
-        console.log("difficulty in create is " + this.difficulty);
-
+        this.started = false;
         this.ended = false;
 
         const mymaze = new Maze(10, 10);
@@ -168,12 +164,12 @@ export default class Game extends Phaser.Scene {
         // Add dotted line at exit (need to make this a more clear image)
         this.dottedLine = this.add.image(this.mazeExitX, this.mazeExitY - 14, 'dottedLine');
 
-        // Create scope
-        this.scope = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, 1000);
-
         // Add line at the beginning to keep the player from going outside of the maze
         var boundaryLine = this.add.rectangle(this.mazeEntranceX, this.mazeEntranceY - 16, 30, 1, 0xffffff);
         this.physics.add.existing(boundaryLine, true);
+
+        // Create scope
+        this.scope = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, 1000);
 
         // Add arrow key image (not visible unless it's level 0 and game is started)
         this.arrowKeys = this.add.image(1225, screenCenterY, 'arrowKeys').setOrigin(0.5);
@@ -338,8 +334,7 @@ export default class Game extends Phaser.Scene {
         this.scene.start('rapid', { difficulty: this.difficulty, mazesPlayed: this.timesPlayed });
     }
 
-    handleCountdownFinished()
-	{
+    handleCountdownFinished() {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
 
         this.started = true;
@@ -354,13 +349,11 @@ export default class Game extends Phaser.Scene {
         }
 	}
 
-    trackPlayer() 
-    {
+    trackPlayer() {
        this.scope.setPosition(this.player.x, this.player.y)
     }
 
-    animateScope()
-    {
+    animateScope() {
         var scopeTargetExpandSize = 0;
         // shrink condition
         if (this.scopeStrokeWidth < this.scopeTargetShrinkSize && this.started) {
@@ -374,8 +367,7 @@ export default class Game extends Phaser.Scene {
         }
     }
 
-    startGame(body, speed)
-    {
+    startGame(body, speed) {
         if(this.rapidFire) {
             if(this.RFCountdown.timerEvent) {
                 this.RFCountdown.timerEvent.paused = false;
@@ -423,8 +415,7 @@ export default class Game extends Phaser.Scene {
         this.controlStopwatch(this.milliseconds);
     }
 
-    update() 
-    {
+    update() {
         const body = this.player.body;
 
         // x and y represent the position of the middle of the player
@@ -465,8 +456,7 @@ export default class Game extends Phaser.Scene {
         }
     }
 
-    controlStopwatch(milliseconds) 
-    {
+    controlStopwatch(milliseconds) {
 
         // Milliseconds to one digit (idk what unit that is)
         var oneDigitMil = Math.ceil(milliseconds / 100);
@@ -498,8 +488,7 @@ export default class Game extends Phaser.Scene {
         this.stopwatchLabel.text = this.formattedTime;
     }
 
-    formatTimeRecordLabel(milliseconds)
-    {
+    formatTimeRecordLabel(milliseconds) {
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
 
         // Milliseconds to one digit (idk what unit that is)
@@ -532,8 +521,7 @@ export default class Game extends Phaser.Scene {
         this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, 'Record ' + formattedTime, { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
     }
 
-    handleWinGame() 
-    {
+    handleWinGame() {
         // Handle booleans
         this.started = false;
         this.ended = true;
@@ -542,14 +530,12 @@ export default class Game extends Phaser.Scene {
         this.animateScope();
 
         if (this.rapidFire) {
-            // pause for a sec? have something happen between mazes... something visual. but not something where you have to click on,
-            // cuz it should feel quick and rushed and stuff!! right now i'm just animating the scope back out
             this.RFCountdown.timerEvent.paused = true;
             if(this.scopeStrokeWidth == 0) {
                 this.scene.restart({ rapidFire: true, difficulty: this.difficulty, sumTime: this.RFSumTime, timeTaken: this.milliseconds, timesPlayed: this.timesPlayed + 1 });
             }
         } else {
-            // Normal / old stuff
+            // Normal level stuff
 
             // Get rid of "Go!" and countdown label
             if(this.level0) {
@@ -567,42 +553,42 @@ export default class Game extends Phaser.Scene {
             if (this.level0) { 
                 this.arrowKeys.setVisible(false);
                 this.stopwatchLabel.setVisible(false);
-                const toLevelsButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
-                                                    this.cameras.main.worldView.y + this.cameras.main.height / 2, 
+                this.timeRecordLabel.setText("");
+                const toTitleButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
+                                                    this.cameras.main.worldView.y + this.cameras.main.height / 2 + 100, 
                                                     'Got it!', 
                                                     { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-                toLevelsButton.setInteractive()
-                            .on('pointerdown', () => this.scene.start('levelScene')); 
+                toTitleButton.setInteractive()
+                            .on('pointerdown', () => this.scene.start('titleScene')); 
             // Not Level 0        
             } else {
-            var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
-            rectanglePopUp.setStrokeStyle(5, '0x000000');
+                var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
+                rectanglePopUp.setStrokeStyle(5, '0x000000');
 
-            // moves time to center of screen
-            // this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
- 
-            var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 250, "", { fontSize: 80, color: '#0abff7'});
-            stopwatchlabel.text = this.stopwatchLabel.text;
-            this.stopwatchLabel.destroy();
-            stopwatchlabel.setOrigin(0.5);
+                // moves time to center of screen
+                // this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
+                var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 250, "", { fontSize: 80, color: '#0abff7'});
+                stopwatchlabel.text = this.stopwatchLabel.text;
+                this.stopwatchLabel.destroy();
+                stopwatchlabel.setOrigin(0.5);
 
-            // when two buttons are made, the second one is the only one that shows
-            // when one button is made, the button shows 
-            // when three buttons are made, only the second one shows 
+                // when two buttons are made, the second one is the only one that shows
+                // when one button is made, the button shows 
+                // when three buttons are made, only the second one shows 
 
-            // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
-            const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'nextLevelButton').setOrigin(0.5).setScale(.75);
-            var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 360, 60);  
-            nextOutline.setInteractive({ useHandCursor: true });
-            nextOutline.setInteractive()
-                        .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));
-            
-            // button with "Play Again" that resets scene 
-            const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'playAgainButton').setOrigin(0.5).setScale(.75);
-            var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 393, 60); 
-            resetOutline.setInteractive({ useHandCursor: true });
-            resetOutline.setInteractive()
-                        .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));            
+                // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
+                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'nextLevelButton').setOrigin(0.5).setScale(.75);
+                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 360, 60);  
+                nextOutline.setInteractive({ useHandCursor: true });
+                nextOutline.setInteractive()
+                            .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));
+                
+                // button with "Play Again" that resets scene 
+                const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'playAgainButton').setOrigin(0.5).setScale(.75);
+                var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 393, 60); 
+                resetOutline.setInteractive({ useHandCursor: true });
+                resetOutline.setInteractive()
+                            .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));            
             }
         }
     }

@@ -12,7 +12,7 @@ export default class Preloader extends Phaser.Scene
 	{
         this.load.image('wallTile', 'src/assets/tiles/wallTile.png');
         this.load.tilemapTiledJSON('maze', 'src/assets/tilemaps/maze.json');
-        this.load.image('scope', 'src/assets/whiteSquare.png');
+        // this.load.image('scope', 'src/assets/whiteSquare.png');
         this.load.image('background', 'src/assets/sprites/graybackground.png');
         this.load.image('arrowKeys', 'src/assets/arrowKeys.png');
         this.load.image('arrow', 'src/assets/arrow.png');

@@ -19,6 +19,8 @@ export default class LevelScene extends Phaser.Scene {
  
     create(){
 
+        console.log("went to level scene");
+
         var title = this.add.image(755, 215, 'levelSelect');
         title.setScale(.75);
 
