@@ -277,17 +277,19 @@ export default class Game extends Phaser.Scene {
         
 
 
-        var homeTextBox = this.add.rectangle(710, 375, 500, 350, '0xffffff'); // need to change x and y to constants 
+        var homeTextBox = this.add.rectangle(710, 365, 525, 350, '0xffffff'); // need to change x and y to constants 
         
-        homeTextBox.setStrokeStyle(1, '0x000000');
-        var homeText = this.add.text(710, 320, "Go back?\nYour progress\nwon't be saved", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5); 
+        homeTextBox.setStrokeStyle(1, '0x000000');    
+        var homeText = this.add.image(710, 400, "goHomePrompt").setOrigin(0.5).setScale(0.75);
 
-        var yesButton = this.add.text(600, 475, "yes", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5);
-        yesButton.setInteractive({ useHandCursor: true });
+        var yesButton = this.add.image(600, 475, "yesButton").setOrigin(0.5).setScale(0.75);
+        var yesOutline = this.add.rectangle(600, 475, 125, 60);
+        yesOutline.setInteractive({ useHandCursor: true });
 
-
-        var noButton = this.add.text(820, 475, "no", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5);
-        noButton.setInteractive({ useHandCursor: true });
+        
+        var noButton = this.add.image(820, 475, "noButton").setOrigin(0.5).setScale(0.75);
+        var noOutline = this.add.rectangle(820, 475, 90, 60);
+        noOutline.setInteractive({ useHandCursor: true });
 
             function fun1() {
                 // expands scope
@@ -305,7 +307,9 @@ export default class Game extends Phaser.Scene {
             function fun2() {
                 homeText.destroy();
                 yesButton.destroy();
+                yesOutline.destroy();
                 noButton.destroy();
+                noOutline.destroy();
                 homeTextBox.destroy();
                 // If in the countdown phase, resets pause boolean 
                 if (thisGame.countdown.paused == true) {
@@ -325,10 +329,10 @@ export default class Game extends Phaser.Scene {
                 
             }
              
-        yesButton.setInteractive() 
+        yesOutline.setInteractive() 
                     .on('pointerdown', () => fun1());
 
-        noButton.setInteractive() 
+        noOutline.setInteractive() 
                     .on('pointerdown', () => fun2());
 
 
