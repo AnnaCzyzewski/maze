@@ -83,6 +83,8 @@ export default class Game extends Phaser.Scene
         screen.setInteractive();
         screen.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.blue);
+            home.setTintFill(this.black);
+            longestStreak.setVisible(false);
             //title.setTintFill(this.black);
             //brain.setTintFill(this.black);
         });
@@ -93,6 +95,9 @@ export default class Game extends Phaser.Scene
         var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);
 
+        var longestStreak = this.add.image(750, 550, 'longestStreak');
+        longestStreak.setScale(.3);
+
         var easy = this.add.image(750, 280, 'easyButton');
         easy.setScale(.55);
 
@@ -102,6 +107,7 @@ export default class Game extends Phaser.Scene
         easyOutline.on('pointerup', () => this.easyButton());
         easyOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.green);
+            longestStreak.setVisible(true);
             //title.setTintFill(this.green);
             //brain.setTintFill(this.green);
         });
@@ -115,6 +121,7 @@ export default class Game extends Phaser.Scene
         mediumOutline.on('pointerup', () => this.mediumButton());
         mediumOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.orange);
+            longestStreak.setVisible(true);
             //title.setTintFill(this.orange);
             //brain.setTintFill(this.orange);
         });
@@ -128,6 +135,7 @@ export default class Game extends Phaser.Scene
         hardOutline.on('pointerup', () => this.hardButton());
         hardOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.red);
+            longestStreak.setVisible(true);
             //title.setTintFill(this.red);
             //brain.setTintFill(this.red);
         });
@@ -141,6 +149,7 @@ export default class Game extends Phaser.Scene
         insaneOutline.on('pointerup', () => this.insaneButton());
         insaneOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.purple);
+            longestStreak.setVisible(true);
             //title.setTintFill(this.purple);
             //brain.setTintFill(this.purple);
         });
@@ -151,6 +160,9 @@ export default class Game extends Phaser.Scene
         //homeOutline.setStrokeStyle(2);
         homeOutline.setInteractive({ useHandCursor: true });
         homeOutline.on('pointerup', () => this.homeButton());
+        homeOutline.on("pointerover", () => {
+            home.setTintFill(this.yellow);
+        });
         
     }
 
