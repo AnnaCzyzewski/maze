@@ -4,6 +4,7 @@ import Preloader from './scenes/Preloader';
 import Game from './scenes/Game';
 import TitleScene from './scenes/TitleScene';
 import LevelScene from './scenes/LevelScene';
+import LevelSceneP2 from './scenes/LevelSceneP2';
 import RapidFire from './scenes/RapidFire';
 
 var config = {
@@ -26,7 +27,7 @@ var config = {
     // backgroundColor: '#D0D0D0',
     backgroundColor: '#ffffff',
     parent: 'phaser-example',
-    scene: [Preloader, TitleScene, LevelScene, Game, RapidFire]
+    scene: [Preloader, TitleScene, LevelScene, LevelSceneP2, Game, RapidFire]
 };
 
 new Phaser.Game(config); 

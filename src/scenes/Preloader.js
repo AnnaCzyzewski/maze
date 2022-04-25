@@ -36,6 +36,16 @@ export default class Preloader extends Phaser.Scene
         this.load.image('eight', 'src/assets/eight.png');
         this.load.image('nine', 'src/assets/nine.png');
         this.load.image('ten', 'src/assets/ten.png');
+        this.load.image('eleven', 'src/assets/eleven.png');
+        this.load.image('twelve', 'src/assets/twelve.png');
+        this.load.image('thirteen', 'src/assets/thirteen.png');
+        this.load.image('fourteen', 'src/assets/fourteen.png');
+        this.load.image('fifteen', 'src/assets/fifteen.png');
+        this.load.image('sixteen', 'src/assets/sixteen.png');
+        this.load.image('seventeen', 'src/assets/seventeen.png');
+        this.load.image('eighteen', 'src/assets/eighteen.png');
+        this.load.image('nineteen', 'src/assets/nineteen.png');
+        this.load.image('twenty', 'src/assets/twenty.png');
         this.load.image('survival', 'src/assets/survival.png');
         this.load.image('survivalButton', 'src/assets/survival_button.png');
         this.load.image('chooseDifficulty', 'src/assets/choose_difficulty.png');
@@ -49,6 +59,9 @@ export default class Preloader extends Phaser.Scene
         this.load.image('goHomePrompt', 'src/assets/go_home_prompt.png');
         this.load.image('yesButton', 'src/assets/yes_button.png');
         this.load.image('noButton', 'src/assets/no_button.png');
+        this.load.image('mazesPlayed', 'src/assets/mazes_played.png');
+        this.load.image('bestTime', 'src/assets/best_time_blue.png');
+        this.load.image('longestStreak', 'src/assets/longest_streak_blue.png');
 
 
         // this.load.tilemapCSV('map', 'src/assets/tilemaps/mazemap.csv');
