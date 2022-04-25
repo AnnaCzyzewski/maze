@@ -3,6 +3,11 @@ import Phaser from 'phaser';
 export default class Game extends Phaser.Scene
 {
 
+    easyRecord;
+    mediumRecord;
+    hardRecord;
+    insaneRecord;
+
     blue = 0x0abff7;
     green = 0x2feb1a;
     orange = 0xebac1a;
@@ -16,8 +21,56 @@ export default class Game extends Phaser.Scene
 		super('rapid')
 	}
 
-    create() 
-    {
+    init(data) {
+
+        // This doesn't actually work yet lol but we're working on it
+
+        if(this.easyRecord == null) {
+            this.easyRecord = 0;
+        }
+
+        if (this.mediumRecord == null) {
+            this.mediumRecord = 0;
+        }
+        
+        if (this.hardRecord == null) {
+            this.hardRecord = 0;
+        }
+        
+        if (this.insaneRecord == null) {
+            this.insaneRecord = 0;
+        }
+
+        console.log("difficulty in rapidfire init is " + data.difficulty);
+
+        if(data.difficulty == 1) {
+            if(data.mazesPlayed > this.easyRecord) {
+                this.easyRecord = data.mazesPlayed;
+            }
+        } else if (data.difficulty == 2) {
+            if(data.mazesPlayed > this.mediumRecord) {
+                this.mediumRecord = data.mazesPlayed;
+            }
+        } else if (data.difficulty == 3) {
+            if(data.mazesPlayed > this.hardRecord) {
+                this.hardRecord = data.mazesPlayed;
+            }
+        } else if (data.difficulty == 4) {
+            if(data.mazesPlayed > this.insaneRecord) {
+                this.insaneRecord = data.mazesPlayed;
+            }
+        }
+
+        console.log("easy record is " + this.easyRecord);
+    }   
+
+    create() {
+
+        // console.log("easy record is " + this.easyRecord);
+        // console.log("medium record is " + this.mediumRecord);
+        // console.log("hard record is " + this.hardRecord);
+        // console.log("insane record is " + this.insaneRecord);
+
         var title = this.add.image(750, 110, 'survival');
         title.setScale(1.1);
         var chooseDifficulty = this.add.image(750, 200, 'chooseDifficulty');

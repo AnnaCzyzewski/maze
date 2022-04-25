@@ -38,6 +38,10 @@ export default class Game extends Phaser.Scene {
     black = 0x000000;
     pauseTime = 0;
 
+    RFTimesPlayedEasy;
+    RFTimesPlayedMedium;
+    RFTimesPlayedHard;
+    RFTimesPlayedInsane;
     RFSumTime;
     RFTimeTaken;
     RFCountdown;
@@ -64,10 +68,13 @@ export default class Game extends Phaser.Scene {
 
         this.scopeStrokeWidth = 0;
 
-        this.rapidFire = data.rapidFire;
-
+    
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
+        this.rapidFire = data.rapidFire;
+        this.difficulty = data.difficulty;
+
+        console.log("difficulty in create is " + this.difficulty);
 
         this.ended = false;
 
@@ -132,12 +139,6 @@ export default class Game extends Phaser.Scene {
             }
         }
 
-        // Add dotted line at exit (need to make this a more clear image)
-        this.dottedLine = this.add.image(this.mazeExitX, this.mazeExitY - 14, 'dottedLine');
-
-        // Create scope
-        this.scope = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, 1000);
-
         // Add white over scope
         // var rec1 = this.add.rectangle(0, 0, screenCenterX - layer.width / 2, 750, 0xffffff).setOrigin(0, 0);
         // var rec2 = this.add.rectangle(screenCenterX - layer.width / 2, 0, layer.width, 100, 0xffffff).setOrigin(0, 0);
@@ -163,6 +164,12 @@ export default class Game extends Phaser.Scene {
             layer.putTilesAt(mazeMap, 0, 0);
             layer.setX(screenCenterX - layer.width / 2);
         }
+
+        // Add dotted line at exit (need to make this a more clear image)
+        this.dottedLine = this.add.image(this.mazeExitX, this.mazeExitY - 14, 'dottedLine');
+
+        // Create scope
+        this.scope = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, 1000);
 
         // Add line at the beginning to keep the player from going outside of the maze
         var boundaryLine = this.add.rectangle(this.mazeEntranceX, this.mazeEntranceY - 16, 30, 1, 0xffffff);
@@ -262,44 +269,37 @@ export default class Game extends Phaser.Scene {
         var thisGame = this;
 
         // if during countdown phase, set countdown as paused 
-        if (thisGame.started == false) {
-            thisGame.countdown.paused = true; 
-            // thisGame.countdown.pause();
+        if (!thisGame.started && !thisGame.ended) {
+            thisGame.countdown.timerEvent.paused = true;
         }
         // if during game phase, pauses game and gets a variable with the time at the beginning of the pause 
-        else {
+        else if (thisGame.started && !thisGame.ended) {
             thisGame.started = false;
             var stopTime = thisGame.game.getTime();
-            // if (thisGame.rapidFire) {
-                
-            // }
+            if(thisGame.rapidFire) {
+                thisGame.RFCountdown.timerEvent.paused = true;
+            }
+        // button doesn't do anything if the game is ended 
+        } else if (thisGame.ended) {
+            return
         }
-        
 
-
-        var homeTextBox = this.add.rectangle(710, 375, 500, 350, '0xffffff'); // need to change x and y to constants 
+        var homeTextBox = thisGame.add.rectangle(710, 375, 500, 350, '0xffffff'); // need to change x and y to constants 
         
         homeTextBox.setStrokeStyle(1, '0x000000');
-        var homeText = this.add.text(710, 320, "Go back?\nYour progress\nwon't be saved", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5); 
+        var homeText = thisGame.add.text(710, 320, "Go back?\nYour progress\nwon't be saved", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5); 
 
-        var yesButton = this.add.text(600, 475, "yes", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5);
+        var yesButton = thisGame.add.text(600, 475, "yes", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5);
         yesButton.setInteractive({ useHandCursor: true });
 
-
-        var noButton = this.add.text(820, 475, "no", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5);
+        var noButton = thisGame.add.text(820, 475, "no", { fontSize: 50, color: '0x000000'}).setAlign('center').setOrigin(0.5);
         noButton.setInteractive({ useHandCursor: true });
 
             function fun1() {
                 // expands scope
                 thisGame.animateScope();
                 thisGame.scopeStrokeWidth = 0;
-
-                // if (this.ended) {
-                //     this.timesPlayed = this.timesPlayed + 1;
-                // }
-
                 thisGame.scene.start('titleScene');
-                // does not handle when a person finishes the maze with a new record and then clicks 'home' instead of 'play again'
             }
 
             function fun2() {
@@ -308,21 +308,18 @@ export default class Game extends Phaser.Scene {
                 noButton.destroy();
                 homeTextBox.destroy();
                 // If in the countdown phase, resets pause boolean 
-                if (thisGame.countdown.paused == true) {
-                    thisGame.countdown.paused = false; 
-
-                    // thisGame.countdown.resume();
+                if (thisGame.countdown.timerEvent) {
+                    thisGame.countdown.timerEvent.paused = false;
                 }
                 // If in game phase, gets elapsed time and adds it to the pause time variables 
-                else if (thisGame.countdown.paused != true) {                 
+                else {                 
                     thisGame.started = true;
                     var newTime = thisGame.game.getTime() - stopTime;
                     thisGame.pauseTime += newTime; 
-                    // if (thisGame.rapidFire) {
-
-                    // }
+                    if (thisGame.rapidFire) {
+                        thisGame.RFCountdown.timerEvent.paused = false;
+                    }
                 }
-                
             }
              
         yesButton.setInteractive() 
@@ -330,17 +327,11 @@ export default class Game extends Phaser.Scene {
 
         noButton.setInteractive() 
                     .on('pointerdown', () => fun2());
-
-
-
     }
 
     handleRapidFireCountdownFinished() {
-        console.log('rapid fire countdown finished function called');
-        this.scene.start('levelScene');
+        this.scene.start('rapid', { difficulty: this.difficulty, mazesPlayed: this.timesPlayed });
     }
-
-
 
     handleCountdownFinished()
 	{
@@ -500,8 +491,6 @@ export default class Game extends Phaser.Scene {
 
         // Sets the stopwatch label
         this.stopwatchLabel.text = this.formattedTime;
-
-
     }
 
     formatTimeRecordLabel(milliseconds)
@@ -551,7 +540,9 @@ export default class Game extends Phaser.Scene {
             // pause for a sec? have something happen between mazes... something visual. but not something where you have to click on,
             // cuz it should feel quick and rushed and stuff!! right now i'm just animating the scope back out
             this.RFCountdown.timerEvent.paused = true;
-            this.scene.restart({ rapidFire: true, sumTime: this.RFSumTime, timeTaken: this.milliseconds, timesPlayed: this.timesPlayed + 1 });
+            if(this.scopeStrokeWidth == 0) {
+                this.scene.restart({ rapidFire: true, difficulty: this.difficulty, sumTime: this.RFSumTime, timeTaken: this.milliseconds, timesPlayed: this.timesPlayed + 1 });
+            }
         } else {
             // Normal / old stuff
 
@@ -607,10 +598,7 @@ export default class Game extends Phaser.Scene {
             resetOutline.setInteractive({ useHandCursor: true });
             resetOutline.setInteractive()
                         .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));            
-
-
             }
-
         }
     }
 }
