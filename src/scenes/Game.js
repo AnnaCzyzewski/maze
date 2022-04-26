@@ -47,6 +47,9 @@ export default class Game extends Phaser.Scene {
     RFCountdown;
     RFCountdownTime = 60;
     RFCountdownLabel;
+
+    homeOutline;
+    homeButton;
     
     scopeTargetShrinkSize = 1800;
 
@@ -249,11 +252,11 @@ export default class Game extends Phaser.Scene {
         }
 
         // home button to get back to titlescene
-        var homeButton = this.add.image(screenCenterX * 0.2, 125, 'homeIcon');
-        homeButton.setScale(.75);
-        var homeOutline = this.add.rectangle(screenCenterX * 0.2, 48, 56, 56); // y offset by 59 px
-        homeOutline.setInteractive({ useHandCursor: true });
-        homeOutline.setInteractive()
+        this.homeButton = this.add.image(screenCenterX * 0.2, 125, 'homeIcon');
+        this.homeButton.setScale(.75);
+        this.homeOutline = this.add.rectangle(screenCenterX * 0.2, 48, 56, 56); // y offset by 59 px
+        this.homeOutline.setInteractive({ useHandCursor: true });
+        this.homeOutline.setInteractive()
                     .on('pointerdown', () => this.handleHomeButton());
 
         //this.scale.displaySize.setAspectRatio( width/height );
@@ -567,28 +570,40 @@ export default class Game extends Phaser.Scene {
 
                 // moves time to center of screen
                 // this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
-                var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 250, "", { fontSize: 80, color: '#0abff7'});
+                var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 225, "", { fontSize: 80, color: '#0abff7'});
                 stopwatchlabel.text = this.stopwatchLabel.text;
                 this.stopwatchLabel.destroy();
                 stopwatchlabel.setOrigin(0.5);
 
-                // when two buttons are made, the second one is the only one that shows
-                // when one button is made, the button shows 
-                // when three buttons are made, only the second one shows 
-
                 // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
-                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 'nextLevelButton').setOrigin(0.5).setScale(.75);
-                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 500, 360, 60);  
+                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 'nextLevelButton').setOrigin(0.5).setScale(.75);
+                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 360, 60);  
                 nextOutline.setInteractive({ useHandCursor: true });
                 nextOutline.setInteractive()
                             .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));
                 
                 // button with "Play Again" that resets scene 
-                const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 'playAgainButton').setOrigin(0.5).setScale(.75);
-                var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 400, 393, 60); 
+                const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 'playAgainButton').setOrigin(0.5).setScale(.75);
+                var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 393, 60); 
                 resetOutline.setInteractive({ useHandCursor: true });
                 resetOutline.setInteractive()
-                            .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));            
+                            .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));     
+                            
+                this.homeOutline.destroy();
+                this.homeButton.destroy();
+
+                
+                var goHome = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 'Go home', { fontSize: 50, color: '#0abff7' }).setOrigin(0.5);
+                goHome.setInteractive({ useHandCursor: true });
+      
+                function fun1(thisGame) {
+                    thisGame.scopeStrokeWidth = 0;
+                    thisGame.scene.start('titleScene');
+                }
+                            
+                goHome.setInteractive()
+                        .on('pointerdown', () => fun1(this));         
+
             }
         }
     }
