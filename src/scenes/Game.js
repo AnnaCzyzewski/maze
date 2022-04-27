@@ -297,33 +297,33 @@ export default class Game extends Phaser.Scene {
         var noOutline = this.add.rectangle(820, 475, 90, 60);
         noOutline.setInteractive({ useHandCursor: true });
 
-            function fun1() {
-                // expands scope
-                thisGame.animateScope();
-                thisGame.scopeStrokeWidth = 0;
-                thisGame.scene.start('titleScene');
-            }
+        function fun1() {
+            // expands scope
+            thisGame.animateScope();
+            thisGame.scopeStrokeWidth = 0;
+            thisGame.scene.start('titleScene');
+        }
 
-            function fun2() {
-                homeText.destroy();
-                yesButton.destroy();
-                yesOutline.destroy();
-                noButton.destroy();
-                noOutline.destroy();
-                homeTextBox.destroy();
-                // If in the countdown phase, resets pause boolean 
-                if (thisGame.countdown.timerEvent) {
-                    thisGame.countdown.timerEvent.paused = false;
+        function fun2() {
+            homeText.destroy();
+            yesButton.destroy();
+            yesOutline.destroy();
+            noButton.destroy();
+            noOutline.destroy();
+            homeTextBox.destroy();
+            // If in the countdown phase, resets pause boolean 
+            if (thisGame.countdown.timerEvent) {
+                thisGame.countdown.timerEvent.paused = false;
+            }
+            // If in game phase, gets elapsed time and adds it to the pause time variables 
+            else {                 
+                thisGame.started = true;
+                var newTime = thisGame.game.getTime() - stopTime;
+                thisGame.pauseTime += newTime; 
+                if (thisGame.rapidFire) {
+                    thisGame.RFCountdown.timerEvent.paused = false;
                 }
-                // If in game phase, gets elapsed time and adds it to the pause time variables 
-                else {                 
-                    thisGame.started = true;
-                    var newTime = thisGame.game.getTime() - stopTime;
-                    thisGame.pauseTime += newTime; 
-                    if (thisGame.rapidFire) {
-                        thisGame.RFCountdown.timerEvent.paused = false;
-                    }
-                }
+            }
             }
              
         yesOutline.setInteractive() 
