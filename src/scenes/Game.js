@@ -240,12 +240,16 @@ export default class Game extends Phaser.Scene {
             {
                 this.timeRecord = 1000 * 1000;
                 this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+             
             }
             else 
             {
-                this.timeRecord = data.timeRecord;
-                this.formatTimeRecordLabel(this.timeRecord);
+                // if (!this.level0) {
+                   this.timeRecord = data.timeRecord;
+                    this.formatTimeRecordLabel(this.timeRecord);
+                // } 
             }
+                
         } else if (this.rapidFire) {
             this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '' + this.timesPlayed, { fontSize: 30, color: '0x000000'}).setOrigin(0.5);
             this.timeRecordLabel.setText('Mazes played: ' + this.timesPlayed);
@@ -547,64 +551,62 @@ export default class Game extends Phaser.Scene {
             this.countdown.label.setText('');
 
             // Update time record
-            if (this.milliseconds < this.timeRecord) {
+            
+            if (this.milliseconds < this.timeRecord && !this.level0) {
                 this.timeRecord = this.milliseconds;
                 this.timeRecordLabel.text = 'Record ' + this.formattedTime;            
             }
 
-            // Level 0
-            if (this.level0) { 
-                this.arrowKeys.setVisible(false);
-                this.stopwatchLabel.setVisible(false);
-                this.timeRecordLabel.setText("");
-                const toTitleButton = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 
-                                                    this.cameras.main.worldView.y + this.cameras.main.height / 2 + 100, 
-                                                    'Got it!', 
-                                                    { fontSize: 60, fill: '#0abff7' }).setOrigin(0.5);
-                toTitleButton.setInteractive()
-                            .on('pointerdown', () => this.scene.start('titleScene')); 
-            // Not Level 0        
-            } else {
-                var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
-                rectanglePopUp.setStrokeStyle(5, '0x000000');
 
+            var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
+            rectanglePopUp.setStrokeStyle(5, '0x000000');
+        
+            if (!this.level0) {
                 // moves time to center of screen
-                // this.stopwatchLabel.setPosition(this.cameras.main.worldView.x + this.cameras.main.width / 2, 300);
                 var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 225, "", { fontSize: 80, color: '#0abff7'});
                 stopwatchlabel.text = this.stopwatchLabel.text;
                 this.stopwatchLabel.destroy();
-                stopwatchlabel.setOrigin(0.5);
+                stopwatchlabel.setOrigin(0.5);                    
+
+                // button with "Play Again" that resets scene 
+                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 'nextLevelButton').setOrigin(0.5).setScale(.75);
+                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 360, 60); 
 
                 // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
-                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 'nextLevelButton').setOrigin(0.5).setScale(.75);
-                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 360, 60);  
-                nextOutline.setInteractive({ useHandCursor: true });
-                nextOutline.setInteractive()
-                            .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));
-                
-                // button with "Play Again" that resets scene 
                 const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 'playAgainButton').setOrigin(0.5).setScale(.75);
                 var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 393, 60); 
                 resetOutline.setInteractive({ useHandCursor: true });
                 resetOutline.setInteractive()
-                            .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));     
-                            
-                this.homeOutline.destroy();
-                this.homeButton.destroy();
-
-                
-                var goHome = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 'Go home', { fontSize: 50, color: '#0abff7' }).setOrigin(0.5);
-                goHome.setInteractive({ useHandCursor: true });
-      
-                function fun1(thisGame) {
-                    thisGame.scopeStrokeWidth = 0;
-                    thisGame.scene.start('titleScene');
-                }
-                            
-                goHome.setInteractive()
-                        .on('pointerdown', () => fun1(this));         
-
+                            .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));          
             }
+            else {
+                // next level button
+                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 390, 'nextLevelButton').setOrigin(0.5).setScale(.75);
+                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 390, 360, 60);                       
+                
+                this.arrowKeys.setVisible(false);
+                this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 225, "Got it!", { fontSize: 80, color: '#0abff7'}).setOrigin(0.5);
+                this.stopwatchLabel.destroy(); 
+            }
+            nextOutline.setInteractive({ useHandCursor: true });
+            nextOutline.setInteractive()
+                        .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));  
+                        
+            this.homeOutline.destroy();
+            this.homeButton.destroy();
+
+            
+            var goHome = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 'Go home', { fontSize: 50, color: '#0abff7' }).setOrigin(0.5);
+            goHome.setInteractive({ useHandCursor: true });
+    
+            function fun1(thisGame) {
+                thisGame.scopeStrokeWidth = 0;
+                thisGame.scene.start('titleScene');
+            }
+                        
+            goHome.setInteractive()
+                    .on('pointerdown', () => fun1(this));         
+
         }
     }
 }
