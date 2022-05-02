@@ -57,6 +57,10 @@ export default class Game extends Phaser.Scene {
     mazeTile;
     tileSize;
     finishLineImage;
+
+    timeMultiplier;
+    flippedMazeMap;
+    route;
     
     scopeTargetShrinkSize = 1800;
 
@@ -126,9 +130,9 @@ export default class Game extends Phaser.Scene {
             mymaze.gateway(this.mazeWidth / 2 - 1, 0);
             mymaze.gateway(this.mazeWidth / 2, this.mazeHeight - 1);
             const mazeMap = mymaze.tiles();
-            const route = mymaze.getRoute(mazeMap, this.mazeWidth / 2 - 1, 0, this.mazeWidth / 2, this.mazeHeight - 1);
+            this.route = mymaze.getRoute(mazeMap, this.mazeWidth / 2 - 1, 0, this.mazeWidth / 2, this.mazeHeight - 1);
 
-            const flippedMazeMap = mazeMap.map(function (nested) {
+            this.flippedMazeMap  = mazeMap.map(function (nested) {
                 return nested.map(function (element) {
                     if (element == 0) {
                         return 1;
@@ -138,10 +142,10 @@ export default class Game extends Phaser.Scene {
                 });
             });
 
-            console.log('route length is ' + route.length);
-            console.log('maze is ' + flippedMazeMap);
+            console.log('route length is ' + this.route.length);
+            console.log('maze is ' + this.flippedMazeMap);
 
-            var timeMultiplier = 0.012195 * route.length + 0.17074;
+            this.timeMultiplier = 0.012195 * this.route.length + 0.17074;
         }
 
 
@@ -163,16 +167,16 @@ export default class Game extends Phaser.Scene {
             this.level0 = false;
             // Need to play around with these times
             if(this.difficulty == 1) {
-                this.countdownTime = Math.ceil(10 * timeMultiplier);
+                this.countdownTime = Math.ceil(10 * this.timeMultiplier);
                 this.color = this.green;
             } else if(this.difficulty == 2) {
-                this.countdownTime = Math.ceil(10 * timeMultiplier);
+                this.countdownTime = Math.ceil(10 * this.timeMultiplier);
                 this.color = this.orange;
             } else if(this.difficulty == 3) {
-                this.countdownTime = Math.ceil(10 * timeMultiplier);
+                this.countdownTime = Math.ceil(10 * this.timeMultiplier);
                 this.color = this.red;
             } else if(this.difficulty == 4) {
-                this.countdownTime = Math.ceil(10 * timeMultiplier);
+                this.countdownTime = Math.ceil(10 * this.timeMultiplier);
                 this.color = this.purple;
             }
         }
@@ -203,7 +207,7 @@ export default class Game extends Phaser.Scene {
             this.arrow.rotation = 1.6;
         } else {
             // Regular maze
-            layer.putTilesAt(flippedMazeMap, 0, 0);
+            layer.putTilesAt(this.flippedMazeMap, 0, 0);
             layer.setX(screenCenterX - layer.width / 2);
         }
 
