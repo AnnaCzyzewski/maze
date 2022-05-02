@@ -1,0 +1,29 @@
+{ "compressionlevel":-1,
+ "height":17,
+ "infinite":false,
+ "layers": [],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.8.2",
+ "tileheight":37,
+ "tilesets":[
+        {
+         "columns":1,
+         "firstgid":1,
+         "image":"wallTile1.png",
+         "imageheight":37,
+         "imagewidth":37,
+         "margin":0,
+         "name":"wallTile1",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":37,
+         "tilewidth":37
+        }],
+ "tilewidth":37,
+ "type":"map",
+ "version":"1.8",
+ "width":17
+}

@@ -23,39 +23,31 @@ export default class Game extends Phaser.Scene
 
     init(data) {
 
-        // Only works until someone refreshes, can save the data using localStorage though
-
-        if(this.easyRecord == null) {
-            this.easyRecord = 0;
-        }
-
-        if (this.mediumRecord == null) {
-            this.mediumRecord = 0;
-        }
-        
-        if (this.hardRecord == null) {
-            this.hardRecord = 0;
-        }
-        
-        if (this.insaneRecord == null) {
-            this.insaneRecord = 0;
-        }
+        // Retrieves records: Gets the value stored in localStorage, or 0 if nothing is found
+        this.easyRecord = parseInt(localStorage.getItem('easyRecord')) || 0;
+        this.mediumRecord = parseInt(localStorage.getItem('mediumRecord')) || 0;
+        this.hardRecord = parseInt(localStorage.getItem('hardRecord')) || 0;
+        this.insaneRecord = parseInt(localStorage.getItem('insaneRecord')) || 0;
 
         if(data.difficulty == 1) {
             if(data.mazesPlayed > this.easyRecord) {
                 this.easyRecord = data.mazesPlayed;
+                localStorage.setItem('easyRecord', this.easyRecord);
             }
         } else if (data.difficulty == 2) {
             if(data.mazesPlayed > this.mediumRecord) {
                 this.mediumRecord = data.mazesPlayed;
+                localStorage.setItem('mediumRecord', this.mediumRecord);
             }
         } else if (data.difficulty == 3) {
             if(data.mazesPlayed > this.hardRecord) {
                 this.hardRecord = data.mazesPlayed;
+                localStorage.setItem('hardRecord', this.hardRecord);
             }
         } else if (data.difficulty == 4) {
             if(data.mazesPlayed > this.insaneRecord) {
                 this.insaneRecord = data.mazesPlayed;
+                localStorage.setItem('insaneRecord', this.insaneRecord);
             }
         }
     }   

@@ -1,19 +1,7 @@
 { "compressionlevel":-1,
- "height":1,
+ "height":21,
  "infinite":false,
- "layers":[
-        {
-         "data":[0, 1],
-         "height":1,
-         "id":1,
-         "name":"Tile Layer 1",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":2,
-         "x":0,
-         "y":0
-        }],
+ "layers": [],
  "nextlayerid":2,
  "nextobjectid":1,
  "orientation":"orthogonal",
@@ -24,11 +12,11 @@
         {
          "columns":1,
          "firstgid":1,
-         "image":"..\/..\/..\/..\/..\/..\/..\/..\/wallTile.png",
+         "image":"wallTile2.png",
          "imageheight":30,
          "imagewidth":30,
          "margin":0,
-         "name":"wallTile",
+         "name":"wallTile2",
          "spacing":0,
          "tilecount":1,
          "tileheight":30,
@@ -37,5 +25,5 @@
  "tilewidth":30,
  "type":"map",
  "version":"1.8",
- "width":2
+ "width":21
 }

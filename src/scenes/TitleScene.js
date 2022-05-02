@@ -7,7 +7,6 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     preload(){
-       this.load.image('background', 'src/assets/graybackground.png');
        this.load.image('memoryMaze', 'src/assets/memory_maze.png');
        this.load.image('startButton', 'src/assets/start_button.png')
        this.load.image('brainMaze', 'src/assets/brain_maze.png');

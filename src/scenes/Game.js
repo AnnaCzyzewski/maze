@@ -50,6 +50,13 @@ export default class Game extends Phaser.Scene {
 
     homeOutline;
     homeButton;
+
+    mazeWidth;
+    mazeHeight;
+    mazeJSON;
+    mazeTile;
+    tileSize;
+    finishLineImage;
     
     scopeTargetShrinkSize = 1800;
 
@@ -77,20 +84,93 @@ export default class Game extends Phaser.Scene {
         this.started = false;
         this.ended = false;
 
-        const mymaze = new Maze(10, 10);
-        mymaze.gateway(4, 0);
-        mymaze.gateway(5, 9);
-        const mazeMap = mymaze.tiles();
-        const route = mymaze.getRoute(mazeMap, 4, 0, 5, 9);
+        if(this.difficulty == 0) {
+            this.playerRadius = 10;
+            this.mazeJSON = 'maze2';
+            this.mazeTile = 'wallTile2';
+            this.finishLineImage = 'finishLine2';
+        } else if(this.difficulty == 1) {
+            this.playerRadius = 12.3;
+            this.mazeWidth = 8;
+            this.mazeHeight = 8;
+            this.mazeJSON = 'maze1';
+            this.mazeTile = 'wallTile1';
+            this.finishLineImage = 'finishLine1';
+        } else if(this.difficulty == 2) {
+            this.playerRadius = 10;
+            this.mazeWidth = 10;
+            this.mazeHeight = 10;
+            this.mazeJSON = 'maze2';
+            this.mazeTile = 'wallTile2';
+            this.finishLineImage = 'finishLine2';
+        } else if(this.difficulty == 3) {
+            this.playerRadius = 8.3;
+            this.mazeWidth = 12;
+            this.mazeHeight = 12;
+            this.mazeJSON = 'maze3';
+            this.mazeTile = 'wallTile3';
+            this.finishLineImage = 'finishLine3';
+        } else if(this.difficulty == 4) {
+            this.playerRadius = 7;
+            this.mazeWidth = 14;
+            this.mazeHeight = 14;
+            this.mazeJSON = 'maze4';
+            this.mazeTile = 'wallTile4';
+            this.finishLineImage = 'finishLine4';
+        }
 
-        // Need to flip all the 0s and 1s because of the way the algorithm works (Paul has easier way to do this! ask him)
-        for (var i = 0; i <= 20; i++) {
-            for (var j = 0; j <= 20; j++) {
-                if (mazeMap[i][j] == 0) {
-                    mazeMap[i][j] = 1;
-                } else if (mazeMap[i][j] == 1) {
-                    mazeMap[i][j] = 0;
+        this.tileSize = Math.floor(630 / (this.mazeWidth * 2 + 1));
+
+        const mymaze = new Maze(this.mazeWidth, this.mazeHeight);
+        mymaze.gateway(this.mazeWidth / 2 - 1, 0);
+        mymaze.gateway(this.mazeWidth / 2, this.mazeHeight - 1);
+        const mazeMap = mymaze.tiles();
+        const route = mymaze.getRoute(mazeMap, this.mazeWidth / 2 - 1, 0, this.mazeWidth / 2, this.mazeHeight - 1);
+
+        const flippedMazeMap = mazeMap.map(function (nested) {
+            return nested.map(function (element) {
+                if (element == 0) {
+                    return 1;
+                } else if (element == 1) {
+                    return 0;
                 }
+            });
+        });
+
+        console.log('route length is ' + route.length);
+        console.log('maze is ' + flippedMazeMap);
+
+        // Make maze tilemap
+        const map = this.make.tilemap({ key: this.mazeJSON });
+        const tileset = map.addTilesetImage(this.mazeTile, this.mazeTile);
+        const layer = map.createBlankLayer(this.mazeJSON, tileset, 0, 100);
+
+        var timeMultiplier = 0.012195 * route.length + 0.17074;
+
+        // Way to control things based on which button is pushed and thus what the difficulty is
+        if (this.difficulty == 0) {
+            this.level0 = true;
+            this.countdownTime = 10;
+            this.color = this.blue;
+        } else {
+            this.mazeEntranceX = screenCenterX - layer.width / 2 + this.tileSize * (this.mazeWidth - 0.5);
+            this.mazeExitX = screenCenterX - layer.width / 2 + this.tileSize * (this.mazeWidth + 1.5);
+            this.mazeEntranceY = 100 + this.tileSize / 2;
+            this.mazeExitY = 100 + this.tileSize * this.mazeWidth * 2 + this.tileSize / 2;
+            this.level0 = false;
+            // Need to play around with these times
+            if(this.difficulty == 1) {
+                this.countdownTime = Math.ceil(10 * timeMultiplier);
+                this.color = this.green;
+            } else if(this.difficulty == 2) {
+                this.countdownTime = Math.ceil(10 * timeMultiplier);
+                this.color = this.orange;
+            } else if(this.difficulty == 3) {
+                this.countdownTime = Math.ceil(10 * timeMultiplier);
+                this.color = this.red;
+            } else if(this.difficulty == 4) {
+                this.countdownTime = Math.ceil(10 * timeMultiplier);
+                this.color = this.purple;
             }
         }
 
@@ -104,46 +184,6 @@ export default class Game extends Phaser.Scene {
             [1, 1, 1, 0, 1, 1, 1]
         ]
 
-        // Make maze tilemap
-        const map = this.make.tilemap({ key: 'maze' });
-        const tileset = map.addTilesetImage('wallTile', 'wallTile');
-        const layer = map.createBlankLayer('maze', tileset, 60, 100);
-
-        var timeMultiplier = 0.012195 * route.length + 0.17074;
-
-        // Way to control the countdown time or scope (or rlly anything) based on which button is pushed and thus what the difficulty is
-        // (countdown times are just fillers for now, will have to tweak them)
-        if (this.difficulty == 0) {
-            this.level0 = true;
-            this.countdownTime = 10;
-            this.color = this.blue;
-        } else {
-            this.mazeEntranceX = 680;
-            this.mazeEntranceY = 115;
-            this.mazeExitX = 740;
-            this.mazeExitY = 715;
-            this.level0 = false;
-            if(this.difficulty == 1) {
-                this.countdownTime = Math.ceil(10 * timeMultiplier);
-                this.color = this.green;
-            } else if(this.difficulty == 2) {
-                this.countdownTime = Math.ceil(7 * timeMultiplier);
-                this.color = this.orange;
-            } else if(this.difficulty == 3) {
-                this.countdownTime = Math.ceil(5 * timeMultiplier);
-                this.color = this.red;
-            } else if(this.difficulty == 4) {
-                this.countdownTime = Math.ceil(3 * timeMultiplier);
-                this.color = this.purple;
-            }
-        }
-
-        // Add white over scope
-        // var rec1 = this.add.rectangle(0, 0, screenCenterX - layer.width / 2, 750, 0xffffff).setOrigin(0, 0);
-        // var rec2 = this.add.rectangle(screenCenterX - layer.width / 2, 0, layer.width, 100, 0xffffff).setOrigin(0, 0);
-        // var rec3 = this.add.rectangle(screenCenterX + layer.width / 2, 0, screenCenterX - layer.width / 2, 750, 0xffffff).setOrigin(0, 0);
-        // var rec4 = this.add.rectangle(screenCenterX - layer.width / 2, layer.height + 100, layer.width, 750 - (100 + layer.height), 0xffffff).setOrigin(0,0);
-        
         if (this.level0) {
             // Level 0
             this.mazeEntranceY = 215;
@@ -160,12 +200,12 @@ export default class Game extends Phaser.Scene {
             this.arrow.rotation = 1.6;
         } else {
             // Regular maze
-            layer.putTilesAt(mazeMap, 0, 0);
+            layer.putTilesAt(flippedMazeMap, 0, 0);
             layer.setX(screenCenterX - layer.width / 2);
         }
 
-        // Add dotted line at exit (need to make this a more clear image)
-        this.dottedLine = this.add.image(this.mazeExitX, this.mazeExitY - 14, 'dottedLine');
+        // Add finish line image at exit (idk if I like this one either but we can change it)
+        this.finishLine = this.add.image(this.mazeExitX, this.mazeExitY, this.finishLineImage);
 
         // Add line at the beginning to keep the player from going outside of the maze
         var boundaryLine = this.add.rectangle(this.mazeEntranceX, this.mazeEntranceY - 16, 30, 1, 0xffffff);
@@ -181,7 +221,7 @@ export default class Game extends Phaser.Scene {
         // Create player (same blue as the blue in the maze screen concepts)
         this.player = this.add.circle(this.mazeEntranceX, this.mazeEntranceY, this.playerRadius, this.color, 1);
         this.physics.add.existing(this.player);
-        this.player.body.setCircle(10);
+        this.player.body.setCircle(this.playerRadius);
 
         // Add a rectangle at the location of each tile for collision purposes
         layer.forEachTile(tile => {
@@ -213,6 +253,7 @@ export default class Game extends Phaser.Scene {
             this.timeTaken = Math.ceil(data.timeTaken / 1000);
         }
 
+        // More setting up rapid fire countdown
         if (this.rapidFire) {
             this.RFSumTime = this.RFSumTime + this.timeTaken;
             this.RFCountdownLabel = this.add.text(screenCenterX * 0.25, screenCenterY, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
@@ -240,16 +281,12 @@ export default class Game extends Phaser.Scene {
             {
                 this.timeRecord = 1000 * 1000;
                 this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
-             
             }
             else 
             {
-                // if (!this.level0) {
-                   this.timeRecord = data.timeRecord;
-                    this.formatTimeRecordLabel(this.timeRecord);
-                // } 
+                this.timeRecord = data.timeRecord;
+                this.formatTimeRecordLabel(this.timeRecord);
             }
-                
         } else if (this.rapidFire) {
             this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '' + this.timesPlayed, { fontSize: 30, color: '0x000000'}).setOrigin(0.5);
             this.timeRecordLabel.setText('Mazes played: ' + this.timesPlayed);
@@ -328,7 +365,7 @@ export default class Game extends Phaser.Scene {
                     thisGame.RFCountdown.timerEvent.paused = false;
                 }
             }
-            }
+        }
              
         yesOutline.setInteractive() 
                     .on('pointerdown', () => fun1());
