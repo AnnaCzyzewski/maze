@@ -121,31 +121,34 @@ export default class Game extends Phaser.Scene {
 
         this.tileSize = Math.floor(630 / (this.mazeWidth * 2 + 1));
 
-        const mymaze = new Maze(this.mazeWidth, this.mazeHeight);
-        mymaze.gateway(this.mazeWidth / 2 - 1, 0);
-        mymaze.gateway(this.mazeWidth / 2, this.mazeHeight - 1);
-        const mazeMap = mymaze.tiles();
-        const route = mymaze.getRoute(mazeMap, this.mazeWidth / 2 - 1, 0, this.mazeWidth / 2, this.mazeHeight - 1);
+        if(!this.difficulty == 0) {
+            const mymaze = new Maze(this.mazeWidth, this.mazeHeight);
+            mymaze.gateway(this.mazeWidth / 2 - 1, 0);
+            mymaze.gateway(this.mazeWidth / 2, this.mazeHeight - 1);
+            const mazeMap = mymaze.tiles();
+            const route = mymaze.getRoute(mazeMap, this.mazeWidth / 2 - 1, 0, this.mazeWidth / 2, this.mazeHeight - 1);
 
-        const flippedMazeMap = mazeMap.map(function (nested) {
-            return nested.map(function (element) {
-                if (element == 0) {
-                    return 1;
-                } else if (element == 1) {
-                    return 0;
-                }
+            const flippedMazeMap = mazeMap.map(function (nested) {
+                return nested.map(function (element) {
+                    if (element == 0) {
+                        return 1;
+                    } else if (element == 1) {
+                        return 0;
+                    }
+                });
             });
-        });
 
-        console.log('route length is ' + route.length);
-        console.log('maze is ' + flippedMazeMap);
+            console.log('route length is ' + route.length);
+            console.log('maze is ' + flippedMazeMap);
+
+            var timeMultiplier = 0.012195 * route.length + 0.17074;
+        }
+
 
         // Make maze tilemap
         const map = this.make.tilemap({ key: this.mazeJSON });
         const tileset = map.addTilesetImage(this.mazeTile, this.mazeTile);
         const layer = map.createBlankLayer(this.mazeJSON, tileset, 0, 100);
-
-        var timeMultiplier = 0.012195 * route.length + 0.17074;
 
         // Way to control things based on which button is pushed and thus what the difficulty is
         if (this.difficulty == 0) {
