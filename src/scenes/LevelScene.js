@@ -13,13 +13,8 @@ export default class LevelScene extends Phaser.Scene {
     constructor() {
         super({key:'levelScene'});
     }
-    preload(){
-        this.load.image('background', 'src/assets/graybackground.png');
-    }
  
     create(){
-
-        console.log("went to level scene");
 
         var title = this.add.image(755, 215, 'levelSelect');
         title.setScale(.75);
@@ -70,6 +65,9 @@ export default class LevelScene extends Phaser.Scene {
         nextOutline.on("pointerover", () => {
             next.setTintFill(this.yellow);
         });
+
+        // We can use this array to make it so we just have one nested for loop to create all of the level images
+        var arrayCountingUp = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 
         var zero = this.add.image(580, 350.5, 'zero');
         zero.setScale(.9);
@@ -172,47 +170,51 @@ export default class LevelScene extends Phaser.Scene {
     }
 
     level1Button() {
-        this.scene.start('game', {difficulty: 1, rapidFire: false});
+        this.scene.start('game', {level: 1, difficulty: 1, rapidFire: false});
     }
 
     level2Button() {
-        this.scene.start('game', {difficulty: 2, rapidFire: false});
+        this.scene.start('game', {level: 2, difficulty: 1, rapidFire: false});
     }
 
     level3Button() {
-        this.scene.start('game', {difficulty: 3, rapidFire: false});
+        this.scene.start('game', {level: 3, difficulty: 1, rapidFire: false});
     }
 
     level4Button() {
-        this.scene.start('game', {difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 4, difficulty: 2, rapidFire: false});
     }
 
     level5Button() {
-        this.scene.start('game', {difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 5, difficulty: 2, rapidFire: false});
     }
 
     level6Button() {
-        this.scene.start('game', {difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 6, difficulty: 2, rapidFire: false});
     }
 
     level7Button() {
-        this.scene.start('game', {difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 7, difficulty: 3, rapidFire: false});
     }
 
     level8Button() {
-        this.scene.start('game', {difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 8, difficulty: 3, rapidFire: false});
     }
 
     level9Button() {
-        this.scene.start('game', {difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 9, difficulty: 3, rapidFire: false});
     }
 
     level10Button() {
-        this.scene.start('game', {difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 10, difficulty: 4, rapidFire: false});
     }
 
     level11Button() {
-        this.scene.start('game', {difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 11, difficulty: 4, rapidFire: false});
+    }
+
+    level12Button() {
+        this.scene.start('game', {level: 12, difficulty: 4, rapidFire: false});
     }
 
 }

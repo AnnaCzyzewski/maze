@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Countdown from './Countdown';
+import Levels from './Levels';
 import Maze from '/lib/maze';
 
 export default class Game extends Phaser.Scene {
@@ -61,6 +62,8 @@ export default class Game extends Phaser.Scene {
     timeMultiplier;
     flippedMazeMap;
     route;
+
+    levelsData;
     
     scopeTargetShrinkSize = 1800;
 
@@ -84,6 +87,11 @@ export default class Game extends Phaser.Scene {
         this.timesPlayed = data.timesPlayed || 0;
         this.rapidFire = data.rapidFire;
         this.difficulty = data.difficulty;
+        if(this.difficulty != 0 && !this.rapidFire) {
+            this.level = data.level;
+            var levelsObject = new Levels(this.level);
+            this.levelsData = levelsObject.getData();
+        }
 
         this.started = false;
         this.ended = false;
@@ -142,12 +150,8 @@ export default class Game extends Phaser.Scene {
                 });
             });
 
-            console.log('route length is ' + this.route.length);
-            console.log('maze is ' + this.flippedMazeMap);
-
             this.timeMultiplier = 0.012195 * this.route.length + 0.17074;
         }
-
 
         // Make maze tilemap
         const map = this.make.tilemap({ key: this.mazeJSON });
@@ -206,9 +210,14 @@ export default class Game extends Phaser.Scene {
             this.arrow = this.add.image(this.mazeEntranceX, this.mazeEntranceY - 35, 'arrow');
             this.arrow.rotation = 1.6;
         } else {
-            // Regular maze
-            layer.putTilesAt(this.flippedMazeMap, 0, 0);
-            layer.setX(screenCenterX - layer.width / 2);
+            if(this.rapidFire) {
+                // Random maze
+                layer.putTilesAt(this.flippedMazeMap, 0, 0);
+                layer.setX(screenCenterX - layer.width / 2);
+            } else {
+                layer.putTilesAt(this.levelsData, 0, 0);
+                layer.setX(screenCenterX - layer.width / 2);
+            }
         }
 
         // Add finish line image at exit (idk if I like this one either but we can change it)
