@@ -66,29 +66,6 @@ export default class LevelScene extends Phaser.Scene {
             home.setTintFill(this.yellow);
         });
 
-<<<<<<< Updated upstream
-        var next = this.add.image(960, 682, 'nextIcon');
-        next.setScale(.29);
-
-        var nextOutline = this.add.rectangle(960, 661, 56, 56);
-        nextOutline.setInteractive({ useHandCursor: true });
-        nextOutline.on('pointerup', () => this.nextButton());
-        nextOutline.on("pointerover", () => {
-            next.setTintFill(this.yellow);
-        });
-
-        // We can use this array to make it so we just have one nested for loop to create all of the level images
-        var arrayCountingUp = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
-
-        var zero = this.add.image(580, 350.5, 'zero');
-        zero.setScale(.9);
-        var zeroOutline = this.add.rectangle(581, 259, 80, 90);
-        zeroOutline.setInteractive({ useHandCursor: true });
-        zeroOutline.on('pointerup', () => this.level0Button());
-        zeroOutline.on("pointerover", () => {
-            zero.setTintFill(this.blue);
-            bestTime.setVisible(true);
-=======
         // var next = this.add.image(960, 682, 'nextIcon');
         // next.setScale(.29);
 
@@ -108,7 +85,6 @@ export default class LevelScene extends Phaser.Scene {
         introOutline.on("pointerover", () => {
             intro.setTintFill(this.blue);
             introOutline.setStrokeStyle(3.5, this.blue);
->>>>>>> Stashed changes
         });
 
         var one = this.add.image(580, 412, 'one');
@@ -252,7 +228,6 @@ export default class LevelScene extends Phaser.Scene {
     }
 
     level2Button() {
-<<<<<<< Updated upstream
         this.scene.start('game', {level: 2, difficulty: 1, rapidFire: false});
     }
 
@@ -282,37 +257,6 @@ export default class LevelScene extends Phaser.Scene {
 
     level9Button() {
         this.scene.start('game', {level: 9, difficulty: 3, rapidFire: false});
-=======
-        this.scene.start('game', {difficulty: 1, rapidFire: false});
-    }
-
-    level3Button() {
-        this.scene.start('game', {difficulty: 1, rapidFire: false});
-    }
-
-    level4Button() {
-        this.scene.start('game', {difficulty: 2, rapidFire: false});
-    }
-
-    level5Button() {
-        this.scene.start('game', {difficulty: 2, rapidFire: false});
-    }
-
-    level6Button() {
-        this.scene.start('game', {difficulty: 2, rapidFire: false});
-    }
-
-    level7Button() {
-        this.scene.start('game', {difficulty: 3, rapidFire: false});
-    }
-
-    level8Button() {
-        this.scene.start('game', {difficulty: 3, rapidFire: false});
-    }
-
-    level9Button() {
-        this.scene.start('game', {difficulty: 3, rapidFire: false});
->>>>>>> Stashed changes
     }
 
     level10Button() {
@@ -325,10 +269,6 @@ export default class LevelScene extends Phaser.Scene {
 
     level12Button() {
         this.scene.start('game', {level: 12, difficulty: 4, rapidFire: false});
-    }
-
-    level12Button() {
-        this.scene.start('game', {difficulty: 4, rapidFire: false});
     }
 
 }
