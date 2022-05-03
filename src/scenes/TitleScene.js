@@ -6,14 +6,6 @@ export default class TitleScene extends Phaser.Scene {
         super({key:'titleScene'});
     }
 
-    preload(){
-       this.load.image('memoryMaze', 'src/assets/memory_maze.png');
-       this.load.image('startButton', 'src/assets/start_button.png')
-       this.load.image('brainMaze', 'src/assets/brain_maze.png');
-       this.load.image('levelSelectButton', 'src/assets/level_select_button.png');
-       this.load.image('settingsIcon', 'src/assets/settings_icon.png');
-    }
-
     create(){
 
         var title = this.add.image(765, 220, 'memoryMaze');

@@ -314,7 +314,7 @@ export default class Game extends Phaser.Scene {
         this.homeOutline = this.add.rectangle(screenCenterX * 0.2, 48, 56, 56); // y offset by 59 px
         this.homeOutline.setInteractive({ useHandCursor: true });
         this.homeOutline.setInteractive()
-                    .on('pointerdown', () => this.handleHomeButton());
+                    .on('pointerup', () => this.handleHomeButton());
 
         //this.scale.displaySize.setAspectRatio( width/height );
         //this.scale.refresh();
@@ -384,10 +384,10 @@ export default class Game extends Phaser.Scene {
         }
              
         yesOutline.setInteractive() 
-                    .on('pointerdown', () => fun1());
+                    .on('pointerup', () => fun1());
 
         noOutline.setInteractive() 
-                    .on('pointerdown', () => fun2());
+                    .on('pointerup', () => fun2());
     }
 
     handleRapidFireCountdownFinished() {
@@ -627,10 +627,11 @@ export default class Game extends Phaser.Scene {
 
                 // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
                 const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 'playAgainButton').setOrigin(0.5).setScale(.75);
-                var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 393, 60); 
+                var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 340, 60); 
+                resetOutline.setStrokeStyle(2);
                 resetOutline.setInteractive({ useHandCursor: true });
                 resetOutline.setInteractive()
-                            .on('pointerdown', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));          
+                            .on('pointerup', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));          
             }
             else {
                 // next level button
@@ -643,7 +644,7 @@ export default class Game extends Phaser.Scene {
             }
             nextOutline.setInteractive({ useHandCursor: true });
             nextOutline.setInteractive()
-                        .on('pointerdown', () => this.scene.start('game', {difficulty: this.difficulty + 1}));  
+                        .on('pointerup', () => this.scene.start('game', {difficulty: this.difficulty + 1}));  
                         
             this.homeOutline.destroy();
             this.homeButton.destroy();
@@ -658,7 +659,7 @@ export default class Game extends Phaser.Scene {
             }
                         
             goHome.setInteractive()
-                    .on('pointerdown', () => fun1(this));         
+                    .on('pointerup', () => fun1(this));         
 
         }
     }

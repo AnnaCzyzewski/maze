@@ -33,6 +33,7 @@ export default class Preloader extends Phaser.Scene
         this.load.image('settingsIcon', 'src/assets/images/settings_icon.png');
         this.load.image('nextIcon', 'src/assets/images/next.png');
         this.load.image('levelSelect', 'src/assets/images/level_select.png');
+        this.load.image('introBar', 'src/assets/images/intro_bar.png');
         this.load.image('zero', 'src/assets/images/zero.png');
         this.load.image('one', 'src/assets/images/one.png');
         this.load.image('two', 'src/assets/images/two.png');
@@ -61,10 +62,11 @@ export default class Preloader extends Phaser.Scene
         this.load.image('mediumButton', 'src/assets/images/medium_button.png');
         this.load.image('hardButton', 'src/assets/images/hard_button.png');
         this.load.image('insaneButton', 'src/assets/images/insane_button.png');
-        this.load.image('playAgainButton', 'src/assets/images/play_again_button.png');
+        this.load.image('playAgainButton', 'src/assets/images/play_again.png');
         this.load.image('nextLevelButton', 'src/assets/images/next_level_button.png');
         this.load.image('gotItButton', 'src/assets/images/got_it_button.png');
         this.load.image('goHomePrompt', 'src/assets/images/go_home_prompt.png');
+        this.load.image('goHomeButton', 'src/assets/images/go_home_button.png');
         this.load.image('yesButton', 'src/assets/images/yes_button.png');
         this.load.image('noButton', 'src/assets/images/no_button.png');
         this.load.image('mazesPlayed', 'src/assets/images/mazes_played.png');
