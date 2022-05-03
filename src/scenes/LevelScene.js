@@ -55,7 +55,6 @@ export default class LevelScene extends Phaser.Scene {
         home.setScale(.75);
 
         var homeOutline = this.add.rectangle(542, 661, 56, 56);
-        //homeOutline.setStrokeStyle(2);
         homeOutline.setInteractive({ useHandCursor: true });
         homeOutline.on('pointerup', () => this.homeButton());
         homeOutline.on("pointerover", () => {
@@ -66,7 +65,6 @@ export default class LevelScene extends Phaser.Scene {
         next.setScale(.29);
 
         var nextOutline = this.add.rectangle(960, 661, 56, 56);
-        //nextOutline.setStrokeStyle(2);
         nextOutline.setInteractive({ useHandCursor: true });
         nextOutline.on('pointerup', () => this.nextButton());
         nextOutline.on("pointerover", () => {
@@ -76,7 +74,6 @@ export default class LevelScene extends Phaser.Scene {
         var zero = this.add.image(580, 350.5, 'zero');
         zero.setScale(.9);
         var zeroOutline = this.add.rectangle(581, 259, 80, 90);
-        // zeroOutline.setStrokeStyle(2, '0x0abff7');
         zeroOutline.setInteractive({ useHandCursor: true });
         zeroOutline.on('pointerup', () => this.level0Button());
         zeroOutline.on("pointerover", () => {
@@ -87,7 +84,6 @@ export default class LevelScene extends Phaser.Scene {
         var one = this.add.image(692.25, 362, 'one');
         one.setScale(.9);
         var oneOutline = this.add.rectangle(692.25, 259, 80, 90);
-        // oneOutline.setStrokeStyle(2, '0x0abff7');
         oneOutline.setInteractive({ useHandCursor: true });
         oneOutline.on('pointerup', () => this.level1Button());
         oneOutline.on("pointerover", () => {
@@ -98,7 +94,6 @@ export default class LevelScene extends Phaser.Scene {
         var two = this.add.image(807.75, 358, 'two');
         two.setScale(.9);
         var twoOutline = this.add.rectangle(808, 260, 80, 90);
-        // twoOutline.setStrokeStyle(2, '0x0abff7');
         twoOutline.setInteractive({ useHandCursor: true });
         twoOutline.on('pointerup', () => this.level2Button());
         twoOutline.on("pointerover", () => {
@@ -109,7 +104,6 @@ export default class LevelScene extends Phaser.Scene {
         var three = this.add.image(920, 362, 'three');
         three.setScale(.9);
         var threeOutline = this.add.rectangle(920.25, 260, 80, 90);
-        // threeOutline.setStrokeStyle(2, '0x0abff7');
         threeOutline.setInteractive({ useHandCursor: true });
         threeOutline.on('pointerup', () => this.level3Button());
         threeOutline.on("pointerover", () => {
@@ -120,7 +114,6 @@ export default class LevelScene extends Phaser.Scene {
         var four = this.add.image(580, 465.5, 'four');
         four.setScale(.9);
         var fourOutline = this.add.rectangle(580, 380, 80, 90);
-        // fourOutline.setStrokeStyle(2, '0x0abff7');
         fourOutline.setInteractive({ useHandCursor: true });
         fourOutline.on('pointerup', () => this.level4Button());
         fourOutline.on("pointerover", () => {
@@ -131,43 +124,36 @@ export default class LevelScene extends Phaser.Scene {
         var five = this.add.image(692.25, 457.5, 'five');
         five.setScale(.9);
         var fiveOutline = this.add.rectangle(692.25, 380, 80, 90);
-        //fiveOutline.setStrokeStyle(2, '0x0abff7');
         fiveOutline.setInteractive({ useHandCursor: true });
 
         var six = this.add.image(807.75, 450, 'six');
         six.setScale(.9);
         var sixOutline = this.add.rectangle(807.75, 380, 80, 90);
-        //sixOutline.setStrokeStyle(2, '0x0abff7');
         sixOutline.setInteractive({ useHandCursor: true });
 
         var seven = this.add.image(920, 464, 'seven');
         seven.setScale(.9);
         var sevenOutline = this.add.rectangle(920, 380, 80, 90);
-        //sevenOutline.setStrokeStyle(2, '0x0abff7');
         sevenOutline.setInteractive({ useHandCursor: true });
 
         var eight = this.add.image(580, 574.5, 'eight');
         eight.setScale(.9);
         var eightOutline = this.add.rectangle(580, 501, 80, 90);
-        //eightOutline.setStrokeStyle(2, '0x0abff7');
         eightOutline.setInteractive({ useHandCursor: true });
 
         var nine = this.add.image(692.25, 572, 'nine');
         nine.setScale(.9);
         var nineOutline = this.add.rectangle(692.25, 501, 80, 90);
-        //nineOutline.setStrokeStyle(2, '0x0abff7');
         nineOutline.setInteractive({ useHandCursor: true });
         
         var ten = this.add.image(807, 502, 'ten');
         ten.setScale(.9);
         var tenOutline = this.add.rectangle(807, 502, 80, 91);
-        //tenOutline.setStrokeStyle(2, '0x0abff7');
         tenOutline.setInteractive({ useHandCursor: true });
 
         var eleven = this.add.image(920, 502, 'eleven');
         eleven.setScale(.9);
         var elevenOutline = this.add.rectangle(920, 502, 80, 91);
-        //elevenOutline.setStrokeStyle(2, '0x0abff7');
         elevenOutline.setInteractive({ useHandCursor: true });
  
     }
@@ -186,7 +172,6 @@ export default class LevelScene extends Phaser.Scene {
     }
 
     level1Button() {
-        // this.scene.start('rapid');
         this.scene.start('game', {difficulty: 1, rapidFire: false});
     }
 

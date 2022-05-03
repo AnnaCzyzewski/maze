@@ -47,22 +47,18 @@ export default class TitleScene extends Phaser.Scene {
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);
 
         var startOutline = this.add.rectangle(750, 311, 140, 40);
-        //startOutline.setStrokeStyle(2);
         startOutline.setInteractive({ useHandCursor: true });
         startOutline.on('pointerup', () => this.startButton());
 
         var levelSelectOutline = this.add.rectangle(750, 374, 305, 40);
-        //levelSelectOutline.setStrokeStyle(2);
         levelSelectOutline.setInteractive({ useHandCursor: true });
         levelSelectOutline.on('pointerup', () => this.levelSelectButton());
 
         var survivalOutline = this.add.rectangle(750, 439, 204, 40);
-        //survivalOutline.setStrokeStyle(2);
         survivalOutline.setInteractive({ useHandCursor: true });
         survivalOutline.on('pointerup', () => this.survivalButton());
 
         var settingsOutline = this.add.rectangle(960, 661, 56, 56);
-        //settingsOutline.setStrokeStyle(2);
         settingsOutline.setInteractive({ useHandCursor: true });
     }
 

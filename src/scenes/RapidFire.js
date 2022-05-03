@@ -79,8 +79,7 @@ export default class Game extends Phaser.Scene
             longestStreakMedium.setVisible(false);
             longestStreakHard.setVisible(false);
             longestStreakInsane.setVisible(false);
-            //title.setTintFill(this.black);
-            //brain.setTintFill(this.black);
+         
         });
 
         var screenOutline = this.add.rectangle(750, 380, screen.width - 15, screen.height - 15);
@@ -100,59 +99,48 @@ export default class Game extends Phaser.Scene
             screenOutlineFill.setStrokeStyle(5, this.green);
             longestStreak.setVisible(true);
             longestStreakEasy.setVisible(true);
-            //title.setTintFill(this.green);
-            //brain.setTintFill(this.green);
+      
         });
 
         var medium = this.add.image(750, 345, 'mediumButton');
         medium.setScale(.55);
 
         var mediumOutline = this.add.rectangle(750, 345, 192, 42);
-        //mediumOutline.setStrokeStyle(2);
         mediumOutline.setInteractive({ useHandCursor: true });
         mediumOutline.on('pointerup', () => this.mediumButton());
         mediumOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.orange);
             longestStreak.setVisible(true);
             longestStreakMedium.setVisible(true);
-            //title.setTintFill(this.orange);
-            //brain.setTintFill(this.orange);
         });
 
         var hard = this.add.image(750, 410, 'hardButton');
         hard.setScale(.55);
 
         var hardOutline = this.add.rectangle(750, 410, 108, 42);
-        //hardOutline.setStrokeStyle(2);
         hardOutline.setInteractive({ useHandCursor: true });
         hardOutline.on('pointerup', () => this.hardButton());
         hardOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.red);
             longestStreak.setVisible(true);
             longestStreakHard.setVisible(true);
-            //title.setTintFill(this.red);
-            //brain.setTintFill(this.red);
         });
 
         var insane = this.add.image(750, 475, 'insaneButton');
         insane.setScale(.55);
 
         var insaneOutline = this.add.rectangle(750, 475, 162, 42);
-        //insaneOutline.setStrokeStyle(2);
         insaneOutline.setInteractive({ useHandCursor: true });
         insaneOutline.on('pointerup', () => this.insaneButton());
         insaneOutline.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.purple);
             longestStreak.setVisible(true);
             longestStreakInsane.setVisible(true);
-            //title.setTintFill(this.purple);
-            //brain.setTintFill(this.purple);
         });
 
         var home = this.add.image(542, 738, 'homeIcon');
         home.setScale(.75);
         var homeOutline = this.add.rectangle(542, 661, 56, 56);
-        //homeOutline.setStrokeStyle(2);
         homeOutline.setInteractive({ useHandCursor: true });
         homeOutline.on('pointerup', () => this.homeButton());
         homeOutline.on("pointerover", () => {

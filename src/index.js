@@ -24,7 +24,6 @@ var config = {
             // debug: true
         }
     },
-    // backgroundColor: '#D0D0D0',
     backgroundColor: '#ffffff',
     parent: 'phaser-example',
     scene: [Preloader, TitleScene, LevelScene, LevelSceneP2, Game, RapidFire]
