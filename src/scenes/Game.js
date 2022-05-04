@@ -65,7 +65,7 @@ export default class Game extends Phaser.Scene {
 
     levelsData;
     
-    scopeTargetShrinkSize = 1800;
+    scopeTargetShrinkSize = 1600;
 
     constructor() {
 		super('game')
@@ -82,21 +82,36 @@ export default class Game extends Phaser.Scene {
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
 
         this.scopeStrokeWidth = 0;
+
+        this.started = false;
+        this.ended = false;
     
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
         this.rapidFire = data.rapidFire;
-        this.difficulty = data.difficulty;
-        if(this.difficulty != 0 && !this.rapidFire) {
-            this.level = data.level;
+
+        this.level = data.level;
+
+        if(this.level != 0 && !this.rapidFire) {
             var levelsObject = new Levels(this.level);
             this.levelsData = levelsObject.getData();
         }
 
-        this.started = false;
-        this.ended = false;
+        if(this.level == 0) {
+            this.difficulty = 0;
+        } else if(this.level > 0 & this.level < 4) {
+            this.difficulty = 1;
+        } else if(this.level > 3 & this.level < 7) {
+            this.difficulty = 2;
+        } else if(this.level > 6 & this.level < 10) {
+            this.difficulty = 3;
+        } else if(this.level > 9 & this.level < 13) {
+            this.difficulty = 4;
+        }
 
         if(this.difficulty == 0) {
+            this.countdownTime = 10;
+            this.color = this.blue;
             this.playerRadius = 10;
             this.mazeJSON = 'maze2';
             this.mazeTile = 'wallTile2';
@@ -159,16 +174,11 @@ export default class Game extends Phaser.Scene {
         const layer = map.createBlankLayer(this.mazeJSON, tileset, 0, 100);
 
         // Way to control things based on which button is pushed and thus what the difficulty is
-        if (this.difficulty == 0) {
-            this.level0 = true;
-            this.countdownTime = 10;
-            this.color = this.blue;
-        } else {
+        if (this.difficulty != 0) {
             this.mazeEntranceX = screenCenterX - layer.width / 2 + this.tileSize * (this.mazeWidth - 0.5);
             this.mazeExitX = screenCenterX - layer.width / 2 + this.tileSize * (this.mazeWidth + 1.5);
             this.mazeEntranceY = 100 + this.tileSize / 2;
             this.mazeExitY = 100 + this.tileSize * this.mazeWidth * 2 + this.tileSize / 2;
-            this.level0 = false;
             // Need to play around with these times
             if(this.difficulty == 1) {
                 this.countdownTime = Math.ceil(10 * this.timeMultiplier);
@@ -195,7 +205,7 @@ export default class Game extends Phaser.Scene {
             [1, 1, 1, 0, 1, 1, 1]
         ]
 
-        if (this.level0) {
+        if (this.difficulty == 0) {
             // Level 0
             this.mazeEntranceY = 215;
             this.mazeEntranceX = 710;
@@ -279,7 +289,7 @@ export default class Game extends Phaser.Scene {
         }
 
         // Initialize countdown and stopwatch
-        if(this.level0) {
+        if(this.difficulty == 0) {
             this.countdownLabel = this.add.text(screenCenterX * 1.35, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
             this.textLabel = this.add.text(screenCenterX * 0.85, 45, "Memorize for ", { fontSize: 65, color: '0x000000'}).setOrigin(0.5);
         } else {
@@ -323,6 +333,9 @@ export default class Game extends Phaser.Scene {
     handleHomeButton() {
 
         var thisGame = this;
+        var difficulty = this.difficulty;
+        var level = this.level;
+        var timeRecord = this.timeRecord;
 
         // if during countdown phase, set countdown as paused 
         if (!thisGame.started && !thisGame.ended) {
@@ -349,7 +362,6 @@ export default class Game extends Phaser.Scene {
         var yesOutline = this.add.rectangle(600, 475, 125, 60);
         yesOutline.setInteractive({ useHandCursor: true });
 
-        
         var noButton = this.add.image(820, 475, "noButton").setOrigin(0.5).setScale(0.75);
         var noOutline = this.add.rectangle(820, 475, 90, 60);
         noOutline.setInteractive({ useHandCursor: true });
@@ -358,7 +370,11 @@ export default class Game extends Phaser.Scene {
             // expands scope
             thisGame.animateScope();
             thisGame.scopeStrokeWidth = 0;
-            thisGame.scene.start('titleScene');
+            if(difficulty == 0) {
+                thisGame.scene.start('titleScene');
+            } else {
+                thisGame.scene.start('titleScene', {level: level, record: timeRecord});
+            }
         }
 
         function fun2() {
@@ -403,7 +419,7 @@ export default class Game extends Phaser.Scene {
 
         this.countdown.label.setText('');
 
-        if(this.level0) {
+        if(this.difficulty == 0) {
             this.textLabel.setText('Go!');
             this.textLabel.setStyle({ fontSize: 100});
         }
@@ -435,7 +451,7 @@ export default class Game extends Phaser.Scene {
         }
 
         // Add the arrow keys and get rid of the arrow image
-        if (this.level0) {
+        if (this.difficulty == 0) {
             this.arrowKeys.setVisible(true);
             this.arrow.setVisible(false);
         }
@@ -598,23 +614,22 @@ export default class Game extends Phaser.Scene {
             // Normal level stuff
 
             // Get rid of "Go!" and countdown label
-            if(this.level0) {
+            if(this.difficulty == 0) {
                 this.textLabel.setText('');
             }
             this.countdown.label.setText('');
 
             // Update time record
             
-            if (this.milliseconds < this.timeRecord && !this.level0) {
+            if (this.milliseconds < this.timeRecord && !this.difficulty == 0) {
                 this.timeRecord = this.milliseconds;
                 this.timeRecordLabel.text = 'Record ' + this.formattedTime;            
             }
 
-
             var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
             rectanglePopUp.setStrokeStyle(5, '0x000000');
         
-            if (!this.level0) {
+            if (!this.difficulty == 0) {
                 // moves time to center of screen
                 var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 225, "", { fontSize: 80, color: '#0abff7'});
                 stopwatchlabel.text = this.stopwatchLabel.text;
@@ -631,7 +646,7 @@ export default class Game extends Phaser.Scene {
                 resetOutline.setStrokeStyle(2);
                 resetOutline.setInteractive({ useHandCursor: true });
                 resetOutline.setInteractive()
-                            .on('pointerup', () => this.scene.restart({ timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));          
+                            .on('pointerup', () => this.scene.restart({ level: this.level, timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));          
             }
             else {
                 // next level button
@@ -644,7 +659,7 @@ export default class Game extends Phaser.Scene {
             }
             nextOutline.setInteractive({ useHandCursor: true });
             nextOutline.setInteractive()
-                        .on('pointerup', () => this.scene.start('game', {difficulty: this.difficulty + 1}));  
+                        .on('pointerup', () => this.scene.start('game', {level: this.level + 1}));  
                         
             this.homeOutline.destroy();
             this.homeButton.destroy();
@@ -655,7 +670,11 @@ export default class Game extends Phaser.Scene {
     
             function fun1(thisGame) {
                 thisGame.scopeStrokeWidth = 0;
-                thisGame.scene.start('titleScene');
+                if(this.difficulty == 0) {
+                    thisGame.scene.start('titleScene');
+                } else {
+                    thisGame.scene.start('titleScene', {level: this.level, record: this.timeRecord});
+                }
             }
                         
             goHome.setInteractive()

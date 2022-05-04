@@ -10,9 +10,62 @@ export default class LevelScene extends Phaser.Scene {
     yellow = 0xfff700;
     black = 0x000000;
 
+    // oneRecord;
+    // twoRecord;
+    // threeRecord;
+    // fourRecord;
+    // fiveRecord;
+    // sixRecord;
+    // sevenRecord;
+    // eightRecord;
+    // nineRecord;
+    // tenRecord;
+    // elevenRecord;
+    // twelveRecord;
+
+    // oneRecordText;
+    // twoRecordText;
+    // threeRecordText;
+    // fourRecordText;
+    // fiveRecordText;
+    // sixRecordText;
+    // sevenRecordText;
+    // eightRecordText;
+    // nineRecordText;
+    // tenRecordText;
+    // elevenRecordText;
+    // twelveRecordText;
+
+    // zeroThruTwelve = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+
     constructor() {
         super({key:'levelScene'});
     }
+
+    // init(data) {
+    
+    //     // Retrieves and sets time records
+    //     for (var i = 1; i <= this.zeroThruTwelve.length; i++) {
+
+    //         var number = this.zeroThruTwelve[i];
+    //         var numberRecord = number + 'record';
+    //         var thisNumberRecord = 'this.' + numberRecord;
+    //         thisNumberRecord = parseInt(localStorage.getItem(numberRecord)) || null;
+
+    //         if(data.level == i) {
+    //             var tempRecord;
+    //             if(data.record == null) {
+    //                 tempRecord = 1000 * 1000;
+    //             } else {
+    //                 tempRecord = data.record;
+    //             } 
+    //             if(tempRecord < eval(thisNumberRecord)) {
+    //                 thisNumberRecord = data.record;
+    //                 localStorage.setItem(numberRecord, thisNumberRecord);
+    //             }
+    //         }
+    //     }
+    // } 
  
     create(){
 
@@ -53,8 +106,10 @@ export default class LevelScene extends Phaser.Scene {
         var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);
 
-        var bestTime = this.add.image(750, 160, 'bestTime');
+        var bestTime = this.add.image(715, 165, 'bestTime');
         bestTime.setScale(.3);
+
+        // this.oneRecordText = this.add.text(785, 152, this.oneRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
 
         var home = this.add.image(542, 738, 'homeIcon');
         home.setScale(.75);
@@ -95,6 +150,7 @@ export default class LevelScene extends Phaser.Scene {
         oneOutline.on("pointerover", () => {
             one.setTintFill(this.green);
             bestTime.setVisible(true);
+            // this.oneRecordText.setVisible(true);
         });
 
         var two = this.add.image(692.25, 408, 'two');
@@ -105,6 +161,7 @@ export default class LevelScene extends Phaser.Scene {
         twoOutline.on("pointerover", () => {
             two.setTintFill(this.green);
             bestTime.setVisible(true);
+            // this.twoRecordText.setVisible(true);
         });
 
         var three = this.add.image(807.75, 412, 'three');
@@ -115,6 +172,7 @@ export default class LevelScene extends Phaser.Scene {
         threeOutline.on("pointerover", () => {
             three.setTintFill(this.green);
             bestTime.setVisible(true);
+            // this.threeRecordText.setVisible(true);
         });
 
         var four = this.add.image(920, 394, 'four');
@@ -125,6 +183,7 @@ export default class LevelScene extends Phaser.Scene {
         fourOutline.on("pointerover", () => {
             four.setTintFill(this.orange);
             bestTime.setVisible(true);
+            // this.fourRecordText.setVisible(true);
         });
 
         var five = this.add.image(580, 507.5, 'five');
@@ -135,6 +194,7 @@ export default class LevelScene extends Phaser.Scene {
         fiveOutline.on("pointerover", () => {
             five.setTintFill(this.orange);
             bestTime.setVisible(true);
+            // this.fiveRecordText.setVisible(true);
         });
 
         var six = this.add.image(692.25, 500, 'six');
@@ -145,6 +205,7 @@ export default class LevelScene extends Phaser.Scene {
         sixOutline.on("pointerover", () => {
             six.setTintFill(this.orange);
             bestTime.setVisible(true);
+            // this.sixRecordText.setVisible(true);
         });
 
         var seven = this.add.image(807.75, 514, 'seven');
@@ -155,6 +216,7 @@ export default class LevelScene extends Phaser.Scene {
         sevenOutline.on("pointerover", () => {
             seven.setTintFill(this.red);
             bestTime.setVisible(true);
+            // this.sevenRecordText.setVisible(true);
         });
 
         var eight = this.add.image(920, 504, 'eight');
@@ -165,6 +227,7 @@ export default class LevelScene extends Phaser.Scene {
         eightOutline.on("pointerover", () => {
             eight.setTintFill(this.red);
             bestTime.setVisible(true);
+            // this.eightRecordText.setVisible(true);
         });
         
 
@@ -176,6 +239,7 @@ export default class LevelScene extends Phaser.Scene {
         nineOutline.on("pointerover", () => {
             nine.setTintFill(this.red);
             bestTime.setVisible(true);
+            // this.nineRecordText.setVisible(true);
         });
 
         var ten = this.add.image(692.25, 552, 'ten');
@@ -186,6 +250,7 @@ export default class LevelScene extends Phaser.Scene {
         tenOutline.on("pointerover", () => {
             ten.setTintFill(this.purple);
             bestTime.setVisible(true);
+            // this.tenRecordText.setVisible(true);
         });
         
         var eleven = this.add.image(807, 552, 'eleven');
@@ -196,6 +261,7 @@ export default class LevelScene extends Phaser.Scene {
         elevenOutline.on("pointerover", () => {
             eleven.setTintFill(this.purple);
             bestTime.setVisible(true);
+            // this.elevenRecordText.setVisible(true);
         });
 
         var twelve = this.add.image(920, 552, 'twelve');
@@ -206,8 +272,8 @@ export default class LevelScene extends Phaser.Scene {
         twelveOutline.on("pointerover", () => {
             twelve.setTintFill(this.purple);
             bestTime.setVisible(true);
+            // this.twelveRecordText.setVisible(true);
         });
- 
     }
 
     homeButton() {
@@ -220,55 +286,55 @@ export default class LevelScene extends Phaser.Scene {
 
     // Just made these functions for reference on what to do with the difficulty, they're not connected to buttons yet
     introButton() {
-        this.scene.start('game', {difficulty: 0, rapidFire: false});
+        this.scene.start('game', {level: 0, rapidFire: false});
     }
 
     level1Button() {
-        this.scene.start('game', {level: 1, difficulty: 1, rapidFire: false});
+        this.scene.start('game', {level: 1, rapidFire: false});
     }
 
     level2Button() {
-        this.scene.start('game', {level: 2, difficulty: 1, rapidFire: false});
+        this.scene.start('game', {level: 2, rapidFire: false});
     }
 
     level3Button() {
-        this.scene.start('game', {level: 3, difficulty: 1, rapidFire: false});
+        this.scene.start('game', {level: 3, rapidFire: false});
     }
 
     level4Button() {
-        this.scene.start('game', {level: 4, difficulty: 2, rapidFire: false});
+        this.scene.start('game', {level: 4, rapidFire: false});
     }
 
     level5Button() {
-        this.scene.start('game', {level: 5, difficulty: 2, rapidFire: false});
+        this.scene.start('game', {level: 5, rapidFire: false});
     }
 
     level6Button() {
-        this.scene.start('game', {level: 6, difficulty: 2, rapidFire: false});
+        this.scene.start('game', {level: 6, rapidFire: false});
     }
 
     level7Button() {
-        this.scene.start('game', {level: 7, difficulty: 3, rapidFire: false});
+        this.scene.start('game', {level: 7, rapidFire: false});
     }
 
     level8Button() {
-        this.scene.start('game', {level: 8, difficulty: 3, rapidFire: false});
+        this.scene.start('game', {level: 8, rapidFire: false});
     }
 
     level9Button() {
-        this.scene.start('game', {level: 9, difficulty: 3, rapidFire: false});
+        this.scene.start('game', {level: 9, rapidFire: false});
     }
 
     level10Button() {
-        this.scene.start('game', {level: 10, difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 10, rapidFire: false});
     }
 
     level11Button() {
-        this.scene.start('game', {level: 11, difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 11, rapidFire: false});
     }
 
     level12Button() {
-        this.scene.start('game', {level: 12, difficulty: 4, rapidFire: false});
+        this.scene.start('game', {level: 12, rapidFire: false});
     }
 
 }
