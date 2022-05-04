@@ -658,7 +658,19 @@ export default class Game extends Phaser.Scene {
             }
             nextOutline.setInteractive({ useHandCursor: true });
             nextOutline.setInteractive()
-                        .on('pointerup', () => this.scene.start('game', {level: this.level + 1}));  
+                        .on('pointerup', () => fun2(this)); 
+            
+            function fun2(thisGame) {
+                if (thisGame.difficulty == 0) {
+                    thisGame.scene.start('game', {level: 1});
+                }
+                if (thisGame.level == 12) {
+                    
+                }
+                else {
+                    thisGame.scene.start('game', {level: thisGame.level + 1});
+                }
+            }
                         
             this.homeOutline.destroy();
             this.homeButton.destroy();
