@@ -65,7 +65,6 @@ export default class Game extends Phaser.Scene {
 
     levelsData;
     
-    scopeTargetShrinkSize = 1600;
     scopeTargetShrinkSize = 1800;
 
     constructor() {
