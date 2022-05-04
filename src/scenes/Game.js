@@ -636,14 +636,15 @@ export default class Game extends Phaser.Scene {
                 this.stopwatchLabel.destroy();
                 stopwatchlabel.setOrigin(0.5);                    
 
-                // button with "Play Again" that resets scene 
-                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 'nextLevelButton').setOrigin(0.5).setScale(.75);
-                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 360, 60); 
+                // button with "Next Level" that moves to next level
+                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 'nextLevelButton').setOrigin(0.5).setScale(.75);
+                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 360, 60); 
+                nextOutline.setStrokeStyle(2);
 
-                // button with "Next Level" that moves to next level (right now it only works up to level 4 / insane level)
-                const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 'playAgainButton').setOrigin(0.5).setScale(.75);
-                var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 340, 60); 
-                resetOutline.setStrokeStyle(2);
+                // button with "Play Again" that resets scene
+                const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 'playAgainButton').setOrigin(0.5).setScale(.75);
+                var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 340, 60); 
+                
                 resetOutline.setInteractive({ useHandCursor: true });
                 resetOutline.setInteractive()
                             .on('pointerup', () => this.scene.restart({ level: this.level, timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));          
@@ -652,7 +653,7 @@ export default class Game extends Phaser.Scene {
                 // next level button
                 const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 390, 'nextLevelButton').setOrigin(0.5).setScale(.75);
                 var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 390, 360, 60);                       
-                
+                nextOutline.setStrokeStyle(2);
                 this.arrowKeys.setVisible(false);
                 this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 225, "Got it!", { fontSize: 80, color: '#0abff7'}).setOrigin(0.5);
                 this.stopwatchLabel.destroy(); 
@@ -665,8 +666,9 @@ export default class Game extends Phaser.Scene {
             this.homeButton.destroy();
 
             
-            var goHome = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 'Go home', { fontSize: 50, color: '#0abff7' }).setOrigin(0.5);
-            goHome.setInteractive({ useHandCursor: true });
+            var goHome = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 'goHomeButton').setOrigin(0.5).setScale(0.65);
+            var goHomeOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 240, 35); 
+            goHomeOutline.setInteractive({ useHandCursor: true });
     
             function fun1(thisGame) {
                 thisGame.scopeStrokeWidth = 0;
@@ -677,7 +679,7 @@ export default class Game extends Phaser.Scene {
                 }
             }
                         
-            goHome.setInteractive()
+            goHomeOutline.setInteractive()
                     .on('pointerup', () => fun1(this));         
 
         }
