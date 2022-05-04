@@ -65,7 +65,7 @@ export default class Game extends Phaser.Scene {
 
     levelsData;
     
-    scopeTargetShrinkSize = 1600;
+    scopeTargetShrinkSize;
 
     constructor() {
 		super('game')
@@ -94,7 +94,12 @@ export default class Game extends Phaser.Scene {
 
         if(this.level != 0 && !this.rapidFire) {
             var levelsObject = new Levels(this.level);
-            this.levelsData = levelsObject.getData();
+            levelsObject.setData();
+            this.levelsData = levelsObject.data;
+            this.scopeTargetShrinkSize = levelsObject.scopeSize;
+            this.countdown = levelsObject.countdownTime;
+        } else if (this.rapidFire) {
+            this.scopeTargetShrinkSize = 1800;
         }
 
         if(this.level == 0) {
@@ -111,12 +116,14 @@ export default class Game extends Phaser.Scene {
 
         if(this.difficulty == 0) {
             this.countdownTime = 10;
+            this.scopeTargetShrinkSize = 1800;
             this.color = this.blue;
             this.playerRadius = 10;
             this.mazeJSON = 'maze2';
             this.mazeTile = 'wallTile2';
             this.finishLineImage = 'finishLine2';
         } else if(this.difficulty == 1) {
+            this.color = this.green;
             this.playerRadius = 12.3;
             this.mazeWidth = 8;
             this.mazeHeight = 8;
@@ -124,6 +131,7 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile1';
             this.finishLineImage = 'finishLine1';
         } else if(this.difficulty == 2) {
+            this.color = this.orange;
             this.playerRadius = 10;
             this.mazeWidth = 10;
             this.mazeHeight = 10;
@@ -131,6 +139,7 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile2';
             this.finishLineImage = 'finishLine2';
         } else if(this.difficulty == 3) {
+            this.color = this.red;
             this.playerRadius = 8.3;
             this.mazeWidth = 12;
             this.mazeHeight = 12;
@@ -138,6 +147,7 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile3';
             this.finishLineImage = 'finishLine3';
         } else if(this.difficulty == 4) {
+            this.color = this.purple;
             this.playerRadius = 7;
             this.mazeWidth = 14;
             this.mazeHeight = 14;
@@ -179,19 +189,16 @@ export default class Game extends Phaser.Scene {
             this.mazeExitX = screenCenterX - layer.width / 2 + this.tileSize * (this.mazeWidth + 1.5);
             this.mazeEntranceY = 100 + this.tileSize / 2;
             this.mazeExitY = 100 + this.tileSize * this.mazeWidth * 2 + this.tileSize / 2;
-            // Need to play around with these times
-            if(this.difficulty == 1) {
-                this.countdownTime = Math.ceil(10 * this.timeMultiplier);
-                this.color = this.green;
-            } else if(this.difficulty == 2) {
-                this.countdownTime = Math.ceil(10 * this.timeMultiplier);
-                this.color = this.orange;
-            } else if(this.difficulty == 3) {
-                this.countdownTime = Math.ceil(10 * this.timeMultiplier);
-                this.color = this.red;
-            } else if(this.difficulty == 4) {
-                this.countdownTime = Math.ceil(10 * this.timeMultiplier);
-                this.color = this.purple;
+            if(this.rapidFire) {
+                if(this.difficulty == 1) {
+                    this.countdownTime = Math.ceil(10 * this.timeMultiplier);
+                } else if(this.difficulty == 2) {
+                    this.countdownTime = Math.ceil(10 * this.timeMultiplier);
+                } else if(this.difficulty == 3) {
+                    this.countdownTime = Math.ceil(10 * this.timeMultiplier);
+                } else if(this.difficulty == 4) {
+                    this.countdownTime = Math.ceil(10 * this.timeMultiplier);
+                }
             }
         }
 
@@ -511,9 +518,7 @@ export default class Game extends Phaser.Scene {
             // Shake the camera a bit if the user tries to move too early
             if (!this.ended 
                 &&
-                (this.cursors.left.isDown || this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.down.isDown)
-                &&
-                ((this.rapidFire && this.timesPlayed == 0) || (!this.rapidFire)))
+                (this.cursors.left.isDown || this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.down.isDown))
             {
                 this.cameras.main.shake(20, 0.002);
             } 
@@ -670,9 +675,11 @@ export default class Game extends Phaser.Scene {
             var goHomeOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 240, 35); 
             goHomeOutline.setInteractive({ useHandCursor: true });
     
+            var difficulty = this.difficulty;
+
             function fun1(thisGame) {
                 thisGame.scopeStrokeWidth = 0;
-                if(this.difficulty == 0) {
+                if(difficulty == 0) {
                     thisGame.scene.start('titleScene');
                 } else {
                     thisGame.scene.start('titleScene', {level: this.level, record: this.timeRecord});

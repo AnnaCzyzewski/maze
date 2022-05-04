@@ -46,9 +46,8 @@ export default class TitleScene extends Phaser.Scene {
         survivalOutline.on('pointerup', () => this.survivalButton());
     }
 
-    // right now this runs 
     startButton() {
-        this.scene.start('game', {difficulty: 0});
+        this.scene.start('game', {level: 0});
     }
 
     levelSelectButton() {
