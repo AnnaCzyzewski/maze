@@ -625,17 +625,19 @@ export default class Game extends Phaser.Scene {
             this.countdown.label.setText('');
 
             // Update time record
-            
             if (this.milliseconds < this.timeRecord && !this.difficulty == 0) {
                 this.timeRecord = this.milliseconds;
                 this.timeRecordLabel.text = 'Record ' + this.formattedTime;            
             }
 
-            var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
-            rectanglePopUp.setStrokeStyle(5, '0x000000');
-        
+            this.homeOutline.destroy();
+            this.homeButton.destroy();            
+           
+            // if you are not on level 0
             if (!this.difficulty == 0) {
                 // moves time to center of screen
+                var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
+                rectanglePopUp.setStrokeStyle(5, '0x000000');
                 var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 225, "", { fontSize: 80, color: '#0abff7'});
                 stopwatchlabel.text = this.stopwatchLabel.text;
                 this.stopwatchLabel.destroy();
@@ -644,45 +646,69 @@ export default class Game extends Phaser.Scene {
                 // button with "Next Level" that moves to next level
                 const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 'nextLevelButton').setOrigin(0.5).setScale(.75);
                 var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 360, 60); 
-                nextOutline.setStrokeStyle(2);
 
                 // button with "Play Again" that resets scene
                 const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 'playAgainButton').setOrigin(0.5).setScale(.75);
                 var resetOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 340, 60); 
+
+                var goHome = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 'goHomeButton').setOrigin(0.5).setScale(0.65);
+                var goHomeOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 240, 35);                 
                 
                 resetOutline.setInteractive({ useHandCursor: true });
                 resetOutline.setInteractive()
                             .on('pointerup', () => this.scene.restart({ level: this.level, timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));          
             }
+            // if you are on level 0
             else {
                 // next level button
-                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 390, 'nextLevelButton').setOrigin(0.5).setScale(.75);
-                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 390, 360, 60);                       
-                nextOutline.setStrokeStyle(2);
+                var rectanglePopUp = this.add.rectangle(710, 350, 450, 350, '0xffffff')
+                rectanglePopUp.setStrokeStyle(5, '0x000000');
+                const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 290, 'nextLevelButton').setOrigin(0.5).setScale(.75);
+                var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 290, 360, 60);                       
                 this.arrowKeys.setVisible(false);
-                this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 225, "Got it!", { fontSize: 80, color: '#0abff7'}).setOrigin(0.5);
                 this.stopwatchLabel.destroy(); 
+
+                var goHome = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 430, 'goHomeButton').setOrigin(0.5).setScale(0.65);
+                var goHomeOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 430, 240, 35);                  
             }
             nextOutline.setInteractive({ useHandCursor: true });
             nextOutline.setInteractive()
-                        .on('pointerup', () => this.scene.start('game', {level: this.level + 1}));  
-                        
-            this.homeOutline.destroy();
-            this.homeButton.destroy();
-
+                        .on('pointerup', () => fun2(this)); 
             
-            var goHome = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 'goHomeButton').setOrigin(0.5).setScale(0.65);
-            var goHomeOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 530, 240, 35); 
+            function fun2(thisGame) {
+                // if you are on level 0
+                if (thisGame.difficulty == 0) {
+                    thisGame.scene.start('game', {level: thisGame.level = 1});
+                }
+                // if you are on level 12 (the last level)
+                if (thisGame.level == 12) {
+
+                }
+                // if you are on any other level 
+                else {
+                    thisGame.scene.start('game', {level: thisGame.level + 1});
+                }
+            }
+                        
+
+
+            // if (!this.difficulty == 0) {
+
+            // }
+                
+            // else {
+
+            // }
             goHomeOutline.setInteractive({ useHandCursor: true });
-    
-            var difficulty = this.difficulty;
 
             function fun1(thisGame) {
                 thisGame.scopeStrokeWidth = 0;
-                if(difficulty == 0) {
+                // if you are on level 0
+                if(thisGame.difficulty == 0) {
                     thisGame.scene.start('titleScene');
+                // if you are on any other level 
                 } else {
-                    thisGame.scene.start('titleScene', {level: this.level, record: this.timeRecord});
+                    thisGame.scene.start('titleScene', {level: thisGame.level, record: thisGame.timeRecord});
                 }
             }
                         
