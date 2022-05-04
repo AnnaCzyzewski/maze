@@ -29,6 +29,7 @@ export default class Game extends Phaser.Scene
         this.hardRecord = parseInt(localStorage.getItem('hardRecord')) || 0;
         this.insaneRecord = parseInt(localStorage.getItem('insaneRecord')) || 0;
 
+        // Sets new record if applicable
         if(data.difficulty == 1) {
             if(data.mazesPlayed > this.easyRecord) {
                 this.easyRecord = data.mazesPlayed;

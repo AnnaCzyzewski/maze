@@ -92,12 +92,14 @@ export default class Game extends Phaser.Scene {
 
         this.level = data.level;
 
+        console.log("level is " + this.level);
+
         if(this.level != 0 && !this.rapidFire) {
             var levelsObject = new Levels(this.level);
             levelsObject.setData();
             this.levelsData = levelsObject.data;
             this.scopeTargetShrinkSize = levelsObject.scopeSize;
-            this.countdown = levelsObject.countdownTime;
+            this.countdownTime = levelsObject.countdownTime;
         } else if (this.rapidFire) {
             this.scopeTargetShrinkSize = 1800;
         }
@@ -340,14 +342,12 @@ export default class Game extends Phaser.Scene {
     handleHomeButton() {
 
         var thisGame = this;
-        var difficulty = this.difficulty;
-        var level = this.level;
-        var timeRecord = this.timeRecord;
 
         // if during countdown phase, set countdown as paused 
         if (!thisGame.started && !thisGame.ended) {
             thisGame.countdown.timerEvent.paused = true;
         }
+
         // if during game phase, pauses game and gets a variable with the time at the beginning of the pause 
         else if (thisGame.started && !thisGame.ended) {
             thisGame.started = false;
@@ -355,6 +355,7 @@ export default class Game extends Phaser.Scene {
             if(thisGame.rapidFire) {
                 thisGame.RFCountdown.timerEvent.paused = true;
             }
+
         // button doesn't do anything if the game is ended 
         } else if (thisGame.ended) {
             return
@@ -377,10 +378,10 @@ export default class Game extends Phaser.Scene {
             // expands scope
             thisGame.animateScope();
             thisGame.scopeStrokeWidth = 0;
-            if(difficulty == 0) {
-                thisGame.scene.start('titleScene');
+            if(thisGame.difficulty == 0) {
+                thisGame.scene.start('titleScene', {level: thisGame.level});
             } else {
-                thisGame.scene.start('titleScene', {level: level, record: timeRecord});
+                thisGame.scene.start('titleScene', {level: thisGame.level, record: thisGame.timeRecord});
             }
         }
 
@@ -705,7 +706,7 @@ export default class Game extends Phaser.Scene {
                 thisGame.scopeStrokeWidth = 0;
                 // if you are on level 0
                 if(thisGame.difficulty == 0) {
-                    thisGame.scene.start('titleScene');
+                    thisGame.scene.start('titleScene', {level: thisGame.level});
                 // if you are on any other level 
                 } else {
                     thisGame.scene.start('titleScene', {level: thisGame.level, record: thisGame.timeRecord});

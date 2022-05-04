@@ -10,31 +10,18 @@ export default class LevelScene extends Phaser.Scene {
     yellow = 0xfff700;
     black = 0x000000;
 
-    // oneRecord;
-    // twoRecord;
-    // threeRecord;
-    // fourRecord;
-    // fiveRecord;
-    // sixRecord;
-    // sevenRecord;
-    // eightRecord;
-    // nineRecord;
-    // tenRecord;
-    // elevenRecord;
-    // twelveRecord;
-
-    // oneRecordText;
-    // twoRecordText;
-    // threeRecordText;
-    // fourRecordText;
-    // fiveRecordText;
-    // sixRecordText;
-    // sevenRecordText;
-    // eightRecordText;
-    // nineRecordText;
-    // tenRecordText;
-    // elevenRecordText;
-    // twelveRecordText;
+    oneRecord;
+    twoRecord;
+    threeRecord;
+    fourRecord;
+    fiveRecord;
+    sixRecord;
+    sevenRecord;
+    eightRecord;
+    nineRecord;
+    tenRecord;
+    elevenRecord;
+    twelveRecord;
 
     // zeroThruTwelve = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
 
@@ -42,30 +29,179 @@ export default class LevelScene extends Phaser.Scene {
         super({key:'levelScene'});
     }
 
-    // init(data) {
+    init(data) {
+
+        // Retrieves records: Gets the value stored in localStorage, or 0 if nothing is found
+        this.oneRecord = parseInt(localStorage.getItem('oneRecord')) || null;
+        this.twoRecord = parseInt(localStorage.getItem('twoRecord')) || null;
+        this.threeRecord = parseInt(localStorage.getItem('threeRecord')) || null;
+        this.fourRecord = parseInt(localStorage.getItem('fourRecord')) || null;
+        this.fiveRecord = parseInt(localStorage.getItem('fiveRecord')) || null;
+        this.sixRecord = parseInt(localStorage.getItem('sixRecord')) || null;
+        this.sevenRecord = parseInt(localStorage.getItem('sevenRecord')) || null;
+        this.eightRecord = parseInt(localStorage.getItem('eightRecord')) || null;
+        this.nineRecord = parseInt(localStorage.getItem('nineRecord')) || null;
+        this.tenRecord = parseInt(localStorage.getItem('tenRecord')) || null;
+        this.elevenRecord = parseInt(localStorage.getItem('elevenRecord')) || null;
+        this.twelveRecord = parseInt(localStorage.getItem('twelveRecord')) || null;
+
+        // Sets new record if applicable
+        if(data.level == 1) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.oneRecord) {
+                this.oneRecord = data.record;
+                localStorage.setItem('oneRecord', this.oneRecord);
+            }
+        } else if (data.level == 2) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.twoRecord) {
+                this.twoRecord = data.record;
+                localStorage.setItem('twoRecord', this.twoRecord);
+            }
+        } else if (data.level == 3) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.threeRecord) {
+                this.threeRecord = data.record;
+                localStorage.setItem('threeRecord', this.threeRecord);
+            }
+        } else if (data.level == 4) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.fourRecord) {
+                this.fourRecord = data.record;
+                localStorage.setItem('fourRecord', this.fourRecord);
+            }
+        } else if (data.level == 5) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.fiveRecord) {
+                this.fiveRecord = data.record;
+                localStorage.setItem('fiveRecord', this.fiveRecord);
+            }
+        } else if (data.level == 6) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.sixRecord) {
+                this.sixRecord = data.record;
+                localStorage.setItem('sixRecord', this.sixRecord);
+            }
+        } else if (data.level == 7) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.sevenRecord) {
+                this.sevenRecord = data.record;
+                localStorage.setItem('sevenRecord', this.sevenRecord);
+            }
+        } else if (data.level == 8) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.eightRecord) {
+                this.eightRecord = data.record;
+                localStorage.setItem('eightRecord', this.eightRecord);
+            }
+        } else if (data.level == 9) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.nineRecord) {
+                this.nineRecord = data.record;
+                localStorage.setItem('nineRecord', this.nineRecord);
+            }
+        } else if (data.level == 10) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.tenRecord) {
+                this.tenRecord = data.record;
+                localStorage.setItem('tenRecord', this.tenRecord);
+            }
+        } else if (data.level == 11) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.elevenRecord) {
+                this.elevenRecord = data.record;
+                localStorage.setItem('elevenRecord', this.elevenRecord);
+            }
+        } else if (data.level == 12) {
+            var tempRecord;
+            if(data.record == null) {
+                tempRecord = 1000 * 1000;
+            } else {
+                tempRecord = data.record;
+            } 
+            if(tempRecord > this.twelveRecord) {
+                this.twelveRecord = data.record;
+                localStorage.setItem('twelveRecord', this.twelveRecord);
+            }
+        }
     
-    //     // Retrieves and sets time records
-    //     for (var i = 1; i <= this.zeroThruTwelve.length; i++) {
+        // // My idea for how to do all of above in one nested loop, but this is not how things work lol
+        // for (var i = 1; i <= this.zeroThruTwelve.length; i++) {
 
-    //         var number = this.zeroThruTwelve[i];
-    //         var numberRecord = number + 'record';
-    //         var thisNumberRecord = 'this.' + numberRecord;
-    //         thisNumberRecord = parseInt(localStorage.getItem(numberRecord)) || null;
+        //     var number = this.zeroThruTwelve[i];
+        //     var numberRecord = number + 'record';
+        //     var thisNumberRecord = 'this.' + numberRecord;
+        //     thisNumberRecord = parseInt(localStorage.getItem(numberRecord)) || null;
 
-    //         if(data.level == i) {
-    //             var tempRecord;
-    //             if(data.record == null) {
-    //                 tempRecord = 1000 * 1000;
-    //             } else {
-    //                 tempRecord = data.record;
-    //             } 
-    //             if(tempRecord < eval(thisNumberRecord)) {
-    //                 thisNumberRecord = data.record;
-    //                 localStorage.setItem(numberRecord, thisNumberRecord);
-    //             }
-    //         }
-    //     }
-    // }
+        //     if(data.level == i) {
+        //         var tempRecord;
+        //         if(data.record == null) {
+        //             tempRecord = 1000 * 1000;
+        //         } else {
+        //             tempRecord = data.record;
+        //         } 
+        //         if(tempRecord < eval(thisNumberRecord)) {
+        //             thisNumberRecord = data.record;
+        //             localStorage.setItem(numberRecord, thisNumberRecord);
+        //         }
+        //     }
+        // }
+    }
  
     create() {
 
@@ -95,8 +231,17 @@ export default class LevelScene extends Phaser.Scene {
             twelve.setTintFill(this.black);
             home.setTintFill(this.black);
             bestTime.setVisible(false);
-            //next.setTintFill(this.black);
-            //bestTime.setVisible(false);
+            oneRecordText.setVisible(false);
+            twoRecordText.setVisible(false);
+            threeRecordText.setVisible(false);
+            fourRecordText.setVisible(false);
+            fiveRecordText.setVisible(false);
+            sixRecordText.setVisible(false);
+            sevenRecordText.setVisible(false);
+            eightRecordText.setVisible(false);
+            nineRecordText.setVisible(false);
+            tenRecordText.setVisible(false);
+            elevenRecordText.setVisible(false);
         });
 
         var screenOutline = this.add.rectangle(750, 380, screen.width - 15, screen.height - 15);
@@ -109,7 +254,18 @@ export default class LevelScene extends Phaser.Scene {
         var bestTime = this.add.image(715, 165, 'bestTime');
         bestTime.setScale(.3);
 
-        // this.oneRecordText = this.add.text(785, 152, this.oneRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var oneRecordText = this.add.text(785, 152, this.oneRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var twoRecordText = this.add.text(785, 152, this.twoRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var threeRecordText = this.add.text(785, 152, this.threeRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var fourRecordText = this.add.text(785, 152, this.fourRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var fiveRecordText = this.add.text(785, 152, this.fiveRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var sixRecordText = this.add.text(785, 152, this.sixRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var sevenRecordText = this.add.text(785, 152, this.sevenRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var eightRecordText = this.add.text(785, 152, this.eightRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var nineRecordText = this.add.text(785, 152, this.nineRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var tenRecordText = this.add.text(785, 152, this.tenRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var elevenRecordText = this.add.text(785, 152, this.elevenRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var twelveRecordText = this.add.text(785, 152, this.twelveRecord, { fontSize: 27, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
 
         var home = this.add.image(542, 738, 'homeIcon');
         home.setScale(.75);
@@ -120,16 +276,6 @@ export default class LevelScene extends Phaser.Scene {
         homeOutline.on("pointerover", () => {
             home.setTintFill(this.yellow);
         });
-
-        // var next = this.add.image(960, 682, 'nextIcon');
-        // next.setScale(.29);
-
-        // var nextOutline = this.add.rectangle(960, 661, 56, 56);
-        // nextOutline.setInteractive({ useHandCursor: true });
-        // nextOutline.on('pointerup', () => this.nextButton());
-        // nextOutline.on("pointerover", () => {
-        //     next.setTintFill(this.yellow);
-        // });
 
         var intro = this.add.image(750, 210, 'introBar');
         intro.setScale(.4);
@@ -150,7 +296,7 @@ export default class LevelScene extends Phaser.Scene {
         oneOutline.on("pointerover", () => {
             one.setTintFill(this.green);
             bestTime.setVisible(true);
-            // this.oneRecordText.setVisible(true);
+            oneRecordText.setVisible(true);
         });
 
         var two = this.add.image(692.25, 408, 'two');
@@ -161,7 +307,7 @@ export default class LevelScene extends Phaser.Scene {
         twoOutline.on("pointerover", () => {
             two.setTintFill(this.green);
             bestTime.setVisible(true);
-            // this.twoRecordText.setVisible(true);
+            twoRecordText.setVisible(true);
         });
 
         var three = this.add.image(807.75, 412, 'three');
@@ -172,7 +318,7 @@ export default class LevelScene extends Phaser.Scene {
         threeOutline.on("pointerover", () => {
             three.setTintFill(this.green);
             bestTime.setVisible(true);
-            // this.threeRecordText.setVisible(true);
+            threeRecordText.setVisible(true);
         });
 
         var four = this.add.image(920, 394, 'four');
@@ -183,7 +329,7 @@ export default class LevelScene extends Phaser.Scene {
         fourOutline.on("pointerover", () => {
             four.setTintFill(this.orange);
             bestTime.setVisible(true);
-            // this.fourRecordText.setVisible(true);
+            fourRecordText.setVisible(true);
         });
 
         var five = this.add.image(580, 507.5, 'five');
@@ -194,7 +340,7 @@ export default class LevelScene extends Phaser.Scene {
         fiveOutline.on("pointerover", () => {
             five.setTintFill(this.orange);
             bestTime.setVisible(true);
-            // this.fiveRecordText.setVisible(true);
+            fiveRecordText.setVisible(true);
         });
 
         var six = this.add.image(692.25, 500, 'six');
@@ -205,7 +351,7 @@ export default class LevelScene extends Phaser.Scene {
         sixOutline.on("pointerover", () => {
             six.setTintFill(this.orange);
             bestTime.setVisible(true);
-            // this.sixRecordText.setVisible(true);
+            sixRecordText.setVisible(true);
         });
 
         var seven = this.add.image(807.75, 514, 'seven');
@@ -216,7 +362,7 @@ export default class LevelScene extends Phaser.Scene {
         sevenOutline.on("pointerover", () => {
             seven.setTintFill(this.red);
             bestTime.setVisible(true);
-            // this.sevenRecordText.setVisible(true);
+            sevenRecordText.setVisible(true);
         });
 
         var eight = this.add.image(920, 504, 'eight');
@@ -227,7 +373,7 @@ export default class LevelScene extends Phaser.Scene {
         eightOutline.on("pointerover", () => {
             eight.setTintFill(this.red);
             bestTime.setVisible(true);
-            // this.eightRecordText.setVisible(true);
+            eightRecordText.setVisible(true);
         });
         
 
@@ -239,7 +385,7 @@ export default class LevelScene extends Phaser.Scene {
         nineOutline.on("pointerover", () => {
             nine.setTintFill(this.red);
             bestTime.setVisible(true);
-            // this.nineRecordText.setVisible(true);
+            nineRecordText.setVisible(true);
         });
 
         var ten = this.add.image(692.25, 552, 'ten');
@@ -250,7 +396,7 @@ export default class LevelScene extends Phaser.Scene {
         tenOutline.on("pointerover", () => {
             ten.setTintFill(this.purple);
             bestTime.setVisible(true);
-            // this.tenRecordText.setVisible(true);
+            tenRecordText.setVisible(true);
         });
         
         var eleven = this.add.image(807, 552, 'eleven');
@@ -261,7 +407,7 @@ export default class LevelScene extends Phaser.Scene {
         elevenOutline.on("pointerover", () => {
             eleven.setTintFill(this.purple);
             bestTime.setVisible(true);
-            // this.elevenRecordText.setVisible(true);
+            elevenRecordText.setVisible(true);
         });
 
         var twelve = this.add.image(920, 552, 'twelve');
@@ -272,7 +418,7 @@ export default class LevelScene extends Phaser.Scene {
         twelveOutline.on("pointerover", () => {
             twelve.setTintFill(this.purple);
             bestTime.setVisible(true);
-            // this.twelveRecordText.setVisible(true);
+            twelveRecordText.setVisible(true);
         });
     }
 
@@ -284,7 +430,6 @@ export default class LevelScene extends Phaser.Scene {
         this.scene.start('levelSceneP2');
     }
 
-    // Just made these functions for reference on what to do with the difficulty, they're not connected to buttons yet
     introButton() {
         this.scene.start('game', {level: 0, rapidFire: false});
     }
