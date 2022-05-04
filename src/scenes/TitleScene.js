@@ -22,9 +22,6 @@ export default class TitleScene extends Phaser.Scene {
 
         var survival = this.add.image(750, 439, 'survivalButton');
         survival.setScale(.54);
-
-        var settings = this.add.image(960, 720, 'settingsIcon');
-        settings.setScale(.75);
         
         var screen = this.add.rectangle(750, 380, 550, 700);
         screen.setStrokeStyle(5);
@@ -47,9 +44,6 @@ export default class TitleScene extends Phaser.Scene {
         var survivalOutline = this.add.rectangle(750, 439, 204, 40);
         survivalOutline.setInteractive({ useHandCursor: true });
         survivalOutline.on('pointerup', () => this.survivalButton());
-
-        var settingsOutline = this.add.rectangle(960, 661, 56, 56);
-        settingsOutline.setInteractive({ useHandCursor: true });
     }
 
     // right now this runs 
