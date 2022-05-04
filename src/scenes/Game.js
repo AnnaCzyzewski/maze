@@ -66,6 +66,7 @@ export default class Game extends Phaser.Scene {
     levelsData;
     
     scopeTargetShrinkSize = 1600;
+    scopeTargetShrinkSize = 1800;
 
     constructor() {
 		super('game')
@@ -639,7 +640,6 @@ export default class Game extends Phaser.Scene {
                 // button with "Next Level" that moves to next level
                 const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 'nextLevelButton').setOrigin(0.5).setScale(.75);
                 var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 350, 360, 60); 
-                nextOutline.setStrokeStyle(2);
 
                 // button with "Play Again" that resets scene
                 const resetButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 450, 'playAgainButton').setOrigin(0.5).setScale(.75);
@@ -653,7 +653,6 @@ export default class Game extends Phaser.Scene {
                 // next level button
                 const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 390, 'nextLevelButton').setOrigin(0.5).setScale(.75);
                 var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 390, 360, 60);                       
-                nextOutline.setStrokeStyle(2);
                 this.arrowKeys.setVisible(false);
                 this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 225, "Got it!", { fontSize: 80, color: '#0abff7'}).setOrigin(0.5);
                 this.stopwatchLabel.destroy(); 
@@ -672,10 +671,10 @@ export default class Game extends Phaser.Scene {
     
             function fun1(thisGame) {
                 thisGame.scopeStrokeWidth = 0;
-                if(this.difficulty == 0) {
+                if(thisGame.difficulty == 0) {
                     thisGame.scene.start('titleScene');
                 } else {
-                    thisGame.scene.start('titleScene', {level: this.level, record: this.timeRecord});
+                    thisGame.scene.start('titleScene', {level: thisGame.level, record: thisGame.timeRecord});
                 }
             }
                         
