@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import Countdown from './Countdown';
 import Levels from './Levels';
 import Maze from '/lib/maze';
+import { getRecordForLevel } from '../RecordTracker';
+import { updateRecordForLevel, updateRecordForRapidFire } from '../RecordTracker';
 
 export default class Game extends Phaser.Scene {
 
@@ -13,7 +15,6 @@ export default class Game extends Phaser.Scene {
     seconds;
     formattedTime;
     timesPlayed;
-    timeRecord;
     timeRecordLabel;
     difficulty;
     countdownTime;
@@ -26,7 +27,7 @@ export default class Game extends Phaser.Scene {
     started = false;
     startTime = 0;
     playerRadius = 10;
-    playerSpeed = 200;
+    playerSpeed;
     scopeSpeed = 50;
     scopeStrokeWidth = 0;
 
@@ -39,14 +40,10 @@ export default class Game extends Phaser.Scene {
     black = 0x000000;
     pauseTime = 0;
 
-    RFTimesPlayedEasy;
-    RFTimesPlayedMedium;
-    RFTimesPlayedHard;
-    RFTimesPlayedInsane;
     RFSumTime;
     RFTimeTaken;
     RFCountdown;
-    RFCountdownTime = 60;
+    RFCountdownTime;
     RFCountdownLabel;
 
     homeOutline;
@@ -86,9 +83,11 @@ export default class Game extends Phaser.Scene {
         this.started = false;
         this.ended = false;
     
+        this.rapidFire = data.rapidFire;
+
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
-        this.rapidFire = data.rapidFire;
+        console.log('times played is ' + this.timesPlayed);
 
         this.level = data.level;
 
@@ -117,6 +116,7 @@ export default class Game extends Phaser.Scene {
         }
 
         if(this.difficulty == 0) {
+            this.playerSpeed = 200;
             this.countdownTime = 10;
             this.scopeTargetShrinkSize = 1800;
             this.color = this.blue;
@@ -125,6 +125,8 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile2';
             this.finishLineImage = 'finishLine2';
         } else if(this.difficulty == 1) {
+            this.RFCountdownTime = 60;
+            this.playerSpeed = 246.67;
             this.color = this.green;
             this.playerRadius = 12.3;
             this.mazeWidth = 8;
@@ -133,6 +135,8 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile1';
             this.finishLineImage = 'finishLine1';
         } else if(this.difficulty == 2) {
+            this.RFCountdownTime = 90;
+            this.playerSpeed = 200;
             this.color = this.orange;
             this.playerRadius = 10;
             this.mazeWidth = 10;
@@ -141,6 +145,8 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile2';
             this.finishLineImage = 'finishLine2';
         } else if(this.difficulty == 3) {
+            this.RFCountdownTime = 120;
+            this.playerSpeed = 166.67;
             this.color = this.red;
             this.playerRadius = 8.3;
             this.mazeWidth = 12;
@@ -149,6 +155,8 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile3';
             this.finishLineImage = 'finishLine3';
         } else if(this.difficulty == 4) {
+            this.RFCountdownTime = 150;
+            this.playerSpeed = 140;
             this.color = this.purple;
             this.playerRadius = 7;
             this.mazeWidth = 14;
@@ -280,12 +288,14 @@ export default class Game extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         // Set up rapid fire countdown
-        if(this.timesPlayed == 0) {
-            this.RFSumTime = 0;
-            this.timeTaken = 0;
-        } else {
-            this.RFSumTime = data.sumTime;
-            this.timeTaken = Math.ceil(data.timeTaken / 1000);
+        if(this.rapidFire) {
+            if(this.timesPlayed == 0) {
+                this.RFSumTime = 0;
+                this.timeTaken = 0;
+            } else {
+                this.RFSumTime = data.sumTime;
+                this.timeTaken = Math.ceil(data.timeTaken / 1000);
+            }
         }
 
         // More setting up rapid fire countdown
@@ -305,26 +315,26 @@ export default class Game extends Phaser.Scene {
             this.countdownLabel = this.add.text(screenCenterX, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
         }
 
-        this.stopwatchLabel = this.add.text(screenCenterX * 1.25, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+        if(this.difficulty == 0) {
+            this.stopwatchLabel = this.add.text(screenCenterX * 1.25, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+        } else {
+            this.stopwatchLabel = this.add.text(screenCenterX, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+        }
+
         this.countdown = new Countdown(this, this.countdownLabel, this.countdownTime);
 		this.countdown.start(this.handleCountdownFinished.bind(this));
-        
-        // Update time record for normal levels or mazes played for rapid fire game play
-        if (!this.rapidFire) {
-            // If this is the first time the game is played
-            if (this.timesPlayed == 0)
-            {
-                this.timeRecord = 1000 * 1000;
-                this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+
+        // Create time record label and set its text
+        this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
+        if(!this.difficulty == 0 && this.timesPlayed != 0) {
+            if(this.rapidFire) {
+                this.timeRecordLabel.setPosition(screenCenterX * 1.65, 45);
+                this.timeRecordLabel.setText(
+                    'Mazes played: ' + this.timesPlayed);
+            } else {
+                this.timeRecordLabel.setText(
+                    'Record ' + this.formatTime(getRecordForLevel(this.level)));
             }
-            else 
-            {
-                this.timeRecord = data.timeRecord;
-                this.formatTimeRecordLabel(this.timeRecord);
-            }
-        } else if (this.rapidFire) {
-            this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '' + this.timesPlayed, { fontSize: 30, color: '0x000000'}).setOrigin(0.5);
-            this.timeRecordLabel.setText('Mazes played: ' + this.timesPlayed);
         }
 
         // home button to get back to titlescene
@@ -334,9 +344,6 @@ export default class Game extends Phaser.Scene {
         this.homeOutline.setInteractive({ useHandCursor: true });
         this.homeOutline.setInteractive()
                     .on('pointerup', () => this.handleHomeButton());
-
-        //this.scale.displaySize.setAspectRatio( width/height );
-        //this.scale.refresh();
     }
 
     handleHomeButton() {
@@ -378,11 +385,7 @@ export default class Game extends Phaser.Scene {
             // expands scope
             thisGame.animateScope();
             thisGame.scopeStrokeWidth = 0;
-            if(thisGame.difficulty == 0) {
-                thisGame.scene.start('titleScene', {level: thisGame.level});
-            } else {
-                thisGame.scene.start('titleScene', {level: thisGame.level, record: thisGame.timeRecord});
-            }
+            thisGame.scene.start('titleScene');
         }
 
         function fun2() {
@@ -414,8 +417,44 @@ export default class Game extends Phaser.Scene {
                     .on('pointerup', () => fun2());
     }
 
+    formatTime(milliseconds) {
+        // Milliseconds to one digit (idk what unit that is)
+
+        if(milliseconds == null) {
+            return;
+        }
+
+        var oneDigitMil = Math.ceil(milliseconds / 100);
+
+        // OneDigitMil to seconds
+        var seconds = Math.floor(oneDigitMil / 10);
+
+        // Remainder back to OneDigitMil
+        var partInOneDigitMils = oneDigitMil%10;
+
+        // Seconds to minutes
+        var minutes = Math.floor(seconds/60);
+
+        // Remainder back to seconds
+        var partInSeconds = seconds%60;
+
+        if(minutes >= 1) 
+        {
+            // Adds left zeros to seconds
+            partInSeconds = partInSeconds.toString().padStart(2,'0');
+            // Formats time
+            var formattedTime =`${minutes}:${partInSeconds}.${partInOneDigitMils}`;
+        } else 
+        {
+            var formattedTime =`${partInSeconds}.${partInOneDigitMils}`;
+        }
+
+        return formattedTime;
+    }
+
     handleRapidFireCountdownFinished() {
-        this.scene.start('rapid', { difficulty: this.difficulty, mazesPlayed: this.timesPlayed });
+        updateRecordForRapidFire(this.difficulty, this.timesPlayed);
+        this.scene.start('rapid');
     }
 
     handleCountdownFinished() {
@@ -496,7 +535,8 @@ export default class Game extends Phaser.Scene {
 
         // Control the stopwatch
         this.milliseconds = this.game.getTime() - this.startTime - this.pauseTime;
-        this.controlStopwatch(this.milliseconds);
+        this.formattedTime = this.formatTime(this.milliseconds);
+        this.stopwatchLabel.text = this.formattedTime;
     }
 
     update() {
@@ -538,71 +578,6 @@ export default class Game extends Phaser.Scene {
         }
     }
 
-    controlStopwatch(milliseconds) {
-
-        // Milliseconds to one digit (idk what unit that is)
-        var oneDigitMil = Math.ceil(milliseconds / 100);
-
-        // OneDigitMil to seconds
-        var seconds = Math.floor(oneDigitMil / 10);
-
-        // Remainder back to OneDigitMil
-        var partInOneDigitMils = oneDigitMil%10;
-
-        // Seconds to minutes
-        var minutes = Math.floor(seconds/60);
-
-        // Remainder back to seconds
-        var partInSeconds = seconds%60;
-
-        if(minutes >= 1) 
-        {
-            // Adds left zeros to seconds
-            partInSeconds = partInSeconds.toString().padStart(2,'0');
-            // Formats time
-            this.formattedTime =`${minutes}:${partInSeconds}.${partInOneDigitMils}`;
-        } else 
-        {
-            this.formattedTime =`${partInSeconds}.${partInOneDigitMils}`;
-        }
-
-        // Sets the stopwatch label
-        this.stopwatchLabel.text = this.formattedTime;
-    }
-
-    formatTimeRecordLabel(milliseconds) {
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-
-        // Milliseconds to one digit (idk what unit that is)
-        var oneDigitMil = Math.ceil(milliseconds / 100);
-
-        // OneDigitMil to seconds
-        var seconds = Math.floor(oneDigitMil / 10);
-
-        // Remainder back to OneDigitMil
-        var partInOneDigitMils = oneDigitMil%10;
-
-        // Seconds to minutes
-        var minutes = Math.floor(seconds/60);
-
-        // Remainder back to seconds
-        var partInSeconds = seconds%60;
-
-        if(minutes >= 1) 
-        {
-            // Adds left zeros to seconds
-            partInSeconds = partInSeconds.toString().padStart(2,'0');
-            // Formats time
-            var formattedTime =`${minutes}:${partInSeconds}.${partInOneDigitMils}`;
-        } else 
-        {
-            var formattedTime =`${partInSeconds}.${partInOneDigitMils}`;
-        }
-
-        // Sets the time record label to formatted time
-        this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, 'Record ' + formattedTime, { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
-    }
-
     handleWinGame() {
         // Handle booleans
         this.started = false;
@@ -625,17 +600,18 @@ export default class Game extends Phaser.Scene {
             }
             this.countdown.label.setText('');
 
-            // Update time record
-            if (this.milliseconds < this.timeRecord && !this.difficulty == 0) {
-                this.timeRecord = this.milliseconds;
-                this.timeRecordLabel.text = 'Record ' + this.formattedTime;            
-            }
-
             this.homeOutline.destroy();
             this.homeButton.destroy();            
            
             // if you are not on level 0
             if (!this.difficulty == 0) {
+
+                // Update time record and time record text
+                console.log("level is " + this.level);
+                console.log("milliseconds is " + this.milliseconds);
+                updateRecordForLevel(this.level, this.milliseconds);
+                this.timeRecordLabel.setText('Record ' + this.formatTime(getRecordForLevel(this.level)));
+
                 // moves time to center of screen
                 var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
                 rectanglePopUp.setStrokeStyle(5, '0x000000');
@@ -657,7 +633,7 @@ export default class Game extends Phaser.Scene {
                 
                 resetOutline.setInteractive({ useHandCursor: true });
                 resetOutline.setInteractive()
-                            .on('pointerup', () => this.scene.restart({ level: this.level, timeRecord: this.timeRecord, timesPlayed: this.timesPlayed + 1 }));          
+                            .on('pointerup', () => this.scene.restart({ level: this.level, timesPlayed: this.timesPlayed + 1 }));       
             }
             // if you are on level 0
             else {
@@ -690,32 +666,16 @@ export default class Game extends Phaser.Scene {
                     thisGame.scene.start('game', {level: thisGame.level + 1});
                 }
             }
-                        
 
-
-            // if (!this.difficulty == 0) {
-
-            // }
-                
-            // else {
-
-            // }
             goHomeOutline.setInteractive({ useHandCursor: true });
 
             function fun1(thisGame) {
                 thisGame.scopeStrokeWidth = 0;
-                // if you are on level 0
-                if(thisGame.difficulty == 0) {
-                    thisGame.scene.start('titleScene', {level: thisGame.level});
-                // if you are on any other level 
-                } else {
-                    thisGame.scene.start('titleScene', {level: thisGame.level, record: thisGame.timeRecord});
-                }
+                thisGame.scene.start('titleScene');
             }
                         
             goHomeOutline.setInteractive()
                     .on('pointerup', () => fun1(this));         
-
         }
     }
 }

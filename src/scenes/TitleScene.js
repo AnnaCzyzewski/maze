@@ -47,7 +47,7 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     startButton() {
-        this.scene.start('game', {level: 0});
+        this.scene.start('game', { level: 0 });
     }
 
     levelSelectButton() {

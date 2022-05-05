@@ -6,15 +6,14 @@ export default class Levels
     scopeSize;
     countdownTime;
 
-	constructor(level)
-	{
+	constructor(level) {
 		this.level = level;
 	}
 
     setData() {
         if (this.level == 1) {
             this.scopeSize = 1700;
-            this.countdownTime = 10;
+            this.countdownTime = 1;
             this.data = [[1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],
                     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
                     [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
@@ -34,7 +33,7 @@ export default class Levels
                     [1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1]]
         } else if (this.level == 2) {
             this.scopeSize = 1700;
-            this.countdownTime = 10;
+            this.countdownTime = 2;
             this.data = [[1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],
                     [1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
                     [1,0,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1],
@@ -54,7 +53,7 @@ export default class Levels
                     [1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1]]
         } else if (this.level == 3) {
             this.scopeSize = 1700;
-            this.countdownTime = 10;
+            this.countdownTime = 9;
             this.data = [[1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1],
                     [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1],
                     [1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,0,1],
