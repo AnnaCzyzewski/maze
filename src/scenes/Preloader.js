@@ -64,6 +64,7 @@ export default class Preloader extends Phaser.Scene
         this.load.image('insaneButton', 'src/assets/images/insane_button.png');
         this.load.image('playAgainButton', 'src/assets/images/play_again.png');
         this.load.image('nextLevelButton', 'src/assets/images/next_level_button.png');
+        this.load.image('gotIt', 'src/assets/images/got_it.png');
         this.load.image('gotItButton', 'src/assets/images/got_it_button.png');
         this.load.image('goHomePrompt', 'src/assets/images/go_home_prompt.png');
         this.load.image('goHomeButton', 'src/assets/images/go_home_button.png');
@@ -72,6 +73,7 @@ export default class Preloader extends Phaser.Scene
         this.load.image('mazesPlayed', 'src/assets/images/mazes_played.png');
         this.load.image('bestTime', 'src/assets/images/best_time_blue.png');
         this.load.image('longestStreak', 'src/assets/images/longest_streak_blue.png');
+        this.load.image('winGameMessage', 'src/assets/images/win_game_message.png');
 	}
 
     create()

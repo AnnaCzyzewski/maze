@@ -34,6 +34,10 @@ export default class Game extends Phaser.Scene {
         screen.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.blue);
             home.setTintFill(this.black);
+            easy.setScale(.55);
+            medium.setScale(.55);
+            hard.setScale(.55);
+            insane.setScale(.55);
             longestStreak.setVisible(false);
             longestStreakText.setVisible(false);
         });
@@ -62,6 +66,7 @@ export default class Game extends Phaser.Scene {
         easyOutline.setInteractive({ useHandCursor: true });
         easyOutline.on('pointerup', () => this.easyButton());
         easyOutline.on("pointerover", () => {
+            easy.setScale(.6);
             screenOutlineFill.setStrokeStyle(5, this.green);
             longestStreak.setVisible(true);
             longestStreakText.setVisible(true);
@@ -72,6 +77,7 @@ export default class Game extends Phaser.Scene {
         mediumOutline.setInteractive({ useHandCursor: true });
         mediumOutline.on('pointerup', () => this.mediumButton());
         mediumOutline.on("pointerover", () => {
+            medium.setScale(.6);
             screenOutlineFill.setStrokeStyle(5, this.orange);
             longestStreak.setVisible(true);
             longestStreakText.setVisible(true);
@@ -82,6 +88,7 @@ export default class Game extends Phaser.Scene {
         hardOutline.setInteractive({ useHandCursor: true });
         hardOutline.on('pointerup', () => this.hardButton());
         hardOutline.on("pointerover", () => {
+            hard.setScale(.6);
             screenOutlineFill.setStrokeStyle(5, this.red);
             longestStreak.setVisible(true);
             longestStreakText.setVisible(true);
@@ -92,6 +99,7 @@ export default class Game extends Phaser.Scene {
         insaneOutline.setInteractive({ useHandCursor: true });
         insaneOutline.on('pointerup', () => this.insaneButton());
         insaneOutline.on("pointerover", () => {
+            insane.setScale(.6);
             screenOutlineFill.setStrokeStyle(5, this.purple);
             longestStreak.setVisible(true);
             longestStreakText.setVisible(true);
