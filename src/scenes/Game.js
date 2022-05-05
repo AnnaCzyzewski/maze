@@ -16,6 +16,7 @@ export default class Game extends Phaser.Scene {
     formattedTime;
     timesPlayed;
     timeRecordLabel;
+    timeRecordImage;
     difficulty;
     countdownTime;
     level0;
@@ -323,15 +324,19 @@ export default class Game extends Phaser.Scene {
 		this.countdown.start(this.handleCountdownFinished.bind(this));
 
         // Create time record label and set its text
-        this.timeRecordLabel = this.add.text(screenCenterX * 1.75, 45, '', { fontSize: 50, color: '0x000000'}).setOrigin(0.5);
-        if(!this.difficulty == 0 && this.timesPlayed != 0) {
+        this.timeRecordLabel = this.add.text(screenCenterX * 1.65, 22, '', { fontSize: 50, color: '0x000000'});
+        if(!this.difficulty == 0 && (this.timesPlayed != 0 || getRecordForLevel(this.level) != null)) {
             if(this.rapidFire) {
-                this.timeRecordLabel.setPosition(screenCenterX * 1.65, 45);
+                // add image with "mazes played: "
+                this.timeRecordImage = this.add.image(screenCenterX * 1.5, 45, 'mazesPlayed').setOrigin(0.5).setScale(0.65);
+                this.timeRecordLabel.setPosition(screenCenterX * 1.80, 47);
                 this.timeRecordLabel.setText(
-                    'Mazes played: ' + this.timesPlayed);
+                    '' + this.timesPlayed);
             } else {
+                // add image with "record:"
+                this.timeRecordImage = this.add.image(screenCenterX * 1.5, 42, 'recordText').setOrigin(0.5).setScale(0.70);
                 this.timeRecordLabel.setText(
-                    'Record ' + this.formatTime(getRecordForLevel(this.level)));
+                    '' + this.formatTime(getRecordForLevel(this.level)));
             }
         }
 
@@ -645,10 +650,12 @@ export default class Game extends Phaser.Scene {
             if (!this.difficulty == 0) {
 
                 // Update time record and time record text
-                console.log("level is " + this.level);
-                console.log("milliseconds is " + this.milliseconds);
+                // console.log("level is " + this.level);
+                // console.log("milliseconds is " + this.milliseconds);
                 updateRecordForLevel(this.level, this.milliseconds);
-                this.timeRecordLabel.setText('Record ' + this.formatTime(getRecordForLevel(this.level)));
+                // add image of "record: "
+                // this.timeRecordImage = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 1.75, 45, 'recordText').setOrigin(0.5).setScale(0.75);
+                // this.timeRecordLabel.setText('' + this.formatTime(getRecordForLevel(this.level)));
 
                 // moves time to center of screen
                 var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
