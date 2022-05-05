@@ -88,11 +88,8 @@ export default class Game extends Phaser.Scene {
 
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
-        console.log('times played is ' + this.timesPlayed);
 
         this.level = data.level;
-
-        console.log("level is " + this.level);
 
         if(this.level != 0 && !this.rapidFire) {
             var levelsObject = new Levels(this.level);
