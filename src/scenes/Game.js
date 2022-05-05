@@ -36,6 +36,7 @@ export default class Game extends Phaser.Scene {
     orange = 0xebac1a;
     red = 0xd61806;
     purple = 0xd925f5;
+    yellow = 0xfff700;
     black = 0x000000;
     pauseTime = 0;
 
@@ -327,13 +328,21 @@ export default class Game extends Phaser.Scene {
             this.timeRecordLabel.setText('Mazes played: ' + this.timesPlayed);
         }
 
+        this.homeColorBox = this.add.rectangle(screenCenterX * 0.2, 48, 85, 85);
+        this.homeColorBox.setInteractive();
+        this.homeColorBox.on("pointerover", () => {
+            this.homeButton.setTintFill(this.black);
+        });
+
         // home button to get back to titlescene
         this.homeButton = this.add.image(screenCenterX * 0.2, 125, 'homeIcon');
         this.homeButton.setScale(.75);
         this.homeOutline = this.add.rectangle(screenCenterX * 0.2, 48, 56, 56); // y offset by 59 px
         this.homeOutline.setInteractive({ useHandCursor: true });
-        this.homeOutline.setInteractive()
-                    .on('pointerup', () => this.handleHomeButton());
+        this.homeOutline.on('pointerup', () => this.handleHomeButton());
+        this.homeOutline.on("pointerover", () => {
+            this.homeButton.setTintFill(this.yellow);
+        });
 
         //this.scale.displaySize.setAspectRatio( width/height );
         //this.scale.refresh();
@@ -361,18 +370,40 @@ export default class Game extends Phaser.Scene {
             return
         }
 
-        var homeTextBox = this.add.rectangle(710, 365, 525, 350, '0xffffff'); // need to change x and y to constants 
-        
-        homeTextBox.setStrokeStyle(1, '0x000000');    
+        var homeTextBox = this.add.rectangle(710, 365, 525, 350, '0xffffff'); // need to change x and y to constants
+        homeTextBox.setInteractive(); 
+        homeTextBox.on("pointerover", () => {
+            yesButton.setTintFill(this.black);
+            noButton.setTintFill(this.black);
+            yesButton.setScale(.75);
+            noButton.setScale(.75);
+        });
+        var homeTextBoxOutline = this.add.rectangle(710, 365, 510, 335);
+        homeTextBoxOutline.setStrokeStyle(2);
+
+        var homeTextBoxFill = this.add.rectangle(710, 365, 517, 342);
+        homeTextBoxFill.setStrokeStyle(5, this.blue);
+
+        homeTextBox.setStrokeStyle(5, '0x000000');    
         var homeText = this.add.image(710, 400, "goHomePrompt").setOrigin(0.5).setScale(0.75);
+        homeText.setTintFill(this.blue);
 
         var yesButton = this.add.image(600, 475, "yesButton").setOrigin(0.5).setScale(0.75);
         var yesOutline = this.add.rectangle(600, 475, 125, 60);
         yesOutline.setInteractive({ useHandCursor: true });
+        yesOutline.on("pointerover", () => {
+            yesButton.setTintFill(this.yellow);
+            yesButton.setScale(.8);
+        });
+
 
         var noButton = this.add.image(820, 475, "noButton").setOrigin(0.5).setScale(0.75);
         var noOutline = this.add.rectangle(820, 475, 90, 60);
         noOutline.setInteractive({ useHandCursor: true });
+        noOutline.on("pointerover", () => {
+            noButton.setTintFill(this.yellow);
+            noButton.setScale(.8);
+        });
 
         function fun1() {
             // expands scope
@@ -392,6 +423,8 @@ export default class Game extends Phaser.Scene {
             noButton.destroy();
             noOutline.destroy();
             homeTextBox.destroy();
+            homeTextBoxOutline.destroy();
+            homeTextBoxFill.destroy();
             // If in the countdown phase, resets pause boolean 
             if (thisGame.countdown.timerEvent) {
                 thisGame.countdown.timerEvent.paused = false;
@@ -635,6 +668,15 @@ export default class Game extends Phaser.Scene {
             this.homeButton.destroy();            
            
             // if you are not on level 0
+            var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff');
+            rectanglePopUp.setStrokeStyle(5, '0x000000');
+
+            var rectanglePopUpOutline = this.add.rectangle(710, 350, 435, 485);
+            rectanglePopUpOutline.setStrokeStyle(2);
+
+            var rectanglePopUpFill = this.add.rectangle(710, 350, 442, 492);
+            rectanglePopUpFill.setStrokeStyle(5, this.blue);
+        
             if (!this.difficulty == 0) {
                 // moves time to center of screen
                 var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
