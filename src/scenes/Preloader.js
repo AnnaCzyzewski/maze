@@ -74,6 +74,9 @@ export default class Preloader extends Phaser.Scene
         this.load.image('bestTime', 'src/assets/images/best_time_blue.png');
         this.load.image('longestStreak', 'src/assets/images/longest_streak_blue.png');
         this.load.image('winGameMessage', 'src/assets/images/win_game_message.png');
+        this.load.image('memorize', 'src/assets/images/memorize.png');
+        this.load.image('goText', 'src/assets/images/go.png');
+        this.load.image('recordText', 'src/assets/images/record_black.png');
 	}
 
     create()

@@ -308,7 +308,7 @@ export default class Game extends Phaser.Scene {
         // Initialize countdown and stopwatch
         if(this.difficulty == 0) {
             this.countdownLabel = this.add.text(screenCenterX * 1.35, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
-            this.textLabel = this.add.text(screenCenterX * 0.85, 45, "Memorize for ", { fontSize: 65, color: '0x000000'}).setOrigin(0.5);
+            this.textLabel = this.add.image(screenCenterX * 0.85, 45, 'memorize').setOrigin(0.5).setScale(1.1);
         } else {
             this.countdownLabel = this.add.text(screenCenterX, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
         }
@@ -496,8 +496,8 @@ export default class Game extends Phaser.Scene {
         this.countdown.label.setText('');
 
         if(this.difficulty == 0) {
-            this.textLabel.setText('Go!');
-            this.textLabel.setStyle({ fontSize: 100});
+            this.textLabel.destroy();
+            this.textLabel = this.add.image(screenCenterX * 0.75, 45, 'goText').setOrigin(0.5).setScale(1.1);
         }
 	}
 
@@ -625,7 +625,7 @@ export default class Game extends Phaser.Scene {
 
             // Get rid of "Go!" and countdown label
             if(this.difficulty == 0) {
-                this.textLabel.setText('');
+                this.textLabel.destroy();
             }
             this.countdown.label.setText('');
 
