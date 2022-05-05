@@ -123,7 +123,7 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile2';
             this.finishLineImage = 'finishLine2';
         } else if(this.difficulty == 1) {
-            this.RFCountdownTime = 60;
+            this.RFCountdownTime = 45;
             this.playerSpeed = 246.67;
             this.color = this.green;
             this.playerRadius = 12.3;
@@ -133,7 +133,7 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile1';
             this.finishLineImage = 'finishLine1';
         } else if(this.difficulty == 2) {
-            this.RFCountdownTime = 90;
+            this.RFCountdownTime = 60;
             this.playerSpeed = 200;
             this.color = this.orange;
             this.playerRadius = 10;
@@ -143,7 +143,7 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile2';
             this.finishLineImage = 'finishLine2';
         } else if(this.difficulty == 3) {
-            this.RFCountdownTime = 120;
+            this.RFCountdownTime = 75;
             this.playerSpeed = 166.67;
             this.color = this.red;
             this.playerRadius = 8.3;
@@ -153,7 +153,7 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile3';
             this.finishLineImage = 'finishLine3';
         } else if(this.difficulty == 4) {
-            this.RFCountdownTime = 150;
+            this.RFCountdownTime = 90;
             this.playerSpeed = 140;
             this.color = this.purple;
             this.playerRadius = 7;
@@ -451,23 +451,19 @@ export default class Game extends Phaser.Scene {
     }
 
     formatTime(milliseconds) {
-        // Milliseconds to one digit (idk what unit that is)
 
         if(milliseconds == null) {
             return;
         }
 
+        // Milliseconds to one digit
         var oneDigitMil = Math.ceil(milliseconds / 100);
-
         // OneDigitMil to seconds
         var seconds = Math.floor(oneDigitMil / 10);
-
         // Remainder back to OneDigitMil
         var partInOneDigitMils = oneDigitMil%10;
-
         // Seconds to minutes
         var minutes = Math.floor(seconds/60);
-
         // Remainder back to seconds
         var partInSeconds = seconds%60;
 

@@ -16,6 +16,7 @@ export default class Game extends Phaser.Scene {
 	}  
 
     create() {
+
         var title = this.add.image(750, 110, 'survival');
         title.setScale(1.1);
         var chooseDifficulty = this.add.image(750, 200, 'chooseDifficulty');
@@ -34,10 +35,6 @@ export default class Game extends Phaser.Scene {
         screen.on("pointerover", () => {
             screenOutlineFill.setStrokeStyle(5, this.blue);
             home.setTintFill(this.black);
-            easy.setScale(.55);
-            medium.setScale(.55);
-            hard.setScale(.55);
-            insane.setScale(.55);
             longestStreak.setVisible(false);
             longestStreakText.setVisible(false);
         });
@@ -49,73 +46,32 @@ export default class Game extends Phaser.Scene {
         var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);
 
-        // var easy;
-        // var medium;
-        // var hard;
-        // var insane;
+        var easy;
+        var medium;
+        var hard;
+        var insane;
 
-        // var easyToInsaneArray = [easy, medium, hard, insane];
-        // var imageArray = ['easyButton', 'mediumButton', 'hardButton', 'insaneButton'];
+        var easyToInsaneArray = [easy, medium, hard, insane];
+        var imageArray = ['easyButton', 'mediumButton', 'hardButton', 'insaneButton'];
+        var colorsArray = [this.green, this.orange, this.red, this.purple];
+        var widthsArray = [112, 192, 108, 192];
 
-        // easyToInsaneArray.forEach((image, index) => {
-        //     image = this.add.image(750, 280 + 65 * index, imageArray[index]);
-        //     image.setScale(.55);
-        // });
-
-        var easy = this.add.image(750, 280, 'easyButton');
-        easy.setScale(.55);
-
-        var easyOutline = this.add.rectangle(750, 280, 112, 42);
-        easyOutline.setInteractive({ useHandCursor: true });
-        easyOutline.on('pointerup', () => this.easyButton());
-        easyOutline.on("pointerover", () => {
-            easy.setScale(.6);
-            screenOutlineFill.setStrokeStyle(5, this.green);
-            longestStreak.setVisible(true);
-            longestStreakText.setVisible(true);
-            longestStreakText.setText(getRecordForRapidFire(1));
-        });
-
-        var medium = this.add.image(750, 345, 'mediumButton');
-        medium.setScale(.55);
-
-        var mediumOutline = this.add.rectangle(750, 345, 192, 42);
-        mediumOutline.setInteractive({ useHandCursor: true });
-        mediumOutline.on('pointerup', () => this.mediumButton());
-        mediumOutline.on("pointerover", () => {
-            medium.setScale(.6);
-            screenOutlineFill.setStrokeStyle(5, this.orange);
-            longestStreak.setVisible(true);
-            longestStreakText.setVisible(true);
-            longestStreakText.setText(getRecordForRapidFire(2));
-        });
-
-        var hard = this.add.image(750, 410, 'hardButton');
-        hard.setScale(.55);
-
-        var hardOutline = this.add.rectangle(750, 410, 108, 42);
-        hardOutline.setInteractive({ useHandCursor: true });
-        hardOutline.on('pointerup', () => this.hardButton());
-        hardOutline.on("pointerover", () => {
-            hard.setScale(.6);
-            screenOutlineFill.setStrokeStyle(5, this.red);
-            longestStreak.setVisible(true);
-            longestStreakText.setVisible(true);
-            longestStreakText.setText(getRecordForRapidFire(3));
-        });
-
-        var insane = this.add.image(750, 475, 'insaneButton');
-        insane.setScale(.55);
-
-        var insaneOutline = this.add.rectangle(750, 475, 162, 42);
-        insaneOutline.setInteractive({ useHandCursor: true });
-        insaneOutline.on('pointerup', () => this.insaneButton());
-        insaneOutline.on("pointerover", () => {
-            insane.setScale(.6);
-            screenOutlineFill.setStrokeStyle(5, this.purple);
-            longestStreak.setVisible(true);
-            longestStreakText.setVisible(true);
-            longestStreakText.setText(getRecordForRapidFire(4));
+        easyToInsaneArray.forEach((numberImage, index) => {
+            numberImage = this.add.image(750, 280 + 65 * index, imageArray[index]);
+            numberImage.setScale(.55);
+            var outline = this.add.rectangle(750, 280 + 65 * index, widthsArray[index], 42);
+            outline.setInteractive({ useHandCursor: true });
+            outline.on('pointerup', () => this.scene.start('game', {difficulty: index + 1, rapidFire: true}));
+            outline.on("pointerover", () => {
+                numberImage.setScale(.6);
+                screenOutlineFill.setStrokeStyle(5, colorsArray[index]);
+                longestStreak.setVisible(true);
+                longestStreakText.setVisible(true);
+                longestStreakText.setText(getRecordForRapidFire(index + 1));
+            });
+            screen.on('pointerover', () => {
+                numberImage.setScale(.55);
+            });
         });
 
         var home = this.add.image(542, 738, 'homeIcon');
@@ -130,21 +86,5 @@ export default class Game extends Phaser.Scene {
 
     homeButton() {
         this.scene.start('titleScene');
-    }
-
-    easyButton() {
-        this.scene.start('game', {difficulty: 1, rapidFire: true});
-    }
-
-    mediumButton() {
-        this.scene.start('game', {difficulty: 2, rapidFire: true});
-    }
-
-    hardButton() {
-        this.scene.start('game', {difficulty: 3, rapidFire: true});
-    }
-
-    insaneButton() {
-        this.scene.start('game', {difficulty: 4, rapidFire: true});
     }
 }

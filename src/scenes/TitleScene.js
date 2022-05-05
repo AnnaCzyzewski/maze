@@ -16,25 +16,28 @@ export default class TitleScene extends Phaser.Scene {
 
     create(){
 
-        var title = this.add.image(765, 220, 'memoryMaze');
+        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+
+        var title = this.add.image(screenCenterX + 20, 220, 'memoryMaze');
         title.setScale(.75);
 
-        var brain = this.add.image(750, 400, 'brainMaze');
+        var brain = this.add.image(screenCenterX, 400, 'brainMaze');
         brain.setScale(.75);
 
-        var start = this.add.image(750, 365, 'startButton');
+        var start = this.add.image(screenCenterX, 365, 'startButton');
         start.setScale(.75);
 
-        var levelSelect = this.add.image(750, 445, 'levelSelectButton');
+        var levelSelect = this.add.image(screenCenterX, 445, 'levelSelectButton');
         levelSelect.setScale(.75);
 
-        var survival = this.add.image(750, 439, 'survivalButton');
+        var survival = this.add.image(screenCenterX, 439, 'survivalButton');
         survival.setScale(.54);
         
-        var screen = this.add.rectangle(750, 380, 550, 700);
+        var screen = this.add.rectangle(screenCenterX, screenCenterY, 550, 700);
         screen.setStrokeStyle(5);
 
-        var screenOutline = this.add.rectangle(750, 380, screen.width - 15, screen.height - 15);
+        var screenOutline = this.add.rectangle(screenCenterX, screenCenterY, screen.width - 15, screen.height - 15);
         screenOutline.setStrokeStyle(2);
         screenOutline.setInteractive();
         screenOutline.on("pointerover", () => {
@@ -44,7 +47,7 @@ export default class TitleScene extends Phaser.Scene {
         });
 
         // fill between screen and screen inner outline
-        var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
+        var screenOutlineFill = this.add.rectangle(screenCenterX, screenCenterY, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, this.blue);
 
         var startOutline = this.add.rectangle(750, 311, 141, 39);
