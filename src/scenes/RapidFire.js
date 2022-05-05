@@ -49,18 +49,21 @@ export default class Game extends Phaser.Scene {
         var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);
 
-        var easy;
-        var medium;
-        var hard;
-        var insane;
+        // var easy;
+        // var medium;
+        // var hard;
+        // var insane;
 
-        var easyToInsaneArray = [easy, medium, hard, insane];
-        var imageArray = ['easyButton', 'mediumButton', 'hardButton', 'insaneButton'];
+        // var easyToInsaneArray = [easy, medium, hard, insane];
+        // var imageArray = ['easyButton', 'mediumButton', 'hardButton', 'insaneButton'];
 
-        easyToInsaneArray.forEach((image, index) => {
-            image = this.add.image(750, 280 + 65 * index, imageArray[index]);
-            image.setScale(.55);
-        });
+        // easyToInsaneArray.forEach((image, index) => {
+        //     image = this.add.image(750, 280 + 65 * index, imageArray[index]);
+        //     image.setScale(.55);
+        // });
+
+        var easy = this.add.image(750, 280, 'easyButton');
+        easy.setScale(.55);
 
         var easyOutline = this.add.rectangle(750, 280, 112, 42);
         easyOutline.setInteractive({ useHandCursor: true });
@@ -73,6 +76,9 @@ export default class Game extends Phaser.Scene {
             longestStreakText.setText(getRecordForRapidFire(1));
         });
 
+        var medium = this.add.image(750, 345, 'mediumButton');
+        medium.setScale(.55);
+
         var mediumOutline = this.add.rectangle(750, 345, 192, 42);
         mediumOutline.setInteractive({ useHandCursor: true });
         mediumOutline.on('pointerup', () => this.mediumButton());
@@ -84,6 +90,9 @@ export default class Game extends Phaser.Scene {
             longestStreakText.setText(getRecordForRapidFire(2));
         });
 
+        var hard = this.add.image(750, 410, 'hardButton');
+        hard.setScale(.55);
+
         var hardOutline = this.add.rectangle(750, 410, 108, 42);
         hardOutline.setInteractive({ useHandCursor: true });
         hardOutline.on('pointerup', () => this.hardButton());
@@ -94,6 +103,9 @@ export default class Game extends Phaser.Scene {
             longestStreakText.setVisible(true);
             longestStreakText.setText(getRecordForRapidFire(3));
         });
+
+        var insane = this.add.image(750, 475, 'insaneButton');
+        insane.setScale(.55);
 
         var insaneOutline = this.add.rectangle(750, 475, 162, 42);
         insaneOutline.setInteractive({ useHandCursor: true });
