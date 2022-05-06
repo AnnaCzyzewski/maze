@@ -362,14 +362,28 @@ export default class Game extends Phaser.Scene {
 
         // Add button that can skip the countdown
         if(!this.difficulty == 0) {
-            this.skipCountdownButton = this.add.text(screenCenterX - 300, 48, "Skip countdown", { fontSize: 30, color: '0x000000' }).setOrigin(0.5);
-            this.skipCountdownOutline = this.add.rectangle(screenCenterX - 300, 48, 275, 60);
+
+            this.skipColorBox = this.add.rectangle(screenCenterX - 250, 48, 85, 85);
+            this.skipColorBox.setInteractive();
+            this.skipColorBox.on("pointerover", () => {
+                this.skipCountdownButton.setTintFill(this.black);
+            });   
+
+            this.skipCountdownButton = this.add.image(screenCenterX - 250, 48, "skipButton").setOrigin(0.5).setScale(0.32);
+            this.skipCountdownOutline = this.add.rectangle(screenCenterX - 250, 48, 56, 56);
             this.skipCountdownOutline.setInteractive({ useHandCursor: true });
+         
+
+            this.skipCountdownOutline.on("pointerover", () => {
+                this.skipCountdownButton.setTintFill(this.yellow);
+            });
             this.skipCountdownOutline.on('pointerup', () => {
                 this.countdown.stop();
+                this.skipCountdownOutline.destroy();
+                this.skipCountdownButton.destroy();
+                this.skipColorBox.destroy();
                 this.handleCountdownFinished();
-                this.skipCountdownButton.setText('');
-                this.skipCountdownOutline.destroy;
+                
             }
             );
         }
