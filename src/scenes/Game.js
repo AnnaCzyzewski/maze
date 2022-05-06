@@ -779,11 +779,14 @@ export default class Game extends Phaser.Scene {
 
         var winText = this.add.image(710, 200, 'winGameMessage').setOrigin(0.5).setScale(0.75);
 
-        this.timeRecordImage.destroy();
-        this.timeRecordLabel.destroy();
+        if (timeRecordLabel) {
+            this.timeRecordImage.destroy();
+            this.timeRecordLabel.destroy(); 
+        }
+        
 
-        var timeRecordImage = this.add.image(675, 350, 'recordText').setOrigin(0.5).setScale(0.70);
-        var timeRecordLabel = this.add.text(800, 327, "" + this.timesPlayed,{ fontSize: 60, color: '0x000000'});            
+        var timeRecordImage = this.add.image(685, 350, 'mazesPlayed').setOrigin(0.5).setScale(0.70);
+        var timeRecordLabel = this.add.text(915, 327, "" + this.timesPlayed,{ fontSize: 55, color: '0x000000'});            
 
         const resetButton = this.add.image(710, 450, 'playAgainButton').setOrigin(0.5).setScale(.75);
         var resetOutline = this.add.rectangle(710, 450, 340, 60); 
