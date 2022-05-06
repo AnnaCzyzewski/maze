@@ -349,7 +349,7 @@ export default class Game extends Phaser.Scene {
             this.homeButton.setTintFill(this.black);
         });
 
-        // home button to get back to titlescene
+        // Add home button to get back to titlescene
         this.homeButton = this.add.image(screenCenterX * 0.2, 125, 'homeIcon');
         this.homeButton.setScale(.75);
         this.homeOutline = this.add.rectangle(screenCenterX * 0.2, 48, 56, 56); // y offset by 59 px
@@ -665,7 +665,6 @@ export default class Game extends Phaser.Scene {
             rectanglePopUpFill.setStrokeStyle(5, this.blue);
         
             if (!this.difficulty == 0) {
-
                 updateRecordForLevel(this.level, this.milliseconds);
 
                 // moves time to center of screen
