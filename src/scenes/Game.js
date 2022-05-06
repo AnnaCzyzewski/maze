@@ -313,6 +313,7 @@ export default class Game extends Phaser.Scene {
         if(this.difficulty == 0) {
             this.countdownLabel = this.add.text(screenCenterX * 1.35, 85, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
             this.textLabel = this.add.image(screenCenterX * 0.85, 85, 'memorize').setOrigin(0.5).setScale(1.1);
+            this.textLabel.setTintFill(this.blue);
         } else {
             this.countdownLabel = this.add.text(screenCenterX, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
         }
@@ -652,14 +653,14 @@ export default class Game extends Phaser.Scene {
             this.homeButton.destroy();            
            
             // if you are not on level 0
-            var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff');
-            rectanglePopUp.setStrokeStyle(5, '0x000000');
+            // var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff');
+            // rectanglePopUp.setStrokeStyle(5, '0x000000');
 
-            var rectanglePopUpOutline = this.add.rectangle(710, 350, 435, 485);
-            rectanglePopUpOutline.setStrokeStyle(2);
+            // var rectanglePopUpOutline = this.add.rectangle(710, 350, 435, 485);
+            // rectanglePopUpOutline.setStrokeStyle(2);
 
-            var rectanglePopUpFill = this.add.rectangle(710, 350, 442, 492);
-            rectanglePopUpFill.setStrokeStyle(5, this.blue);
+            // var rectanglePopUpFill = this.add.rectangle(710, 350, 442, 492);
+            // rectanglePopUpFill.setStrokeStyle(5, this.blue);
         
             if (!this.difficulty == 0) {
                 updateRecordForLevel(this.level, this.milliseconds);
@@ -667,6 +668,10 @@ export default class Game extends Phaser.Scene {
                 // moves time to center of screen
                 var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
                 rectanglePopUp.setStrokeStyle(5, '0x000000');
+                var rectanglePopUpOutline = this.add.rectangle(710, 350, 435, 485);
+                rectanglePopUpOutline.setStrokeStyle(2);
+                var rectanglePopUpFill = this.add.rectangle(710, 350, 442, 492);
+                rectanglePopUpFill.setStrokeStyle(5, this.blue);
                 var stopwatchlabel = this.add.text(this.cameras.main.worldView.x + this.cameras.main.width / 2, 225, "", { fontSize: 80, color: '#0abff7'});
                 stopwatchlabel.text = this.stopwatchLabel.text;
                 this.stopwatchLabel.destroy();
@@ -692,13 +697,21 @@ export default class Game extends Phaser.Scene {
                 // next level button
                 var rectanglePopUp = this.add.rectangle(710, 350, 450, 350, '0xffffff')
                 rectanglePopUp.setStrokeStyle(5, '0x000000');
+                var rectanglePopUpOutline = this.add.rectangle(710, 350, 435, 335);
+                rectanglePopUpOutline.setStrokeStyle(2);
+                var rectanglePopUpFill = this.add.rectangle(710, 350, 442, 342);
+                rectanglePopUpFill.setStrokeStyle(5, this.blue);
                 const nextLevelButton = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 290, 'nextLevelButton').setOrigin(0.5).setScale(.75);
                 var nextOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 290, 360, 60);                       
                 this.arrowKeys.setVisible(false);
                 this.stopwatchLabel.destroy(); 
 
                 var goHome = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 430, 'goHomeButton').setOrigin(0.5).setScale(0.65);
-                var goHomeOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 430, 240, 35);                  
+                var goHomeOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 430, 232, 52);
+                goHomeOutline.setStrokeStyle(2);
+                // goHomeOutline.on('pointerover', () => {
+                //     goHome.setScale(1.5);
+                // });                  
             }
             nextOutline.setInteractive({ useHandCursor: true });
             nextOutline.setInteractive()

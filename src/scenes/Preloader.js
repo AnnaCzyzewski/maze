@@ -77,6 +77,10 @@ export default class Preloader extends Phaser.Scene
         this.load.image('memorize', 'src/assets/images/memorize.png');
         this.load.image('goText', 'src/assets/images/go.png');
         this.load.image('recordText', 'src/assets/images/record_black.png');
+        this.load.image('skipButton', 'src/assets/images/skip_button.png');
+        this.load.image('restartButton', 'src/assets/images/restart_button.png');
+        this.load.image('skipText', 'src/assets/images/skip_text.png');
+        this.load.image('restartText', 'src/assets/images/restart_text.png');
 	}
 
     create()
