@@ -503,7 +503,9 @@ export default class Game extends Phaser.Scene {
 
     handleRapidFireCountdownFinished() {
         updateRecordForRapidFire(this.difficulty, this.timesPlayed);
-        this.scene.start('rapid');
+        if (this.RFCountdown.label.text == "0") {
+            this.handleRapidFireWinGame();
+        }
     }
 
     handleCountdownFinished() {
@@ -623,10 +625,11 @@ export default class Game extends Phaser.Scene {
         // Handle countdown updating
         this.countdown.update();
         if(this.rapidFire) {
-            this.RFCountdown.update();
+            this.RFCountdown.update(); 
         }
     }
 
+    
     handleWinGame() {
         // Handle booleans
         this.started = false;
@@ -693,7 +696,7 @@ export default class Game extends Phaser.Scene {
                             .on('pointerup', () => this.scene.restart({ level: this.level, timesPlayed: this.timesPlayed + 1 }));       
             }
             // if you are on level 0
-            else {
+            else if (this.difficulty == 0) {
                 // next level button
                 var rectanglePopUp = this.add.rectangle(710, 350, 450, 350, '0xffffff')
                 rectanglePopUp.setStrokeStyle(5, '0x000000');
@@ -722,10 +725,6 @@ export default class Game extends Phaser.Scene {
                 if (thisGame.difficulty == 0) {
                     thisGame.scene.start('game', {level: thisGame.level = 1});
                 }
-                // if you are on level 12 (the last level)
-                if (thisGame.level == 12) {
-
-                }
                 // if you are on any other level 
                 else {
                     thisGame.scene.start('game', {level: thisGame.level + 1});
@@ -742,5 +741,60 @@ export default class Game extends Phaser.Scene {
             goHomeOutline.setInteractive()
                     .on('pointerup', () => fun1(this));         
         }
+    }
+
+    handleRapidFireWinGame() {
+        this.started = false;
+        this.ended = true;
+
+        this.animateScope(); 
+
+        this.RFCountdownLabel.setText("");
+        this.stopwatchLabel.destroy();
+
+        this.homeOutline.destroy();
+        this.homeButton.destroy();            
+       
+        // if you are not on level 0
+        var rectanglePopUp = this.add.rectangle(710, 350, 665, 500, '0xffffff');
+        rectanglePopUp.setStrokeStyle(5, '0x000000');
+
+        var rectanglePopUpOutline = this.add.rectangle(710, 350, 650, 485);
+        rectanglePopUpOutline.setStrokeStyle(2);
+
+        var rectanglePopUpFill = this.add.rectangle(710, 350, 657, 492);
+        rectanglePopUpFill.setStrokeStyle(5, this.blue);
+
+        var winText = this.add.image(710, 200, 'winGameMessage').setOrigin(0.5).setScale(0.75);
+
+        this.timeRecordImage.destroy();
+        this.timeRecordLabel.destroy();
+
+        var timeRecordImage = this.add.image(675, 350, 'recordText').setOrigin(0.5).setScale(0.70);
+        var timeRecordLabel = this.add.text(800, 327, "" + this.timesPlayed,{ fontSize: 60, color: '0x000000'});            
+
+        const resetButton = this.add.image(710, 450, 'playAgainButton').setOrigin(0.5).setScale(.75);
+        var resetOutline = this.add.rectangle(710, 450, 340, 60); 
+
+        var goHome = this.add.image(710, 530, 'goHomeButton').setOrigin(0.5).setScale(0.65);
+        var goHomeOutline = this.add.rectangle(710, 530, 240, 35);                 
+        
+        goHomeOutline.setInteractive({ useHandCursor: true });
+
+        function fun1(thisGame) {
+            thisGame.scopeStrokeWidth = 0;
+            thisGame.scene.start('titleScene');
+        }
+
+        function fun2(thisGame) {
+            thisGame.scene.restart();
+        }
+
+        resetOutline.setInteractive({ useHandCursor: true });
+        resetOutline.setInteractive()
+                    .on('pointerup', () => fun2(this));  
+
+        goHomeOutline.setInteractive()
+                .on('pointerup', () => fun1(this));       
     }
 }
