@@ -367,15 +367,18 @@ export default class Game extends Phaser.Scene {
             this.skipColorBox.setInteractive();
             this.skipColorBox.on("pointerover", () => {
                 this.skipCountdownButton.setTintFill(this.black);
+                this.skipCountdownOutline.setStrokeStyle(2.7, this.black);
             });   
 
             this.skipCountdownButton = this.add.image(screenCenterX - 250, 48, "skipButton").setOrigin(0.5).setScale(0.32);
             this.skipCountdownOutline = this.add.rectangle(screenCenterX - 250, 48, 56, 56);
+            this.skipCountdownOutline.setStrokeStyle(2.7);
             this.skipCountdownOutline.setInteractive({ useHandCursor: true });
          
 
             this.skipCountdownOutline.on("pointerover", () => {
                 this.skipCountdownButton.setTintFill(this.yellow);
+                this.skipCountdownOutline.setStrokeStyle(2.7, this.yellow);
             });
             this.skipCountdownOutline.on('pointerup', () => {
                 this.countdown.stop();
