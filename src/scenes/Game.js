@@ -802,7 +802,7 @@ export default class Game extends Phaser.Scene {
         var rectanglePopUpFill = this.add.rectangle(710, 350, 657, 492);
         rectanglePopUpFill.setStrokeStyle(5, this.blue);
 
-        var winText = this.add.image(710, 200, 'winGameMessage').setOrigin(0.5).setScale(0.75);
+        var winText = this.add.image(710, 225, 'timesUp').setOrigin(0.5).setScale(1.35);
 
         if (timeRecordLabel) {
             this.timeRecordImage.destroy();
