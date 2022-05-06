@@ -17,19 +17,25 @@ export default class Game extends Phaser.Scene {
 
     create() {
 
-        var title = this.add.image(750, 110, 'survival');
+        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+
+        console.log(screenCenterX);
+
+
+        var title = this.add.image(screenCenterX, 110, 'survival');
         title.setScale(1.1);
-        var chooseDifficulty = this.add.image(750, 200, 'chooseDifficulty');
+        var chooseDifficulty = this.add.image(screenCenterX, 200, 'chooseDifficulty');
         chooseDifficulty.setScale(.6);
-        var brain = this.add.image(750, 400, 'brainMaze');
+        var brain = this.add.image(screenCenterX, 400, 'brainMaze');
         brain.setScale(.75);
 
-        var longestStreak = this.add.image(750, 550, 'longestStreak').setVisible(false);
+        var longestStreak = this.add.image(screenCenterX - 40, 550, 'longestStreak').setVisible(false);
         longestStreak.setScale(.3);
 
-        var longestStreakText = this.add.text(843, 529, "", { fontSize: 40, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
+        var longestStreakText = this.add.text(775, 529, "", { fontSize: 40, color: '#0abff7' }).setOrigin(0, 0).setVisible(false);
 
-        var screen = this.add.rectangle(750, 380, 550, 700);
+        var screen = this.add.rectangle(screenCenterX, screenCenterY, 550, 700);
         screen.setStrokeStyle(5);
         screen.setInteractive();
         screen.on("pointerover", () => {
@@ -39,11 +45,11 @@ export default class Game extends Phaser.Scene {
             longestStreakText.setVisible(false);
         });
 
-        var screenOutline = this.add.rectangle(750, 380, screen.width - 15, screen.height - 15);
+        var screenOutline = this.add.rectangle(screenCenterX, screenCenterY, screen.width - 15, screen.height - 15);
         screenOutline.setStrokeStyle(2);
 
         // fill between screen and screen inner outline
-        var screenOutlineFill = this.add.rectangle(750, 380, screen.width - 8, screen.height - 8);
+        var screenOutlineFill = this.add.rectangle(screenCenterX, screenCenterY, screen.width - 8, screen.height - 8);
         screenOutlineFill.setStrokeStyle(5, 0x0abff7);
 
         var easy;
@@ -57,9 +63,9 @@ export default class Game extends Phaser.Scene {
         var widthsArray = [112, 192, 108, 192];
 
         easyToInsaneArray.forEach((numberImage, index) => {
-            numberImage = this.add.image(750, 280 + 65 * index, imageArray[index]);
+            numberImage = this.add.image(screenCenterX, 280 + 65 * index, imageArray[index]);
             numberImage.setScale(.55);
-            var outline = this.add.rectangle(750, 280 + 65 * index, widthsArray[index], 42);
+            var outline = this.add.rectangle(screenCenterX, 280 + 65 * index, widthsArray[index], 42);
             outline.setInteractive({ useHandCursor: true });
             outline.on('pointerup', () => this.scene.start('game', {difficulty: index + 1, rapidFire: true}));
             outline.on("pointerover", () => {
@@ -74,9 +80,9 @@ export default class Game extends Phaser.Scene {
             });
         });
 
-        var home = this.add.image(542, 738, 'homeIcon');
+        var home = this.add.image(500, 738, 'homeIcon');
         home.setScale(.75);
-        var homeOutline = this.add.rectangle(542, 661, 56, 56);
+        var homeOutline = this.add.rectangle(500, 661, 56, 56);
         homeOutline.setInteractive({ useHandCursor: true });
         homeOutline.on('pointerup', () => this.homeButton());
         homeOutline.on("pointerover", () => {
