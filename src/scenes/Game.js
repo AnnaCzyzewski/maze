@@ -711,7 +711,6 @@ export default class Game extends Phaser.Scene {
 
                 var goHome = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, 430, 'goHomeButton').setOrigin(0.5).setScale(0.65);
                 var goHomeOutline = this.add.rectangle(this.cameras.main.worldView.x + this.cameras.main.width / 2, 430, 232, 52);
-                goHomeOutline.setStrokeStyle(2);
                 // goHomeOutline.on('pointerover', () => {
                 //     goHome.setScale(1.5);
                 // });                  
