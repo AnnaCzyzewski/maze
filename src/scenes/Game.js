@@ -51,6 +51,9 @@ export default class Game extends Phaser.Scene {
     homeOutline;
     homeButton;
 
+    skipCountdownOutline;
+    skipCountdownButton;
+
     mazeWidth;
     mazeHeight;
     mazeJSON;
@@ -308,14 +311,14 @@ export default class Game extends Phaser.Scene {
 
         // Initialize countdown and stopwatch
         if(this.difficulty == 0) {
-            this.countdownLabel = this.add.text(screenCenterX * 1.35, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
-            this.textLabel = this.add.image(screenCenterX * 0.85, 45, 'memorize').setOrigin(0.5).setScale(1.1);
+            this.countdownLabel = this.add.text(screenCenterX * 1.35, 85, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+            this.textLabel = this.add.image(screenCenterX * 0.85, 85, 'memorize').setOrigin(0.5).setScale(1.1);
         } else {
             this.countdownLabel = this.add.text(screenCenterX, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
         }
 
         if(this.difficulty == 0) {
-            this.stopwatchLabel = this.add.text(screenCenterX * 1.25, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
+            this.stopwatchLabel = this.add.text(screenCenterX * 1.15, 85, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
         } else {
             this.stopwatchLabel = this.add.text(screenCenterX, 45, '', { fontSize: 80, color: '0x000000' }).setOrigin(0.5);
         }
@@ -329,12 +332,12 @@ export default class Game extends Phaser.Scene {
             if(this.rapidFire) {
                 // add image with "mazes played: "
                 this.timeRecordImage = this.add.image(screenCenterX * 1.5, 45, 'mazesPlayed').setOrigin(0.5).setScale(0.65);
-                this.timeRecordLabel.setPosition(screenCenterX * 1.80, 47);
+                this.timeRecordLabel.setPosition(screenCenterX * 1.80, 22);
                 this.timeRecordLabel.setText(
                     '' + this.timesPlayed);
             } else {
                 // add image with "record:"
-                this.timeRecordImage = this.add.image(screenCenterX * 1.5, 42, 'recordText').setOrigin(0.5).setScale(0.70);
+                this.timeRecordImage = this.add.image(screenCenterX * 1.48, 45, 'recordText').setOrigin(0.5).setScale(0.70);
                 this.timeRecordLabel.setText(
                     '' + this.formatTime(getRecordForLevel(this.level)));
             }
@@ -356,8 +359,19 @@ export default class Game extends Phaser.Scene {
             this.homeButton.setTintFill(this.yellow);
         });
 
-        //this.scale.displaySize.setAspectRatio( width/height );
-        //this.scale.refresh();
+        // Add button that can skip the countdown
+        if(!this.difficulty == 0) {
+            this.skipCountdownButton = this.add.text(screenCenterX - 300, 48, "Skip countdown", { fontSize: 30, color: '0x000000' }).setOrigin(0.5);
+            this.skipCountdownOutline = this.add.rectangle(screenCenterX - 300, 48, 275, 60);
+            this.skipCountdownOutline.setInteractive({ useHandCursor: true });
+            this.skipCountdownOutline.on('pointerup', () => {
+                this.countdown.stop();
+                this.handleCountdownFinished();
+                this.skipCountdownButton.setText('');
+                this.skipCountdownOutline.destroy;
+            }
+            );
+        }
     }
 
     handleHomeButton() {
@@ -488,7 +502,9 @@ export default class Game extends Phaser.Scene {
 
     handleRapidFireCountdownFinished() {
         updateRecordForRapidFire(this.difficulty, this.timesPlayed);
-        this.scene.start('rapid');
+        if (this.RFCountdown.label.text == "0") {
+            this.handleRapidFireWinGame();
+        }
     }
 
     handleCountdownFinished() {
@@ -502,7 +518,7 @@ export default class Game extends Phaser.Scene {
 
         if(this.difficulty == 0) {
             this.textLabel.destroy();
-            this.textLabel = this.add.image(screenCenterX * 0.75, 45, 'goText').setOrigin(0.5).setScale(1.1);
+            this.textLabel = this.add.image(screenCenterX * 0.87, 83, 'goText').setOrigin(0.5).setScale(1.1);
         }
 	}
 
@@ -608,10 +624,11 @@ export default class Game extends Phaser.Scene {
         // Handle countdown updating
         this.countdown.update();
         if(this.rapidFire) {
-            this.RFCountdown.update();
+            this.RFCountdown.update(); 
         }
     }
 
+    
     handleWinGame() {
         // Handle booleans
         this.started = false;
@@ -649,13 +666,7 @@ export default class Game extends Phaser.Scene {
         
             if (!this.difficulty == 0) {
 
-                // Update time record and time record text
-                // console.log("level is " + this.level);
-                // console.log("milliseconds is " + this.milliseconds);
                 updateRecordForLevel(this.level, this.milliseconds);
-                // add image of "record: "
-                // this.timeRecordImage = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 1.75, 45, 'recordText').setOrigin(0.5).setScale(0.75);
-                // this.timeRecordLabel.setText('' + this.formatTime(getRecordForLevel(this.level)));
 
                 // moves time to center of screen
                 var rectanglePopUp = this.add.rectangle(710, 350, 450, 500, '0xffffff')
@@ -681,7 +692,7 @@ export default class Game extends Phaser.Scene {
                             .on('pointerup', () => this.scene.restart({ level: this.level, timesPlayed: this.timesPlayed + 1 }));       
             }
             // if you are on level 0
-            else {
+            else if (this.difficulty == 0) {
                 // next level button
                 var rectanglePopUp = this.add.rectangle(710, 350, 450, 350, '0xffffff')
                 rectanglePopUp.setStrokeStyle(5, '0x000000');
@@ -702,10 +713,6 @@ export default class Game extends Phaser.Scene {
                 if (thisGame.difficulty == 0) {
                     thisGame.scene.start('game', {level: thisGame.level = 1});
                 }
-                // if you are on level 12 (the last level)
-                if (thisGame.level == 12) {
-
-                }
                 // if you are on any other level 
                 else {
                     thisGame.scene.start('game', {level: thisGame.level + 1});
@@ -722,5 +729,60 @@ export default class Game extends Phaser.Scene {
             goHomeOutline.setInteractive()
                     .on('pointerup', () => fun1(this));         
         }
+    }
+
+    handleRapidFireWinGame() {
+        this.started = false;
+        this.ended = true;
+
+        this.animateScope(); 
+
+        this.RFCountdownLabel.setText("");
+        this.stopwatchLabel.destroy();
+
+        this.homeOutline.destroy();
+        this.homeButton.destroy();            
+       
+        // if you are not on level 0
+        var rectanglePopUp = this.add.rectangle(710, 350, 665, 500, '0xffffff');
+        rectanglePopUp.setStrokeStyle(5, '0x000000');
+
+        var rectanglePopUpOutline = this.add.rectangle(710, 350, 650, 485);
+        rectanglePopUpOutline.setStrokeStyle(2);
+
+        var rectanglePopUpFill = this.add.rectangle(710, 350, 657, 492);
+        rectanglePopUpFill.setStrokeStyle(5, this.blue);
+
+        var winText = this.add.image(710, 200, 'winGameMessage').setOrigin(0.5).setScale(0.75);
+
+        this.timeRecordImage.destroy();
+        this.timeRecordLabel.destroy();
+
+        var timeRecordImage = this.add.image(675, 350, 'recordText').setOrigin(0.5).setScale(0.70);
+        var timeRecordLabel = this.add.text(800, 327, "" + this.timesPlayed,{ fontSize: 60, color: '0x000000'});            
+
+        const resetButton = this.add.image(710, 450, 'playAgainButton').setOrigin(0.5).setScale(.75);
+        var resetOutline = this.add.rectangle(710, 450, 340, 60); 
+
+        var goHome = this.add.image(710, 530, 'goHomeButton').setOrigin(0.5).setScale(0.65);
+        var goHomeOutline = this.add.rectangle(710, 530, 240, 35);                 
+        
+        goHomeOutline.setInteractive({ useHandCursor: true });
+
+        function fun1(thisGame) {
+            thisGame.scopeStrokeWidth = 0;
+            thisGame.scene.start('titleScene');
+        }
+
+        function fun2(thisGame) {
+            thisGame.scene.restart();
+        }
+
+        resetOutline.setInteractive({ useHandCursor: true });
+        resetOutline.setInteractive()
+                    .on('pointerup', () => fun2(this));  
+
+        goHomeOutline.setInteractive()
+                .on('pointerup', () => fun1(this));       
     }
 }
