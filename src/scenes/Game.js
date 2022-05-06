@@ -42,6 +42,7 @@ export default class Game extends Phaser.Scene {
     black = 0x000000;
     pauseTime = 0;
 
+    RFTimesPlayed;
     RFSumTime;
     RFTimeTaken;
     RFCountdown;
@@ -93,6 +94,10 @@ export default class Game extends Phaser.Scene {
         // Take data from the last game to set up the number of times played variable (set it to 0 if there is no incoming data)
         this.timesPlayed = data.timesPlayed || 0;
 
+        if(this.rapidFire) {
+            this.RFTimesPlayed = data.RFTimesPlayed || 0;
+        }
+
         this.level = data.level;
 
         if(this.level != 0 && !this.rapidFire) {
@@ -127,7 +132,7 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile2';
             this.finishLineImage = 'finishLine2';
         } else if(this.difficulty == 1) {
-            this.RFCountdownTime = 45;
+            this.RFCountdownTime = 10;
             this.playerSpeed = 246.67;
             this.color = this.green;
             this.playerRadius = 12.3;
@@ -780,6 +785,9 @@ export default class Game extends Phaser.Scene {
     }
 
     handleRapidFireWinGame() {
+
+        var thisGame = this;
+
         this.started = false;
         this.ended = true;
 
@@ -792,7 +800,6 @@ export default class Game extends Phaser.Scene {
         this.homeOutline.destroy();
         this.homeButton.destroy();            
        
-
         var rectanglePopUp = this.add.rectangle(710, 350, 665, 500, '0xffffff');
         rectanglePopUp.setStrokeStyle(5, '0x000000');
 
@@ -809,7 +816,6 @@ export default class Game extends Phaser.Scene {
             this.timeRecordLabel.destroy(); 
         }
         
-
         var timeRecordImage = this.add.image(685, 350, 'mazesPlayed').setOrigin(0.5).setScale(0.70);
         var timeRecordLabel = this.add.text(915, 327, "" + this.timesPlayed,{ fontSize: 55, color: '0x000000'});            
 
@@ -827,7 +833,7 @@ export default class Game extends Phaser.Scene {
         }
 
         function fun2(thisGame) {
-            thisGame.scene.restart();
+            thisGame.scene.restart( {rapidFire: true, difficulty: thisGame.difficulty, RFTimesPlayed: thisGame.RFTimesPlayed + 1});
         }
 
         resetOutline.setInteractive({ useHandCursor: true });
