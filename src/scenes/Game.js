@@ -132,7 +132,7 @@ export default class Game extends Phaser.Scene {
             this.mazeTile = 'wallTile2';
             this.finishLineImage = 'finishLine2';
         } else if(this.difficulty == 1) {
-            this.RFCountdownTime = 10;
+            this.RFCountdownTime = 45;
             this.playerSpeed = 246.67;
             this.color = this.green;
             this.playerRadius = 12.3;
