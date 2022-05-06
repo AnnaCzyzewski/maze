@@ -81,6 +81,7 @@ export default class Preloader extends Phaser.Scene
         this.load.image('restartButton', 'src/assets/images/restart_button.png');
         this.load.image('skipText', 'src/assets/images/skip_text.png');
         this.load.image('restartText', 'src/assets/images/restart_text.png');
+        this.load.image('timesUp', 'src/assets/images/times_up.png');
 	}
 
     create()

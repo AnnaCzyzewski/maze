@@ -517,6 +517,11 @@ export default class Game extends Phaser.Scene {
 
     handleRapidFireCountdownFinished() {
         updateRecordForRapidFire(this.difficulty, this.timesPlayed);
+        if (this.difficulty != 0 && this.skipCountdownButton) {
+            this.skipCountdownOutline.destroy();
+            this.skipCountdownButton.destroy();
+            this.skipColorBox.destroy();
+        }
         if (this.RFCountdown.label.text == "0") {
             this.handleRapidFireWinGame();
         }
@@ -534,6 +539,11 @@ export default class Game extends Phaser.Scene {
         if(this.difficulty == 0) {
             this.textLabel.destroy();
             this.textLabel = this.add.image(screenCenterX * 0.87, 83, 'goText').setOrigin(0.5).setScale(1.1);
+        }
+        else if (this.difficulty != 0 && this.skipCountdownButton) {
+            this.skipCountdownOutline.destroy();
+            this.skipCountdownButton.destroy();
+            this.skipColorBox.destroy();
         }
 	}
 
@@ -774,6 +784,7 @@ export default class Game extends Phaser.Scene {
         this.ended = true;
 
         this.animateScope(); 
+        this.scope.destroy(); 
 
         this.RFCountdownLabel.setText("");
         this.stopwatchLabel.destroy();
